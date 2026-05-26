@@ -1,11 +1,6 @@
 ---
 name: attends_court
-description: >-
-  Structured court-deliberation framework modeled loosely on Northern Song
-  dynasty state discussions. Use when user says "朝议", "廷议", "朝堂讨论", "皇上", "辩论", or wants to explore a
-  topic through a ruler-led, multi-perspective discussion with ministers,
-  philosophers, and modern advisers. Also use when the user wants a topic to
-  be拆解 into role-based viewpoints rather than a plain summary.
+description: Structured court-deliberation framework modeled loosely on Northern Song dynasty state discussions. Use when user says "朝议", "廷议", "朝堂讨论", "皇上", "辩论", or wants to explore a topic through a ruler-led, multi-perspective discussion with ministers, philosophers, and modern advisers. Also use when the user wants a topic to be break down into role-based viewpoints rather than a plain summary.
 ---
 
 ## Usage
