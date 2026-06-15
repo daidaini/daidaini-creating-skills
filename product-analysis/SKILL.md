@@ -1,6 +1,6 @@
 ---
 name: product-analysis
-description: 产品第一性原理分析 + 历史演化调研 + HTML 报告生成。当你想要了解一个产品「应该」是什么样子、拆解产品的本质、研究产品的演化历程、或制作面向客户的演示报告时，使用这个技能。即使你没有明确要求「产品分析」，只要涉及理解产品本质或制作产品报告，都应该触发。触发词：分析产品、产品报告、拆解产品、产品演化、这个产品应该是什么样的、产品第一性原理、product analysis、产品调研。
+description: Use when the user wants to analyze a product's essence, first principles, historical evolution, strategic tension, competitive position, or generate a client-ready product analysis HTML report. Trigger on 产品分析、产品报告、拆解产品、产品演化、产品第一性原理、product analysis, or questions like “这个产品应该是什么样”.
 ---
 
 # Product Analysis: First Principles + Historical Evolution
@@ -31,6 +31,31 @@ Three phases:
 - Abstract concept analysis — use ljg-think
 
 ## Workflow
+
+### Preflight: Clarify the Analysis Frame
+
+Before starting, identify these inputs:
+
+| Input | Purpose |
+|---|---|
+| **Product name** | The exact product or company-product being analyzed |
+| **Scope** | Whole product by default; clarify if the user means one feature, one market, or one product line |
+| **Audience** | Founder, investor, product team, client, or general reader |
+| **Depth** | Full HTML report by default; ask if the user only wants a short analysis |
+| **Angle** | Strategy by default; clarify if the user wants growth, UX, business model, competition, or roadmap |
+| **Theme** | Light template by default; dark only if requested or strongly fits the product |
+
+If the user clearly names a product and asks for analysis, proceed with the full workflow using defaults. Ask one short clarification question only when the product identity, scope, or expected deliverable is ambiguous.
+
+### Quality Boundaries: What NOT to Do
+
+- Do not write a product introduction or marketing overview. The report must reveal a structural tension.
+- Do not list features as if features explain the product. Features are evidence, not the analysis.
+- Do not treat every launch, funding round, redesign, or metric milestone as a historical turning point.
+- Do not use generic Core Anchors that could apply to any product in the category.
+- Do not make the competitive chart a subjective scorecard with arbitrary dimensions.
+- Do not end with vague advice like "be more focused", "improve experience", or "use AI better" unless it follows directly from the Core Anchor.
+- Do not overfill the HTML with decorative sections. Keep the report focused on the 5-section structure.
 
 ### Phase 1: First Principles Deconstruction (3 Steps)
 
