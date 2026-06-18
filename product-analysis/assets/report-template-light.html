@@ -391,6 +391,7 @@
 
             const timelineCtx = document.getElementById('timelineChart').getContext('2d');
             const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            const minYear = Math.min(...timelineData.map(d => d.year));
 
             new Chart(timelineCtx, {
               type: 'bar',
@@ -418,7 +419,11 @@
                   }
                 },
                 scales: {
-                  x: { title: { display: true, text: '年份' }, grid: { color: '#f0ece6' } },
+                  x: {
+                    min: minYear,
+                    title: { display: true, text: '年份' },
+                    grid: { color: '#f0ece6' }
+                  },
                   y: { grid: { display: false } }
                 }
               }

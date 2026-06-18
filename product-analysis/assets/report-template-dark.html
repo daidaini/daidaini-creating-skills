@@ -381,6 +381,8 @@
             const timelineData = {{TIMELINE_CHART_DATA}};
 
             const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+            const minYear = Math.min(...timelineData.map(d => d.year));
+
             new Chart(timelineCtx, {
               type: 'bar',
               data: {
@@ -406,6 +408,7 @@
                 },
                 scales: {
                   x: {
+                    min: minYear,
                     title: { display: true, text: '年份', color: '#b0ab9f' },
                     grid: { color: '#25231c' },
                     ticks: { color: '#b0ab9f' }
