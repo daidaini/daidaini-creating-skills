@@ -1,0 +1,28 @@
+interface:
+  display_name: "Leaflet Route Map"
+  short_description: "Build a Leaflet HTML route map or Google My Maps-compatible KML with test data, route polyline, markers, local Leaflet assets, and browser verification"
+  default_prompt: "Use $leaflet-route-map to create a route-map demo in my target folder: vendor Leaflet locally, fetch or create test route data, render a route polyline and waypoint markers, then verify it in a real browser with a screenshot. Optionally generate a KML file for Google My Maps import."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual-or-description"
+    paths:
+      - "SKILL.md"
+      - "references/workflow.md"
+  execution:
+    context: "inline"
+    shell: "bash"
+    browser_verification: "recommended"
+  trust:
+    source_tier: "local"
+    network_policy: "allow-for-leaflet-assets-osm-tiles-and-optional-test-route-fetch"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    no_network: "use manually embedded test coordinates and local Leaflet assets if already available; otherwise explain missing assets"
+    no_browser: "perform static file and data-shape checks, but mark screenshot evidence as unavailable"
+    generic: "neutral-source"
