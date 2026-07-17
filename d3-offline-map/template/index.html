@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!--
+  D3 Offline Map — China province choropleth reference template.
+  Expects in the same folder:
+    vendor/d3.v5.min.js
+    vendor/topojson-client.min.js
+    data.js                 <- produced by ../scripts/build-data.js
+  Build data.js with aliases matching the MAPS keys below (mainland / chnTwn / hkMac):
+    node ../scripts/build-data.js \
+      data/zh-mainland-provinces.topo.json:mainland \
+      data/zh-chn-twn.topo.json:chnTwn \
+      data/zh-hkg-mac.topo.json:hkMac -o data.js
+  Lines tagged // DATA-SPECIFIC: change when you swap to a different region's data.
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>中国省份人口自绘地图 · Natural Earth + D3 (路线 D)</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #fafafa; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .header { padding: 20px 30px 6px; }
+    .header h1 { margin: 0; font-size: 20px; font-weight: 600; color: #222; }
+    .header p  { margin: 4px 0 0; font-size: 12px; color: #888; }
+    #map { display: block; margin: 0 auto; }
+    .province { stroke: #fff; stroke-width: 0.6; stroke-linejoin: round; transition: fill 120ms; }
+    .province:hover { stroke: #d9480f; stroke-width: 1.4; }
+    .label { font-size: 10px; fill: #333; text-anchor: middle; pointer-events: none; opacity: 0.85; }
+    .inset-border { fill: none; stroke: #bbb; stroke-width: 1; }
+    .inset-label { font-size: 10px; fill: #666; text-anchor: start; }
+    .axis text { font-size: 10px; fill: #555; }
+    .legend-caption { font-size: 11px; fill: #444; }
+  </style>
+</head>
+<body>
+  <!-- 标题放 HTML 而非 SVG，避免被地图遮挡 -->
+  <div class="header">
+    <h1>中国各省份常住人口分布</h1>
+    <p>数据：2020 年第七次全国人口普查（万人） · 底图：Natural Earth 1:10m · 渲染：D3.js（路线 D）</p>
+  </div>
+
+  <div id="map"></div>
+
+  <script src="vendor/d3.v5.min.js"></script>
+  <script src="vendor/topojson-client.min.js"></script>
+  <script src="data.js"></script>
+  <script>
+  (function () {
+    var MAPS = window.MAPS;
+    // height 680 给地图留足纵向空间，避免北方省份溢出 viewBox
+    var width = 960, height = 680;
+
+    // DATA-SPECIFIC: per-region value lookup. Keys MUST match the name field
+    // your TopoJSON exposes (here: mainland provinces use properties.name,
+    // Taiwan/Hong Kong/Macao use the pop entries "Taiwan"/"Hong Kong"/"Macao").
+    // 2020 第七次全国人口普查（单位：万人），港澳台为同年估算
+    var pop = {
+      "Guangdong": 12601, "Shandong": 10163, "Henan": 9937,  "Jiangsu": 8475,
+      "Sichuan": 8367,    "Hebei": 7461,     "Hunan": 6644,  "Zhejiang": 6457,
+      "Anhui": 6103,      "Hubei": 5775,     "Guangxi": 5013,"Yunnan": 4721,
+      "Jiangxi": 4519,    "Liaoning": 4259,  "Fujian": 4154, "Shaanxi": 3953,
+      "Guizhou": 3856,    "Shanxi": 3492,    "Chongqing": 3205,"Heilongjiang": 3185,
+      "Gansu": 2502,      "Shanghai": 2487,  "Xinjiang": 2585,"Jilin": 2407,
+      "Inner Mongol": 2405,"Taiwan": 2356,   "Beijing": 2189,"Tianjin": 1387,
+      "Hainan": 1008,     "Ningxia": 720,    "Qinghai": 595, "Xizang": 365,
+      "Hong Kong": 747,   "Macao": 68
+    };
+
+    var svg = d3.select("#map").append("svg")
+      .attr("width", width).attr("height", height)
+      .attr("viewBox", "0 0 " + width + " " + height);
+
+    // DATA-SPECIFIC: projection. center=[region centroid lon,lat], tune scale to fit.
+    // center y=36 (比中国实际中心 31 偏北) 使地图整体落入 viewBox 0..680 区间
+    var projection = d3.geoMercator()
+      .center([107, 36]).scale(800).translate([width / 2, height / 2]);
+    var path = d3.geoPath().projection(projection);
+
+    var maxVal = d3.max(d3.values(pop));
+    // DATA-SPECIFIC (cosmetic): color scale. Swap interpolateBlues for any d3 palette.
+    var color = d3.scaleSequential(d3.interpolateBlues).domain([0, maxVal]);
+
+    // A) 大陆 31 省
+    // DATA-SPECIFIC: MAPS.mainland + objects.provinces + properties.name
+    var mainland = topojson.feature(MAPS.mainland, MAPS.mainland.objects.provinces).features;
+    var gMain = svg.append("g").attr("class", "mainland");
+    gMain.selectAll("path")
+      .data(mainland)
+      .enter().append("path")
+        .attr("class", "province")
+        .attr("d", path)
+        .attr("fill", function (d) { return color(pop[d.properties.name] || 0); })
+      .append("title").text(function (d) {
+        var v = pop[d.properties.name];
+        return d.properties.name + (v == null ? "" : "：" + v + " 万人");
+      });
+
+    // B) 台湾（来自国界数据，按 GU_A3 过滤）
+    // DATA-SPECIFIC: MAPS.chnTwn + objects.layer1, filter by GU_A3==='TWN'
+    var tw = topojson.feature(MAPS.chnTwn, MAPS.chnTwn.objects.layer1).features
+      .filter(function (d) { return d.properties.GU_A3 === "TWN"; });
+    svg.append("g").selectAll("path").data(tw).enter().append("path")
+        .attr("class", "province")
+        .attr("d", path)
+        .attr("fill", color(pop["Taiwan"]))
+      .append("title").text("Taiwan：" + pop["Taiwan"] + " 万人");
+
+    // C) 港澳缩略图（右下角小窗）—— 小面积区域在主投影下不可见，单独放大
+    var insetW = 170, insetH = 120;
+    var insetX = width - insetW - 20, insetY = height - insetH - 40;
+    var gInset = svg.append("g").attr("class", "inset")
+        .attr("transform", "translate(" + insetX + "," + insetY + ")");
+    gInset.append("rect")
+      .attr("class", "inset-border")
+      .attr("width", insetW).attr("height", insetH);
+    gInset.append("text").attr("class", "inset-label")
+      .attr("x", 8).attr("y", 16).text("Hong Kong & Macao");
+
+    // DATA-SPECIFIC: inset projection centered on the tiny region.
+    var proj2 = d3.geoMercator().center([114.15, 22.35]).scale(6000)
+        .translate([insetW / 2, insetH / 2 + 8]);
+    var path2 = d3.geoPath().projection(proj2);
+
+    // DATA-SPECIFIC: MAPS.hkMac + objects.layer1 + properties.NAME
+    var hk = topojson.feature(MAPS.hkMac, MAPS.hkMac.objects.layer1).features;
+    gInset.selectAll("path").data(hk).enter().append("path")
+        .attr("class", "province")
+        .attr("d", path2)
+        .attr("fill", function (d) {
+          var n = d.properties.NAME; // "Hong Kong" / "Macao"
+          return color(pop[n] || 0);
+        })
+      .append("title").text(function (d) {
+        var v = pop[d.properties.NAME];
+        return d.properties.NAME + (v == null ? "" : "：" + v + " 万人");
+      });
+
+    // D) 省份名称（大陆）
+    gMain.selectAll("text.label")
+      .data(mainland)
+      .enter().append("text")
+        .attr("class", "label")
+        .attr("transform", function (d) { return "translate(" + path.centroid(d) + ")"; })
+        .text(function (d) { return d.properties.name; });
+
+    // E) 图例（色阶条）
+    var legendW = 14, legendH = 200, legendX = width - 60, legendY = 90;
+    var defs = svg.append("defs");
+    var gradId = "legendGrad";
+    var grad = defs.append("linearGradient")
+      .attr("id", gradId).attr("x1", 0).attr("y1", 1).attr("x2", 0).attr("y2", 0);
+    var stops = d3.range(0, 1.01, 0.1);
+    grad.selectAll("stop").data(stops).enter().append("stop")
+      .attr("offset", function (t) { return (t * 100) + "%"; })
+      .attr("stop-color", function (t) { return color(t * maxVal); });
+
+    var gLeg = svg.append("g").attr("class", "legend")
+      .attr("transform", "translate(" + legendX + "," + legendY + ")");
+    gLeg.append("rect").attr("width", legendW).attr("height", legendH)
+      .attr("fill", "url(#" + gradId + ")").attr("stroke", "#999");
+    var axis = d3.axisRight(d3.scaleLinear().domain([0, maxVal]).range([legendH, 0]))
+      .ticks(5).tickFormat(function (d) { return d; });
+    gLeg.append("g").attr("class", "axis").attr("transform", "translate(" + legendW + ",0)").call(axis);
+    gLeg.append("text").attr("class", "legend-caption")
+      .attr("x", legendW / 2).attr("y", -10).attr("text-anchor", "middle").text("万人");
+  })();
+  </script>
+</body>
+</html>
