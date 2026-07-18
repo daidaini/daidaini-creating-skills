@@ -1,6 +1,9 @@
 ---
 name: product-analysis
-description: Use when the user wants to analyze a product's essence, first principles, historical evolution, strategic tension, competitive position, or generate a client-ready product analysis HTML report. Trigger on 产品分析、产品报告、拆解产品、产品演化、产品第一性原理、product analysis, or questions like “这个产品应该是什么样”.
+description: >-
+  Analyze a product's essence via first-principles deconstruction and historical evolution, then generate a client-ready HTML report.
+  Trigger on: 产品分析, 拆解产品, 产品报告, 产品第一性原理, 产品演化, product analysis, "what should X really be", "why is X the way it is".
+  NOT for: investment-specific analysis (use ljg-invest), feature-only analysis, abstract concept analysis, quick factual lookups, or marketing overviews.
 ---
 
 # Product Analysis: First Principles + Historical Evolution
@@ -34,18 +37,18 @@ Three phases:
 
 ### Preflight: Clarify the Analysis Frame
 
-Before starting, identify these inputs:
+Before starting, quickly align on what's being analyzed. You don't need a long questionnaire — one short clarifying sentence is usually enough.
 
-| Input | Purpose |
+| Input | When to clarify |
 |---|---|
-| **Product name** | The exact product or company-product being analyzed |
-| **Scope** | Whole product by default; clarify if the user means one feature, one market, or one product line |
-| **Audience** | Founder, investor, product team, client, or general reader |
-| **Depth** | Full HTML report by default; ask if the user only wants a short analysis |
-| **Angle** | Strategy by default; clarify if the user wants growth, UX, business model, competition, or roadmap |
-| **Theme** | Light template by default; dark only if requested or strongly fits the product |
+| **Product name** | Always needed — the exact product or company-product (e.g., "微信支付" vs "微信") |
+| **Scope** | Only if ambiguous — whole product by default |
+| **Audience** | Only if unusual — founder, investor, product team, client, or general reader |
+| **Depth** | Only if they might want a short verbal analysis — full HTML report by default |
+| **Angle** | Only if they have a clear bent — strategy by default; alternatives: growth, UX, business model, competition, roadmap |
+| **Theme** | Only if they explicitly mention dark mode — light template by default |
 
-If the user clearly names a product and asks for analysis, proceed with the full workflow using defaults. Ask one short clarification question only when the product identity, scope, or expected deliverable is ambiguous.
+**Default rule**: If the user clearly names a product and asks for "分析" or "analysis", proceed with the full workflow. Ask one short question only when the product identity, scope, or expected deliverable is genuinely ambiguous — don't stall with form-filling.
 
 ### Quality Boundaries: What NOT to Do
 
@@ -56,6 +59,23 @@ If the user clearly names a product and asks for analysis, proceed with the full
 - Do not make the competitive chart a subjective scorecard with arbitrary dimensions.
 - Do not end with vague advice like "be more focused", "improve experience", or "use AI better" unless it follows directly from the Core Anchor.
 - Do not overfill the HTML with decorative sections. Keep the report focused on the 5-section structure.
+- Do not let insights restate the obvious. If an insight could appear in a competitor's analysis unchanged, it's not sharp enough.
+- Do not pick turning points by recency. A funding round is not automatically a turning point — the true structural choice may be older and quieter.
+
+### Output Risk Profile
+
+This skill produces a client-facing HTML report. Guard against these common failure modes:
+
+| Risk | Guard |
+|---|---|
+| **Core Anchor too generic** — fits any product in the category | Test: would this sentence embarrass you if the product's founder read it? If not, rewrite. |
+| **Turning points by recency** — latest launches chosen over structural choices | For each: "Did this choice permanently close an alternative future?" If no, replace it. |
+| **Chart axes from convenience, not analysis** — dimensions not tied to Phase 1 | Every axis must trace to the Core Need or Ideal Form. No free variables. |
+| **Insights restate the obvious** — "needs better UX" | Each insight should surprise a casual observer. If it fits a competitor unchanged, it's not sharp. |
+| **Stats are decorative** — don't support the Core Anchor narrative | Each stat must illuminate a tension in the analysis. Non-obvious stats beat vanity metrics. |
+| **Chart.js CDN failure** — network blocks the CDN | Templates include a CDN fallback (see Phase 3). |
+
+> Full reference: [references/output-risk-profile.md](references/output-risk-profile.md)
 
 ### Phase 1: First Principles Deconstruction (3 Steps)
 
@@ -86,8 +106,15 @@ This sentence drives the entire report. If you can't state it crisply, your anal
 
 ### Phase 2: Historical Evolution (3–6 Turning Points)
 
-Don't write a comprehensive history. Identify **3–6 key turning points** — moments where the product made an irreversible choice that shaped everything after. 
-Simple products need 3; complex products with rich histories can go up to 6. Select the count that tells the most causally complete story without filler.
+Don't write a comprehensive history. Identify **3–6 key turning points** — moments where the product made an irreversible choice that shaped everything after.
+
+**Count heuristics:**
+- **3** → A focused product (1–2 major features, <5 year history). Lean toward 3.
+- **4** → Moderate complexity (clear category shifts, 5–10 years).
+- **5** → Complex product (multiple platform pivots, 10+ years, regulatory drama).
+- **6** → Landscape-defining product (shaped the category itself, 15+ years). Use only if each point carries unique causal weight.
+
+**Selection test**: For each candidate, ask: "Did this choice *permanently close* an alternative future?" If no, it's an event, not a turning point. Prefer older, structural choices over recent, visible ones.
 
 For each turning point:
 
@@ -100,8 +127,15 @@ For each turning point:
 
 #### Research Method
 
-Use web search. Prefer primary sources (founder interviews, launch announcements) over summaries. When sources conflict, note it. 
-The goal is not completeness but **causal clarity** — understanding *why* each turning point happened.
+Use web search. Prefer primary sources (founder interviews, launch announcements, earnings call transcripts) over summaries or second-hand analysis.
+
+**When sources conflict**, note the disagreement in the report and state which interpretation you're following and why. Do not fabricate a consensus.
+
+**When search results are thin** (obscure product, young product, or closed platform):
+- If you can identify 2+ turning points from available sources, proceed and note which are inferred vs documented.
+- If you can identify <2 turning points, switch to "structural analysis only" mode: skip Phase 2, explain why in the report, and use the space to deepen Phase 1 and Phase 3.
+
+The goal is not completeness but **causal clarity** — understanding *why* each turning point happened. A 3-point story with clear causality beats a 6-point timeline with filler.
 
 ### Phase 3: HTML Report Generation
 
@@ -120,7 +154,7 @@ The aesthetic is "电子杂志 × 电子墨水":
 2. **Executive Summary** — 2 paragraphs: what the product is and what the Core Anchor reveals
 3. **First Principles** — Visual flow: Core Need → Ideal Form → Gap. Clean, minimal.
 4. **N Turning Points** — Each as a story card: context → choice → trade-off. With a timeline visualization. Dynamic count (3–6) based on Phase 2.
-5. **Implications** — 3 sharp insights that follow from the Core Anchor. Each is actionable.
+5. **Implications** — 3 sharp insights that follow from the Core Anchor. Each must be **actionable and non-obvious**. Read each insight with the product name blanked out: if it could apply equally to a competitor, it's not specific enough. Each insight should make someone familiar with the product say "I hadn't thought of it that way."
 
 #### Design Philosophy: 电子杂志 × 电子墨水
 
@@ -165,6 +199,8 @@ Only 2 charts (not 4):
 |---|---|
 | `{{TIMELINE_CHART_DATA}}` | Array of `{ year: 2011, label: "Event", description: "...", impact: "high"\|"medium" }` — 3–6 entries |
 | `{{POSITIONING_CHART_DATA}}` | `{ labels: ["维度1",...], datasets: [{ label: "Product", data: [...] }, ...] }` |
+
+> **CDN resilience**: Both templates include a Chart.js fallback. If the primary CDN (jsdelivr) fails, a secondary CDN (unpkg) is tried. If both fail, the template renders plain-text data summaries instead of charts. See the `<script>` section in each template.
 
 #### Turning Point Card Markup
 
@@ -215,6 +251,8 @@ The file is self-contained (inline CSS/JS, Chart.js from CDN). Opens in any mode
 
 ## Bundled Resources
 
+- `agents/interface.yaml` — Skill interface definition with triggers, inputs, outputs, and resource budgets
 - `assets/report-template-light.html` — Light theme HTML template (warm parchment, default)
 - `assets/report-template-dark.html` — Dark theme HTML template (charcoal e-ink)
 - `references/first-principles.md` — Condensed methodology for the 3-step first principles approach
+- `references/output-risk-profile.md` — Known failure modes and guards for report generation

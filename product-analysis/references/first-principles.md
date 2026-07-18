@@ -41,6 +41,15 @@ This is the Core Anchor. It drives the entire report. If you can't state it in o
 ## Common Traps
 
 1. **Mistaking features for needs** — "Users want dark mode" is not a need. Eye comfort in low light is.
-2. **Ignoring dead constraints** — Many products carry decisions from constraints that no longer exist. Identify these.
+2. **Ignoring dead constraints** — Many products carry decisions from constraints that no longer exist (e.g., offline-first design from a pre-5G era). Identify these.
 3. **Over-indexing on current users** — They self-selected for the current product. Consider non-users and churned users.
 4. **Being too abstract** — If your Core Anchor could apply to any product in the category, it's not specific enough.
+5. **Confusing business model with product purpose** — "Make money" is not a core need. It's a constraint on the solution, not the desire itself.
+
+## Diagnostic Questions
+
+When stuck, ask:
+
+- **Core Need**: "If this product disappeared tomorrow, what workaround would people use?" The answer reveals the real need.
+- **Ideal Form**: "What does the perfect version of this feel like — not look like, but *feel* like?" Start with sensation, end with features.
+- **The Gap**: "If the founder started from scratch today, what would they do differently?" This often surfaces the deepest tension.

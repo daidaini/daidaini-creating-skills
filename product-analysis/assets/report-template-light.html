@@ -4,7 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{{PRODUCT_NAME}} — 产品分析</title>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"
+                onerror="(function(){let s=document.createElement('script');s.src='https://unpkg.com/chart.js@4.4.7/dist/chart.umd.min.js';s.onerror=function(){window.__chartFailed=true};document.head.appendChild(s)})()"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap"
@@ -260,6 +261,22 @@
               section { break-inside: avoid; padding: 1.5rem 0; }
               .card, .chart-container, .tp-card, .insight-card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
             }
+
+            /* ── Chart Fallback ── */
+            .chart-fallback {
+              background: var(--card-bg);
+              border: 1px solid var(--border);
+              border-radius: 8px;
+              padding: 2rem;
+              text-align: center;
+              color: var(--ink-muted);
+              font-style: italic;
+              min-height: 100px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .chart-fallback p { margin: 0; font-size: 0.95rem; }
         </style>
     </head>
     <body>
@@ -380,88 +397,122 @@
 
         <!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
         <script>
-            // ── Chart theme ──
-            Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.color = '#4a4a4a';
-            Chart.defaults.borderColor = '#e8e2da';
-
-            // ── Timeline Chart ──
-            const timelineData = {{TIMELINE_CHART_DATA}};
-            // Format: [{ year: 2012, label: "Event name", description: "...", impact: "high"|"medium" }]
-
-            const timelineCtx = document.getElementById('timelineChart').getContext('2d');
-            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-            const minYear = Math.min(...timelineData.map(d => d.year));
-
-            new Chart(timelineCtx, {
-              type: 'bar',
-              data: {
-                labels: timelineData.map(d => d.label),
-                datasets: [{
-                  data: timelineData.map(d => d.year),
-                  backgroundColor: timelineData.map(d =>
-                    d.impact === 'high' ? accentColor + 'cc' : accentColor + '55'
-                  ),
-                  borderColor: accentColor,
-                  borderWidth: 1,
-                  borderRadius: 4,
-                  barPercentage: 0.5
-                }]
-              },
-              options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: { display: false },
-                  tooltip: {
-                    callbacks: { label: ctx => timelineData[ctx.dataIndex].description }
+            // ── CDN Guard: wait for Chart.js or fall back to text ──
+            (function() {
+              function renderFallback() {
+                ['timelineChart', 'positioningChart'].forEach(function(id) {
+                  var el = document.getElementById(id);
+                  if (el) {
+                    el.outerHTML = '<div class="chart-fallback"><p>图表数据摘要：请见下方文字描述</p></div>';
                   }
-                },
-                scales: {
-                  x: {
-                    min: minYear,
-                    title: { display: true, text: '年份' },
-                    grid: { color: '#f0ece6' }
-                  },
-                  y: { grid: { display: false } }
+                });
+              }
+
+              function tryInit() {
+                if (typeof Chart === 'undefined') {
+                  renderFallback();
+                  return;
+                }
+
+                // ── Chart theme ──
+                Chart.defaults.font.family = "'Inter', sans-serif";
+                Chart.defaults.color = '#4a4a4a';
+                Chart.defaults.borderColor = '#e8e2da';
+
+                // ── Timeline Chart ──
+                var timelineData = {{TIMELINE_CHART_DATA}};
+                var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+
+                if (timelineData && timelineData.length) {
+                  var timelineCtx = document.getElementById('timelineChart').getContext('2d');
+                  var minYear = Math.min.apply(null, timelineData.map(function(d) { return d.year; }));
+
+                  new Chart(timelineCtx, {
+                    type: 'bar',
+                    data: {
+                      labels: timelineData.map(function(d) { return d.label; }),
+                      datasets: [{
+                        data: timelineData.map(function(d) { return d.year; }),
+                        backgroundColor: timelineData.map(function(d) {
+                          return d.impact === 'high' ? accentColor + 'cc' : accentColor + '55';
+                        }),
+                        borderColor: accentColor,
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barPercentage: 0.5
+                      }]
+                    },
+                    options: {
+                      indexAxis: 'y',
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                          callbacks: { label: function(ctx) { return timelineData[ctx.dataIndex].description; } }
+                        }
+                      },
+                      scales: {
+                        x: {
+                          min: minYear,
+                          title: { display: true, text: '年份' },
+                          grid: { color: '#f0ece6' }
+                        },
+                        y: { grid: { display: false } }
+                      }
+                    }
+                  });
+                }
+
+                // ── Positioning Chart ──
+                var posData = {{POSITIONING_CHART_DATA}};
+
+                if (posData && posData.labels && posData.labels.length) {
+                  var posCtx = document.getElementById('positioningChart').getContext('2d');
+                  new Chart(posCtx, {
+                    type: 'radar',
+                    data: {
+                      labels: posData.labels,
+                      datasets: posData.datasets.map(function(ds, i) {
+                        return {
+                          label: ds.label,
+                          data: ds.data,
+                          borderColor: ds.borderColor,
+                          borderWidth: i === 0 ? 2.5 : 1.5,
+                          pointRadius: 3,
+                          pointBackgroundColor: ds.borderColor || accentColor,
+                          backgroundColor: (ds.borderColor || accentColor) + '1a',
+                          fill: true
+                        };
+                      })
+                    },
+                    options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: { legend: { position: 'bottom', labels: { padding: 20 } } },
+                      scales: {
+                        r: {
+                          min: 0, max: 100,
+                          ticks: { display: false, stepSize: 20 },
+                          grid: { color: '#e8e2da' },
+                          angleLines: { color: '#e8e2da' },
+                          pointLabels: { font: { size: 12 } }
+                        }
+                      }
+                    }
+                  });
                 }
               }
-            });
 
-            // ── Positioning Chart ──
-            const posData = {{POSITIONING_CHART_DATA}};
-            // Format: { labels: ["维度1",...], datasets: [{ label: "Product", data: [85,...], borderColor: "#..." }, ...] }
-
-            const posCtx = document.getElementById('positioningChart').getContext('2d');
-            new Chart(posCtx, {
-              type: 'radar',
-              data: {
-                labels: posData.labels,
-                datasets: posData.datasets.map((ds, i) => ({
-                  ...ds,
-                  borderWidth: i === 0 ? 2.5 : 1.5,
-                  pointRadius: 3,
-                  pointBackgroundColor: ds.borderColor,
-                  backgroundColor: (ds.borderColor || accentColor) + '1a',
-                  fill: true
-                }))
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { position: 'bottom', labels: { padding: 20 } } },
-                scales: {
-                  r: {
-                    min: 0, max: 100,
-                    ticks: { display: false, stepSize: 20 },
-                    grid: { color: '#e8e2da' },
-                    angleLines: { color: '#e8e2da' },
-                    pointLabels: { font: { size: 12 } }
-                  }
-                }
+              // If CDN already failed, render fallback immediately
+              if (window.__chartFailed) {
+                renderFallback();
+                return;
               }
-            });
+
+              // Try init after a short delay to let fallback CDN load
+              setTimeout(tryInit, 500);
+            })();
         </script>
     </body>
 </html>

@@ -1,0 +1,72 @@
+# Product Analysis Skill Interface
+# Production mode — team-reused, quality-sensitive
+---
+skill: product-analysis
+version: 1.0.0
+
+description:
+  zh: 基于第一性原理拆解和历史演化研究，生成客户级产品分析HTML报告
+  en: First-principles product deconstruction + historical evolution research → client-ready HTML report
+
+inputs:
+  required:
+    - name: product_name
+      description: Product name (e.g., "微信", "Notion", "Tesla FSD")
+  optional:
+    - name: scope
+      description: Analysis scope — whole product (default), feature line, or market
+      default: whole
+    - name: angle
+      description: Analytical angle — strategy (default), growth, UX, business model, competition, or roadmap
+      default: strategy
+    - name: audience
+      description: Target audience — founder, investor, product team, client, general
+      default: general
+    - name: depth
+      description: Report depth — full HTML (default), short analysis only
+      default: full
+    - name: theme
+      description: Report theme — light (default), dark
+      default: light
+
+outputs:
+  primary:
+    type: html
+    path: "{product_name}_analysis.html"
+    description: Self-contained HTML report, opens in any modern browser
+  optional:
+    - type: markdown
+      description: Short analysis text (when depth=short)
+
+triggers:
+  positive:
+    - "产品分析"
+    - "拆解产品"
+    - "产品报告"
+    - "产品第一性原理"
+    - "产品演化"
+    - "product analysis"
+    - "分析一下{产品名}"
+    - "这个产品应该是什么样"
+    - "what should X really be"
+    - "why is X the way it is"
+  negative:
+    - "投资分析"           # → ljg-invest
+    - "投资报告"           # → ljg-invest
+    - "feature分析"        # → single-feature, not whole product
+    - "抽象概念分析"       # → ljg-think or similar
+    - "{产品名}的MAU"      # → quick factual lookup
+    - "{产品名}的历史"     # → quick factual lookup
+
+exclusions:
+  - Investment-specific analysis → route to ljg-invest
+  - Single-feature or single-metric analysis
+  - Abstract concept / philosophy-only analysis
+  - Quick factual lookups or data queries
+  - Marketing overviews or product introductions
+
+resource_budget:
+  max_skill_context_lines: 350
+  max_template_size_kb: 50
+  max_html_output_kb: 500
+  web_search_max_queries: 8
