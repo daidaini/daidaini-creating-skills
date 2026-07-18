@@ -1,0 +1,43 @@
+# attends_court skill interface
+# Generated per yao-meta-skill package conventions
+
+name: attends_court
+description: |
+  Structured court-deliberation framework modeled on Northern Song dynasty state discussions.
+  Transforms user topics into role-based deliberations with ministers, philosophers, and modern advisers.
+
+trigger_mode: keyword
+triggers:
+  - "朝议"
+  - "廷议"
+  - "朝堂讨论"
+  - "皇上"
+
+entrypoint: SKILL.md
+
+inputs:
+  - type: text
+    description: User's topic or question for court deliberation
+    examples:
+      - "朝议，怎么看待 AI 对教育体系的冲击？"
+      - "设朕问政，如何治理平台经济中的垄断与创新冲突？"
+
+outputs:
+  - type: markdown_file
+    path: "./议事-{topic_keywords}.md"
+    description: Full deliberation record with roles, stances, and knowledge graph
+  - type: interactive_dialogue
+    description: Multi-round court deliberation with pause-and-wait protocol
+
+output_contract:
+  - "Each round posts individual role statements in fixed order"
+  - "After each round, 宰相 summarizes and pauses for 皇上's input"
+  - "Final output includes 宰相总括, 知识网络图, and 未决问题"
+  - "Full record saved to markdown file"
+
+exclusions:
+  - "General debate or argumentation without a ruler-frame"
+  - "Straightforward Q&A or summary without role-based discussion"
+  - "Modern group discussion formats (roundtable, panel) without 朝堂 style"
+
+mode: production
