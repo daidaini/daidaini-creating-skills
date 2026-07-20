@@ -1,0 +1,72 @@
+# SVG Generation Skill — Interface Definition
+# Archetype: Production
+schema_version: "1.0"
+
+name: svg-generation
+
+description: >
+  Generate SVG diagrams via one of three routes.
+  Route 1 — direct LLM SVG for simple icons/UI elements.
+  Route 2 — structured JSON + Glyphic layout engine (recommended for most structured charts).
+  Route 3 — visual pipeline (SVG Genie/Recraft) for complex illustrations.
+
+trigger:
+  description_contains:
+    - "生成 svg"
+    - "svg 图"
+    - "draw a diagram"
+    - "create an svg"
+    - "架构图"
+    - "流程图"
+    - "generate svg"
+    - "draw svg"
+    - "architecture diagram"
+    - "flowchart"
+    - "mindmap"
+    - "sequence diagram"
+    - "erd"
+    - "entity relationship"
+    - "uml"
+    - "state machine"
+    - "gantt chart"
+    - "sankey"
+    - "timeline"
+    - "user journey"
+    - "kanban"
+    - "c4 diagram"
+  description_excludes:
+    - "edit/修改"
+    - "convert/转换"
+    - "raster"
+    - "photo"
+    - "jpeg"
+    - "pixel"
+
+inputs:
+  - name: "diagram_spec"
+    type: "json | string"
+    description: >
+      For Route 2: JSON object conforming to Glyphic DiagramInput schema
+      (type, nodes, edges, theme, style). For Route 1: natural language prompt
+      structured via SCSS (Subject, Context, Style, Specifications).
+    required: true
+
+outputs:
+  - name: "svg"
+    type: "string"
+    description: "Valid SVG markup string"
+  - name: "png"
+    type: "buffer"
+    description: "High-resolution PNG Buffer (optional, Route 2 only)"
+  - name: "metadata"
+    type: "object"
+    description: "Dimensions { width, height } and optional React Flow JSON"
+
+constraints:
+  max_nodes: 1000
+  requires_node_18_plus: true
+  no_browser_dependency: true  # Route 2 uses resvg (Rust), no Chromium
+
+post_processing:
+  - "SVGO optimization: always run after generation"
+  - "Validation loop on ZodError for Route 2"
