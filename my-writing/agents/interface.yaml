@@ -1,0 +1,102 @@
+# my-writing skill interface
+# Archetype: Scaffold — personal writing workflow, reusable but low operational risk
+schema_version: "1.0"
+
+name: my-writing
+mode: scaffold
+version: 1.0.0
+
+summary: >
+  Turn one viewpoint, judgment, or theme into a 1000-1500 character Chinese analytical essay
+  with concrete scenes, two layers of inquiry, one angle shift, and a warm friend-like tone.
+
+description:
+  zh: 把一个观点、判断或主题写成 1000-1500 字中文分析文章，一篇只处理一个核心判断。
+  en: Write a 1000-1500 character Chinese analytical essay around one clear claim.
+
+inputs:
+  required:
+    - name: topic_or_viewpoint
+      type: string
+      description: 用户给出的主题、观点、判断或想展开的想法
+  optional:
+    - name: stance
+      type: string
+      description: 用户希望支持、反对或保持开放的立场
+    - name: audience
+      type: string
+      default: 一个脆弱但聪明的朋友
+      description: 文章心里写给谁
+    - name: length
+      type: string
+      default: 1000-1500字
+      description: 目标长度；默认不写长文综述
+    - name: output_keywords
+      type: string
+      description: 用户指定的文件名关键词；未提供时由技能提取 2-4 个关键词
+
+outputs:
+  primary:
+    type: markdown_file
+    path: "{keywords}.md"
+    description: 带 YAML frontmatter 的中文分析文章
+  frontmatter:
+    required:
+      - title
+      - date
+      - tags: [writing]
+  completion_message:
+    - saved_path
+    - one_sentence_core_claim
+
+triggers:
+  positive:
+    - 写文章
+    - 写深一点
+    - 写深写透
+    - 展开一个判断
+    - 深入分析观点
+    - 把一个想法讲清楚
+    - 写一篇思考文
+    - 围绕这个观点写一篇
+    - 这个判断能不能展开讲
+  negative:
+    - 产品分析报告
+    - 技术文档
+    - 总结摘要
+    - 会议纪要
+    - 资料整理
+    - 头脑风暴
+    - 诗歌
+    - 小说
+    - 广告文案
+    - 需要引用来源的研究报告
+
+exclusions:
+  - 产品、商业、竞品、市场分析 → route to product-analysis or another report skill
+  - 技术教程、API 文档、实现说明 → route to technical writing/documentation workflow
+  - 摘要、提炼、纪要 → route to summarization workflow
+  - 创意文学、营销文案 → route to creative/copywriting workflow
+  - 事实密集研究或需要联网核查 → use research workflow before writing
+
+constraints:
+  one_core_claim: true
+  target_length: 1000-1500 Chinese characters
+  no_fabricated_experience: true
+  no_fabricated_data_or_sources: true
+  avoid_ai_cliches: true
+  final_output_must_be_file_backed: true
+
+quality_gates:
+  - 观点是否能用一句话说清楚
+  - 第一刀是否切出隐含前提或机制
+  - 第二刀是否不是重复第一刀
+  - 每个抽象判断是否有场景或例子托住
+  - 是否有一次换角度验证和一次诚实让步
+  - 结尾是否是新发现而不是摘要
+  - 是否像对一个脆弱但聪明的朋友说话
+
+resource_budget:
+  max_skill_context_lines: 180
+  expected_output_chars_zh: 1000-1500
+  web_search_required: false
