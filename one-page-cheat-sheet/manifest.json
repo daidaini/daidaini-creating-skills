@@ -1,0 +1,24 @@
+{
+  "name": "one-page-cheat-sheet",
+  "version": "2.0.0",
+  "owner": "Yao Team",
+  "updated_at": "2025-07-04",
+  "review_cadence": "quarterly",
+  "status": "active",
+  "maturity_tier": "production",
+  "lifecycle_stage": "production",
+  "description": "Generates a one-page cheat sheet (一页速查表) for any topic",
+  "tags": ["cheat-sheet", "study", "reference", "learning", "exam-prep"],
+  "platforms": ["claude-code", "generic-agent"],
+  "gates": {
+    "trigger_eval": "scripts/trigger_eval.py",
+    "resource_boundary": true,
+    "output_risk_profile": "reports/output-risk-profile.md"
+  },
+  "dependencies": [],
+  "known_failure_modes": [
+    "topic too broad → output exceeds one page",
+    "topic too niche → hard to find real-world examples",
+    "user wants deep dive → boundary violation"
+  ]
+}
