@@ -27,9 +27,13 @@
               --sans: 'Inter', -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
               --max-width: 920px;
               --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
+              --shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04);
+              --nav-height: 48px;
+              --progress-height: 3px;
             }
 
             * { margin: 0; padding: 0; box-sizing: border-box; }
+            html { scroll-behavior: smooth; }
 
             body {
               font-family: var(--sans);
@@ -38,6 +42,80 @@
               line-height: 1.8;
               -webkit-font-smoothing: antialiased;
             }
+
+            /* ── Scroll Progress Bar ── */
+            #progress-bar {
+              position: fixed; top: 0; left: 0;
+              height: var(--progress-height);
+              background: var(--accent);
+              width: 0%;
+              z-index: 1001;
+              transition: width 50ms linear;
+            }
+
+            /* ── Sticky Section Nav ── */
+            #section-nav {
+              position: fixed; top: var(--progress-height); left: 0; right: 0;
+              height: var(--nav-height);
+              background: color-mix(in srgb, var(--parchment) 92%, transparent);
+              backdrop-filter: blur(12px);
+              -webkit-backdrop-filter: blur(12px);
+              border-bottom: 1px solid var(--border);
+              z-index: 1000;
+              opacity: 0; transform: translateY(-100%);
+              transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+            #section-nav.visible { opacity: 1; transform: translateY(0); }
+            .nav-container {
+              max-width: var(--max-width);
+              margin: 0 auto;
+              padding: 0 2rem;
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            }
+            .nav-brand {
+              font-family: var(--serif);
+              font-size: 0.9rem;
+              font-weight: 700;
+              color: var(--ink);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 180px;
+            }
+            .nav-links { display: flex; gap: 0.3rem; }
+            .nav-links a {
+              text-decoration: none;
+              font-size: 0.78rem;
+              color: var(--ink-muted);
+              padding: 0.3rem 0.7rem;
+              border-radius: 4px;
+              transition: color 0.2s, background 0.2s;
+              white-space: nowrap;
+            }
+            .nav-links a:hover { color: var(--ink); background: var(--accent-soft); }
+            .nav-links a.active { color: var(--accent); font-weight: 500; }
+
+            /* ── Back to Top ── */
+            #back-to-top {
+              position: fixed; bottom: 2rem; right: 2rem;
+              width: 44px; height: 44px;
+              border-radius: 50%;
+              background: var(--card-bg);
+              border: 1px solid var(--border);
+              box-shadow: var(--shadow-hover);
+              color: var(--ink-muted);
+              font-size: 1.3rem;
+              cursor: pointer;
+              z-index: 999;
+              opacity: 0; transform: translateY(20px);
+              transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s, border-color 0.2s;
+              display: flex; align-items: center; justify-content: center;
+            }
+            #back-to-top.visible { opacity: 1; transform: translateY(0); }
+            #back-to-top:hover { color: var(--accent); border-color: var(--accent); }
 
             /* ── Typography ── */
             h1, h2, h3 { font-family: var(--serif); font-weight: 700; }
@@ -54,9 +132,19 @@
 
             section {
               padding: 5rem 0;
-              border-bottom: 1px solid var(--border);
+              position: relative;
             }
-            section:last-of-type { border-bottom: none; }
+            section::after {
+              content: '';
+              display: block;
+              position: absolute;
+              bottom: 0; left: 50%;
+              transform: translateX(-50%);
+              width: 60px;
+              height: 1px;
+              background: var(--border);
+            }
+            section:last-of-type::after { display: none; }
 
             /* ── Hero ── */
             .hero {
@@ -68,7 +156,14 @@
               background:
                 radial-gradient(ellipse 80% 60% at 50% 40%, var(--accent-soft) 0%, transparent 70%),
                 linear-gradient(180deg, var(--parchment) 0%, var(--parchment-warm) 100%);
-              border-bottom: 1px solid var(--border);
+              position: relative;
+            }
+            .hero::after {
+              content: '';
+              position: absolute;
+              bottom: 0; left: 10%; right: 10%;
+              height: 1px;
+              background: var(--border);
             }
             .hero h1 {
               font-weight: 900;
@@ -111,6 +206,11 @@
               border-radius: 8px;
               padding: 2rem;
               box-shadow: var(--shadow);
+              transition: box-shadow 0.25s ease, transform 0.25s ease;
+            }
+            .card:hover {
+              box-shadow: var(--shadow-hover);
+              transform: translateY(-2px);
             }
             .card p { color: var(--ink-light); font-size: 0.96rem; }
 
@@ -129,7 +229,9 @@
               padding: 1.5rem;
               text-align: center;
               box-shadow: var(--shadow);
+              transition: box-shadow 0.25s ease;
             }
+            .fp-node:hover { box-shadow: var(--shadow-hover); }
             .fp-node h4 {
               font-family: var(--serif);
               font-size: 1rem;
@@ -147,6 +249,7 @@
               display: flex; align-items: center;
               font-size: 1.5rem; color: var(--ink-muted);
               padding-top: 2rem;
+              font-weight: 300;
             }
 
             /* ── Pull Quote ── */
@@ -173,6 +276,11 @@
               border-radius: 8px;
               padding: 2rem;
               box-shadow: var(--shadow);
+              transition: box-shadow 0.25s ease, transform 0.25s ease;
+            }
+            .tp-card:hover {
+              box-shadow: var(--shadow-hover);
+              transform: translateY(-2px);
             }
             .tp-year {
               font-family: var(--serif);
@@ -192,6 +300,82 @@
               margin-top: 0.8rem;
               margin-bottom: 0.2rem;
             }
+
+            /* ── Timeline Visual ── */
+            .timeline-vis {
+              position: relative;
+              padding: 3rem 0.5rem 2rem;
+              margin: 2rem 0;
+              overflow-x: auto;
+            }
+            .timeline-track {
+              position: relative;
+              height: 2px;
+              background: var(--border);
+              margin: 0 0.5rem;
+              min-width: 100%;
+            }
+            .timeline-marker {
+              position: absolute;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              z-index: 2;
+            }
+            .timeline-dot {
+              width: 14px; height: 14px;
+              border-radius: 50%;
+              background: var(--accent);
+              border: 2px solid var(--card-bg);
+              box-shadow: 0 0 0 1px var(--accent);
+              transition: transform 0.2s ease;
+              cursor: default;
+            }
+            .timeline-dot.impact-high { width: 18px; height: 18px; }
+            .timeline-dot.impact-medium { width: 14px; height: 14px; }
+            .timeline-dot.impact-low { width: 10px; height: 10px; opacity: 0.6; }
+            .timeline-dot:hover { transform: scale(1.3); }
+            .timeline-label-top {
+              position: absolute;
+              bottom: calc(100% + 14px);
+              left: 50%;
+              transform: translateX(-50%);
+              text-align: center;
+              white-space: nowrap;
+              font-family: var(--serif);
+              font-weight: 700;
+              font-size: 1rem;
+              color: var(--ink);
+            }
+            .timeline-label-bottom {
+              position: absolute;
+              top: calc(100% + 14px);
+              left: 50%;
+              transform: translateX(-50%);
+              text-align: center;
+              white-space: nowrap;
+              font-size: 0.82rem;
+              color: var(--ink-muted);
+            }
+            .timeline-year-label {
+              position: absolute;
+              top: calc(100% + 8px);
+              left: 50%;
+              transform: translateX(-50%);
+              font-size: 0.72rem;
+              color: var(--ink-muted);
+              opacity: 0.7;
+              letter-spacing: 0.04em;
+            }
+            .timeline-start-label, .timeline-end-label {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              font-size: 0.7rem;
+              color: var(--ink-muted);
+              opacity: 0.5;
+            }
+            .timeline-start-label { left: -8px; }
+            .timeline-end-label { right: -8px; }
 
             /* ── Chart ── */
             .chart-container {
@@ -215,6 +399,11 @@
               border-radius: 0 8px 8px 0;
               padding: 1.5rem 2rem;
               box-shadow: var(--shadow);
+              transition: box-shadow 0.25s ease, transform 0.25s ease;
+            }
+            .insight-card:hover {
+              box-shadow: var(--shadow-hover);
+              transform: translateY(-2px);
             }
             .insight-card h4 {
               font-family: var(--serif);
@@ -229,12 +418,20 @@
 
             /* ── Section Header ── */
             .section-label {
-              font-size: 0.75rem;
+              font-size: 0.7rem;
               text-transform: uppercase;
               letter-spacing: 0.12em;
               color: var(--ink-muted);
               font-weight: 500;
               margin-bottom: 0.5rem;
+            }
+            .section-number {
+              font-family: var(--serif);
+              font-size: 0.85rem;
+              color: var(--accent);
+              letter-spacing: 0.04em;
+              font-weight: 700;
+              margin-right: 0.4rem;
             }
 
             /* ── Footer ── */
@@ -253,13 +450,20 @@
               .fp-arrow { transform: rotate(90deg); justify-content: center; padding: 0; }
               .tp-card { grid-template-columns: 1fr; }
               .tp-year { font-size: 1.2rem; }
+              .nav-links { gap: 0; }
+              .nav-links a { font-size: 0.7rem; padding: 0.3rem 0.5rem; }
+              #back-to-top { bottom: 1rem; right: 1rem; width: 38px; height: 38px; font-size: 1.1rem; }
             }
 
             /* ── Print ── */
             @media print {
-              .hero { min-height: auto; padding: 2rem 0; background: #fff; }
+              #progress-bar, #section-nav, #back-to-top { display: none !important; }
+              .hero { min-height: auto; padding: 2rem 0; background: #fff !important; }
               section { break-inside: avoid; padding: 1.5rem 0; }
+              section::after { display: none; }
               .card, .chart-container, .tp-card, .insight-card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+              .card:hover, .tp-card:hover, .insight-card:hover { box-shadow: none; transform: none; }
+              .fp-node:hover { box-shadow: none; }
             }
 
             /* ── Chart Fallback ── */
@@ -277,9 +481,37 @@
               justify-content: center;
             }
             .chart-fallback p { margin: 0; font-size: 0.95rem; }
+            
+            /* ── Timeline fallback ── */
+            .timeline-fallback {
+              text-align: center;
+              color: var(--ink-muted);
+              font-style: italic;
+              padding: 2rem;
+            }
         </style>
     </head>
     <body>
+        <!-- ═══ Scroll Progress Bar ═══ -->
+        <div id="progress-bar"></div>
+
+        <!-- ═══ Sticky Section Nav ═══ -->
+        <nav id="section-nav">
+            <div class="nav-container">
+                <span class="nav-brand">{{PRODUCT_NAME}}</span>
+                <div class="nav-links">
+                    <a href="#summary">概要</a>
+                    <a href="#first-principles">第一性原理</a>
+                    <a href="#turning-points">历史演化</a>
+                    <a href="#positioning">竞争定位</a>
+                    <a href="#insights">洞察</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- ═══ Back to Top ═══ -->
+        <button id="back-to-top" aria-label="回到顶部">↑</button>
+
         <!-- ═══════════════════════ HERO ═══════════════════════ -->
         <section class="hero" id="hero">
             <h1>{{PRODUCT_NAME}}</h1>
@@ -303,7 +535,7 @@
         <!-- ═══════════════════════ EXECUTIVE SUMMARY ═══════════════════════ -->
         <section id="summary">
             <div class="container">
-                <div class="section-label">概要</div>
+                <div class="section-label"><span class="section-number">01 / 05</span>概要</div>
                 <h2>这个产品是什么，以及它为何如此</h2>
                 <p class="summary-text">{{EXECUTIVE_SUMMARY_P1}}</p>
                 <p class="summary-text">{{EXECUTIVE_SUMMARY_P2}}</p>
@@ -313,7 +545,7 @@
         <!-- ═══════════════════════ FIRST PRINCIPLES ═══════════════════════ -->
         <section id="first-principles">
             <div class="container">
-                <div class="section-label">第一性原理</div>
+                <div class="section-label"><span class="section-number">02 / 05</span>第一性原理</div>
                 <h2>从需求到差距</h2>
 
                 <div class="fp-flow">
@@ -340,13 +572,13 @@
         <!-- ═══════════════════════ TURNING POINTS ═══════════════════════ -->
         <section id="turning-points">
             <div class="container">
-                <div class="section-label">历史演化</div>
+                <div class="section-label"><span class="section-number">03 / 05</span>历史演化</div>
                 <h2>{{HISTORY_SUBTITLE}}</h2>
 
                 <div class="chart-container">
                     <h3>演化时间线</h3>
                     <p class="chart-desc">关键转折点在时间轴上的分布</p>
-                    <canvas id="timelineChart"></canvas>
+                    <div id="timeline-vis" class="timeline-vis"></div>
                 </div>
 
                 <div class="turning-points">{{TURNING_POINTS_HTML}}</div>
@@ -356,7 +588,7 @@
         <!-- ═══════════════════════ POSITIONING ═══════════════════════ -->
         <section id="positioning">
             <div class="container">
-                <div class="section-label">竞争定位</div>
+                <div class="section-label"><span class="section-number">04 / 05</span>竞争定位</div>
                 <h2>它在棋盘上的位置</h2>
 
                 <div class="chart-container">
@@ -364,7 +596,7 @@
                     <p class="chart-desc">
                         基于第一性原理维度，与主要竞品的能力对比
                     </p>
-                    <canvas id="positioningChart"></canvas>
+                    <canvas id="positioningChart" role="img" aria-label="多维度定位对比雷达图"></canvas>
                 </div>
             </div>
         </section>
@@ -372,7 +604,7 @@
         <!-- ═══════════════════════ INSIGHTS ═══════════════════════ -->
         <section id="insights">
             <div class="container">
-                <div class="section-label">洞察</div>
+                <div class="section-label"><span class="section-number">05 / 05</span>洞察</div>
                 <h2>所以呢？</h2>
 
                 <div class="insights">
@@ -397,15 +629,141 @@
 
         <!-- ═══════════════════════ SCRIPTS ═══════════════════════ -->
         <script>
-            // ── CDN Guard: wait for Chart.js or fall back to text ──
+            // ── 1. Scroll Progress ──
             (function() {
-              function renderFallback() {
-                ['timelineChart', 'positioningChart'].forEach(function(id) {
-                  var el = document.getElementById(id);
-                  if (el) {
-                    el.outerHTML = '<div class="chart-fallback"><p>图表数据摘要：请见下方文字描述</p></div>';
+              var bar = document.getElementById('progress-bar');
+              window.addEventListener('scroll', function() {
+                var scrollTop = window.scrollY;
+                var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+                bar.style.width = pct + '%';
+              }, { passive: true });
+            })();
+
+            // ── 2. Sticky Nav ──
+            (function() {
+              var nav = document.getElementById('section-nav');
+              var hero = document.querySelector('.hero');
+              var links = nav.querySelectorAll('.nav-links a');
+              var sections = [];
+              document.querySelectorAll('section[id]').forEach(function(s) {
+                sections.push(s);
+              });
+
+              function updateNav() {
+                var heroBottom = hero.offsetTop + hero.offsetHeight;
+                var scrollY = window.scrollY;
+                // show/hide nav
+                if (scrollY > heroBottom - 60) {
+                  nav.classList.add('visible');
+                } else {
+                  nav.classList.remove('visible');
+                }
+                // highlight current section
+                var current = '';
+                sections.forEach(function(s) {
+                  var top = s.offsetTop - 100;
+                  var bottom = top + s.offsetHeight;
+                  if (scrollY >= top && scrollY < bottom) {
+                    current = s.id;
                   }
                 });
+                links.forEach(function(a) {
+                  a.classList.remove('active');
+                  if (a.getAttribute('href') === '#' + current) {
+                    a.classList.add('active');
+                  }
+                });
+              }
+
+              window.addEventListener('scroll', updateNav, { passive: true });
+              updateNav();
+            })();
+
+            // ── 3. Back to Top ──
+            (function() {
+              var btn = document.getElementById('back-to-top');
+              window.addEventListener('scroll', function() {
+                if (window.scrollY > 500) {
+                  btn.classList.add('visible');
+                } else {
+                  btn.classList.remove('visible');
+                }
+              }, { passive: true });
+              btn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              });
+            })();
+
+            // ── 4. Timeline Visual ──
+            (function() {
+              var data = {{TIMELINE_DATA}};
+              var container = document.getElementById('timeline-vis');
+              if (!container || !data || !data.length) return;
+
+              container.innerHTML = '';
+
+              // Sort by year
+              data.sort(function(a, b) { return a.year - b.year; });
+
+              var years = data.map(function(d) { return d.year; });
+              var minYear = Math.min.apply(null, years);
+              var maxYear = Math.max.apply(null, years);
+              var yearSpan = maxYear - minYear || 1;
+              var padding = yearSpan * 0.08; // 8% padding on each side
+              var totalSpan = yearSpan + 2 * padding;
+
+              var track = document.createElement('div');
+              track.className = 'timeline-track';
+
+              // Start/end range labels
+              var startLabel = document.createElement('span');
+              startLabel.className = 'timeline-start-label';
+              startLabel.textContent = Math.floor(minYear - padding);
+              track.appendChild(startLabel);
+
+              var endLabel = document.createElement('span');
+              endLabel.className = 'timeline-end-label';
+              endLabel.textContent = Math.ceil(maxYear + padding);
+              track.appendChild(endLabel);
+
+              data.forEach(function(d) {
+                var pct = ((d.year - minYear + padding) / totalSpan) * 100;
+                var marker = document.createElement('div');
+                marker.className = 'timeline-marker';
+                marker.style.left = pct + '%';
+
+                // Label above
+                var topLabel = document.createElement('div');
+                topLabel.className = 'timeline-label-top';
+                topLabel.textContent = d.label;
+
+                // Year label
+                var yearLabel = document.createElement('div');
+                yearLabel.className = 'timeline-year-label';
+                yearLabel.textContent = d.year;
+
+                // Dot
+                var dot = document.createElement('div');
+                dot.className = 'timeline-dot impact-' + (d.impact || 'medium');
+                dot.title = d.description || '';
+
+                marker.appendChild(topLabel);
+                marker.appendChild(dot);
+                marker.appendChild(yearLabel);
+                track.appendChild(marker);
+              });
+
+              container.appendChild(track);
+            })();
+
+            // ── 5. Chart.js: Positioning Radar ──
+            (function() {
+              function renderFallback() {
+                var el = document.getElementById('positioningChart');
+                if (el) {
+                  el.outerHTML = '<div class="chart-fallback"><p>图表数据摘要：请见下方文字描述</p></div>';
+                }
               }
 
               function tryInit() {
@@ -414,57 +772,11 @@
                   return;
                 }
 
-                // ── Chart theme ──
                 Chart.defaults.font.family = "'Inter', sans-serif";
                 Chart.defaults.color = '#4a4a4a';
                 Chart.defaults.borderColor = '#e8e2da';
 
-                // ── Timeline Chart ──
-                var timelineData = {{TIMELINE_CHART_DATA}};
                 var accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-
-                if (timelineData && timelineData.length) {
-                  var timelineCtx = document.getElementById('timelineChart').getContext('2d');
-                  var minYear = Math.min.apply(null, timelineData.map(function(d) { return d.year; }));
-
-                  new Chart(timelineCtx, {
-                    type: 'bar',
-                    data: {
-                      labels: timelineData.map(function(d) { return d.label; }),
-                      datasets: [{
-                        data: timelineData.map(function(d) { return d.year; }),
-                        backgroundColor: timelineData.map(function(d) {
-                          return d.impact === 'high' ? accentColor + 'cc' : accentColor + '55';
-                        }),
-                        borderColor: accentColor,
-                        borderWidth: 1,
-                        borderRadius: 4,
-                        barPercentage: 0.5
-                      }]
-                    },
-                    options: {
-                      indexAxis: 'y',
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                          callbacks: { label: function(ctx) { return timelineData[ctx.dataIndex].description; } }
-                        }
-                      },
-                      scales: {
-                        x: {
-                          min: minYear,
-                          title: { display: true, text: '年份' },
-                          grid: { color: '#f0ece6' }
-                        },
-                        y: { grid: { display: false } }
-                      }
-                    }
-                  });
-                }
-
-                // ── Positioning Chart ──
                 var posData = {{POSITIONING_CHART_DATA}};
 
                 if (posData && posData.labels && posData.labels.length) {
@@ -504,13 +816,11 @@
                 }
               }
 
-              // If CDN already failed, render fallback immediately
               if (window.__chartFailed) {
                 renderFallback();
                 return;
               }
 
-              // Try init after a short delay to let fallback CDN load
               setTimeout(tryInit, 500);
             })();
         </script>

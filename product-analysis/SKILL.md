@@ -169,8 +169,8 @@ The report looks like a high-end digital magazine printed on e-ink:
 
 Only 2 charts (not 4):
 
-- **Timeline**: Horizontal layout showing the N turning points (3–6) on a time axis. Each point annotated with the choice made. Use Chart.js styled `bar`.
-- **Positioning Map**: A single 2D scatter plot or radar (max 5 axes) showing the product vs 2-3 key competitors. Axes derived from the first principles analysis.
+- **Timeline**: Horizontal layout showing the N turning points (3–6) on a time axis. Rendered as pure HTML/CSS — no Chart.js dependency. Each point positioned by year, annotated with label, impact shown by visual weight.
+- **Positioning Map**: A single radar chart (max 5 axes) showing the product vs 2-3 key competitors. Uses Chart.js. Axes derived from the first principles analysis.
 
 #### Template Placeholders
 
@@ -197,10 +197,10 @@ Only 2 charts (not 4):
 **Chart data:**
 | Placeholder | Format |
 |---|---|
-| `{{TIMELINE_CHART_DATA}}` | Array of `{ year: 2011, label: "Event", description: "...", impact: "high"\|"medium" }` — 3–6 entries |
+| `{{TIMELINE_DATA}}` | Array of `{ year: 2011, label: "Event", description: "...", impact: "high"\|"medium" }` — 3–6 entries |
 | `{{POSITIONING_CHART_DATA}}` | `{ labels: ["维度1",...], datasets: [{ label: "Product", data: [...] }, ...] }` |
 
-> **CDN resilience**: Both templates include a Chart.js fallback. If the primary CDN (jsdelivr) fails, a secondary CDN (unpkg) is tried. If both fail, the template renders plain-text data summaries instead of charts. See the `<script>` section in each template.
+> **CDN resilience**: The positioning chart depends on Chart.js. If the primary CDN (jsdelivr) fails, a secondary CDN (unpkg) is tried. If both fail, the template renders a plain-text data summary instead. The timeline visualization is pure HTML/CSS/JS and works without Chart.js.
 
 #### Turning Point Card Markup
 
