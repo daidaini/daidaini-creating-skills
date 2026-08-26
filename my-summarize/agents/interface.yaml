@@ -1,0 +1,87 @@
+# my-summarize skill interface
+# Archetype: Scaffold - personal batch digest workflow, reusable but low operational risk
+schema_version: "1.0"
+
+name: my-summarize
+mode: scaffold
+version: 1.1.0
+
+summary: >
+  Batch-summarize every article .md in a directory into one Chinese digest file
+  (summarize.md), preserving hyperlinked sources and authors per article.
+
+description:
+  zh: 读取目录下所有文章 .md，逐篇生成 5–8 句中文摘要，来源超链接、作者保留，输出为 summarize.md。
+  en: Batch Chinese digests for all .md articles in a directory, written to summarize.md.
+
+inputs:
+  required:
+    - name: directory
+      type: string
+      description: 包含文章 .md 的目录路径（如 output/2026-03-24/）
+  optional:
+    - name: sentences
+      type: string
+      default: 5-8句
+      description: 每篇摘要句数（-n）
+    - name: output_name
+      type: string
+      default: summarize.md
+      description: 自定义输出文件名（-o）
+
+outputs:
+  primary:
+    type: markdown_file
+    path: "{directory}/summarize.md"
+    description: 按文件名排序的逐篇中文摘要汇总，头部含篇数与生成日期
+  per_article_header:
+    required:
+      - 来源（有链接时超链接到原文）
+    optional:
+      - 作者
+  completion_message:
+    - article_count
+    - saved_path
+    - unreadable_files_and_handling
+
+triggers:
+  positive:
+    - 摘要
+    - 总结文章
+    - 批量摘要
+    - 生成摘要
+    - summarize articles
+    - 帮我总结一下这些文章
+    - 把这个目录的文章做成摘要
+  negative:
+    - 单篇文章摘要
+    - 对话总结
+    - 会议纪要
+    - 非 .md 内容总结
+    - 观点展开、深读评论写作
+
+exclusions:
+  - 单篇文章、单个文件的摘要 -> 直接内联完成，无需本 skill
+  - 对话、会议纪要、非 .md 内容的总结 -> route to general summarization
+  - 观点展开、深读评论文章 -> route to my-writing
+  - 产品分析报告 -> route to product-analysis
+
+constraints:
+  summary_basis: 文章正文全文（不是文内 RSS 摘要片段）
+  per_article_length: 5-8 句中文（默认，可由 -n 覆盖）
+  source_must_be_hyperlinked: true
+  no_fabrication: true
+  read_full_long_articles: true
+  sort: 文件名排序（忽略大小写与前导符号）
+  non_recursive: true
+
+quality_gates:
+  - 每篇摘要是否基于正文全文而非截断片段
+  - 来源是否带超链接、作者是否保留
+  - 长文是否读完再摘要
+  - 读不了的文件是否如实标注而非编造内容
+  - 输出文件是否与源文章同目录、命名是否为 summarize.md（或用户指定）
+
+resource_budget:
+  max_skill_context_lines: 160
+  web_search_required: false

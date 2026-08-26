@@ -1,0 +1,799 @@
+{
+  "threshold": 0.35,
+  "threshold_explanation": "Prompts at or above the threshold are treated as trigger matches. Scores are driven primarily by semantic intent coverage: packaging intent, workflow-to-skill transformation intent, reuse/distribution intent, and eval intent. Explicit exclusions such as summary-only, translation-only, one-off, document-only, or do-not-build directives apply direct penalties and can override otherwise similar wording.",
+  "false_positives": 0,
+  "false_negatives": 0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "bucket_stats": {
+    "should_trigger": {
+      "total": 7,
+      "passed": 7,
+      "pass_rate": 1.0
+    },
+    "should_not_trigger": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1.0
+    },
+    "near_neighbor": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    }
+  },
+  "family_stats": {
+    "colloquial": {
+      "total": 2,
+      "passed": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "explicit": {
+      "total": 2,
+      "passed": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "en-explicit": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "short": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "minimal": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "single-article": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "conversation": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "minutes": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "en-single": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "opinion-writing": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "non-md": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "web-page": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "code-comment": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "my-writing-territory": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
+    "meta-skill": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    }
+  },
+  "misfires": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "帮我总结一下这些文章",
+        "family": "colloquial",
+        "score": 0.726,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "article_files",
+            "batch_summarize"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.68,
+          "support_score": 0,
+          "lexical_support": 1.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "article_files": [
+                "文章"
+              ],
+              "batch_summarize": [
+                "总结一下这些文章"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "把这个目录的文章做成摘要",
+        "family": "explicit",
+        "score": 1.0,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "article_files",
+            "batch_summarize",
+            "directory_scope"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 1.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "article_files": [
+                "文章"
+              ],
+              "batch_summarize": [
+                "做成摘要",
+                "摘要"
+              ],
+              "directory_scope": [
+                "目录"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "对 output/2026-03-24 这个目录做批量摘要",
+        "family": "explicit",
+        "score": 0.702,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "batch_summarize",
+            "directory_scope"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.72,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "batch_summarize": [
+                "批量摘要",
+                "摘要"
+              ],
+              "directory_scope": [
+                "目录"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "summarize articles in this directory",
+        "family": "en-explicit",
+        "score": 1.0,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "article_files",
+            "batch_summarize",
+            "directory_scope"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1.0,
+          "support_score": 0,
+          "lexical_support": 0.4,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "article_files": [
+                "articles"
+              ],
+              "batch_summarize": [
+                "summarize articles"
+              ],
+              "directory_scope": [
+                "directory"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "给 output/2026-03-24/ 生成摘要",
+        "family": "short",
+        "score": 0.381,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "batch_summarize"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.4,
+          "support_score": 0,
+          "lexical_support": 0.167,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "batch_summarize": [
+                "生成摘要",
+                "摘要"
+              ]
+            },
+            "negative": {}
+          }
+        },
+        "boundary_case": true
+      },
+      {
+        "prompt": "今天抓的文章太多了，帮我做个摘要汇总",
+        "family": "colloquial",
+        "score": 0.666,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "article_files",
+            "batch_summarize"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.68,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "article_files": [
+                "文章"
+              ],
+              "batch_summarize": [
+                "摘要",
+                "汇总"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "output/2026-03-28 这个目录，摘要",
+        "family": "minimal",
+        "score": 0.716,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "batch_summarize",
+            "directory_scope"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.72,
+          "support_score": 0,
+          "lexical_support": 0.167,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "batch_summarize": [
+                "摘要"
+              ],
+              "directory_scope": [
+                "目录"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "帮我总结一下这篇文章",
+        "family": "single-article",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "article_files"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "single_article"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.5,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "article_files": [
+                "文章"
+              ]
+            },
+            "negative": {
+              "single_article": [
+                "这篇文章"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "总结一下我们刚才的对话",
+        "family": "conversation",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "non_article_content"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.4,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "non_article_content": [
+                "对话"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "把这次会议的纪要整理成摘要",
+        "family": "minutes",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "batch_summarize"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "non_article_content"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.4,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.4,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "batch_summarize": [
+                "摘要"
+              ]
+            },
+            "negative": {
+              "non_article_content": [
+                "会议",
+                "纪要"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "summarize this article for me",
+        "family": "en-single",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "single_article"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.2,
+          "negative_penalty": 0.5,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "single_article": [
+                "this article"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "帮我写一篇关于AI泡沫的深读文章",
+        "family": "opinion-writing",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "article_files"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "opinion_writing"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.4,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "article_files": [
+                "文章"
+              ]
+            },
+            "negative": {
+              "opinion_writing": [
+                "写一篇",
+                "深读"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "这个 PDF 报告能帮我总结下吗",
+        "family": "non-md",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "non_article_content"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.4,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "non_article_content": [
+                "PDF"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "总结一下这个网页的内容",
+        "family": "web-page",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "帮我给这段代码写个摘要注释",
+        "family": "code-comment",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [
+            "batch_summarize"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "non_article_content"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.4,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.4,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {
+              "batch_summarize": [
+                "摘要"
+              ]
+            },
+            "negative": {
+              "non_article_content": [
+                "代码"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "用 my-writing 的思路把这个观点写深一点",
+        "family": "my-writing-territory",
+        "score": 0.0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "opinion_writing"
+          ],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.0,
+          "negative_penalty": 0.4,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "opinion_writing": [
+                "写深"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "帮我把这个 skill 优化一下",
+        "family": "meta-skill",
+        "score": 0.027,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "batch_summarize",
+            "directory_scope",
+            "article_files"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.0,
+          "support_score": 0,
+          "lexical_support": 0.333,
+          "negative_penalty": 0,
+          "coverage_boost": 0.0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {}
+          }
+        }
+      }
+    ]
+  },
+  "comparison": {
+    "baseline_false_positives": 0,
+    "baseline_false_negatives": 0,
+    "improved_false_positives": 0,
+    "improved_false_negatives": 0,
+    "false_positive_delta": 0,
+    "false_negative_delta": 0,
+    "baseline_precision": 1.0,
+    "improved_precision": 1.0,
+    "baseline_recall": 1.0,
+    "improved_recall": 1.0
+  }
+}

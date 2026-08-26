@@ -1,0 +1,58 @@
+{
+  "optimizer_hints": {
+    "capability": "Batch-summarize a directory of article .md files into one Chinese digest (summarize.md)",
+    "trigger_actions": [
+      "摘要",
+      "总结文章",
+      "批量摘要",
+      "生成摘要",
+      "summarize articles",
+      "帮我总结一下这些文章",
+      "把这个目录的文章做成摘要"
+    ],
+    "exclusions": [
+      "single-article summary",
+      "conversation or meeting-minutes summary",
+      "non-markdown content summary",
+      "opinion essay / deep-read writing"
+    ]
+  },
+  "fallback_positive_concepts": ["batch_summarize", "directory_scope", "article_files"],
+  "positive_concepts": {
+    "batch_summarize": {
+      "weight": 0.4,
+      "phrases": [
+        "批量摘要",
+        "总结文章",
+        "生成摘要",
+        "做成摘要",
+        "总结一下这些文章",
+        "summarize articles",
+        "摘要",
+        "汇总"
+      ]
+    },
+    "directory_scope": {
+      "weight": 0.32,
+      "phrases": ["目录", "directory"]
+    },
+    "article_files": {
+      "weight": 0.28,
+      "phrases": ["文章", "articles"]
+    }
+  },
+  "negative_concepts": {
+    "single_article": {
+      "weight": 0.5,
+      "phrases": ["这篇文章", "这一篇", "单篇", "单个文件", "this article"]
+    },
+    "non_article_content": {
+      "weight": 0.4,
+      "phrases": ["对话", "会议", "纪要", "代码", "PDF", "conversation"]
+    },
+    "opinion_writing": {
+      "weight": 0.4,
+      "phrases": ["写文章", "写一篇", "深入分析观点", "深读", "写深"]
+    }
+  }
+}

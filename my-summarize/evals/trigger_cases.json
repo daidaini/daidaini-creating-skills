@@ -1,0 +1,26 @@
+{
+  "recommended_threshold": 0.35,
+  "should_trigger": [
+    { "text": "帮我总结一下这些文章", "family": "colloquial" },
+    { "text": "把这个目录的文章做成摘要", "family": "explicit" },
+    { "text": "对 output/2026-03-24 这个目录做批量摘要", "family": "explicit" },
+    { "text": "summarize articles in this directory", "family": "en-explicit" },
+    { "text": "给 output/2026-03-24/ 生成摘要", "family": "short" },
+    { "text": "今天抓的文章太多了，帮我做个摘要汇总", "family": "colloquial" },
+    { "text": "output/2026-03-28 这个目录，摘要", "family": "minimal" }
+  ],
+  "should_not_trigger": [
+    { "text": "帮我总结一下这篇文章", "family": "single-article" },
+    { "text": "总结一下我们刚才的对话", "family": "conversation" },
+    { "text": "把这次会议的纪要整理成摘要", "family": "minutes" },
+    { "text": "summarize this article for me", "family": "en-single" },
+    { "text": "帮我写一篇关于AI泡沫的深读文章", "family": "opinion-writing" },
+    { "text": "这个 PDF 报告能帮我总结下吗", "family": "non-md" }
+  ],
+  "near_neighbor": [
+    { "text": "总结一下这个网页的内容", "family": "web-page" },
+    { "text": "帮我给这段代码写个摘要注释", "family": "code-comment" },
+    { "text": "用 my-writing 的思路把这个观点写深一点", "family": "my-writing-territory" },
+    { "text": "帮我把这个 skill 优化一下", "family": "meta-skill" }
+  ]
+}
