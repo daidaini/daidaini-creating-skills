@@ -8,7 +8,6 @@
 
 | 技能 | 描述 |
 |------|------|
-| [20-hour-focus-learning](./20-hour-focus-learning/) | 基于 80/20 原则的 20 小时（10 节 × 2 小时）加速学习计划，含逐节路线图、练习和结业项目 |
 | [build-learning-ladder](./build-learning-ladder/) | 为任意主题搭建 5 级渐进式学习阶梯，每级含掌握标准、核心概念、实操练习、常见误区和自测清单 |
 | [feyman-learning-method](./feyman-learning-method/) | 交互式费曼学习法对话——用 12 岁孩子能懂的话讲解，邀请你教回来，定位薄弱点，循环直到真正掌握 |
 | [high-leverage-resources](./high-leverage-resources/) | 精选 Top 5 高杠杆学习资源（书/课/视频等）并附详细理由，再用这些资源规划 7 天学习路径 |
@@ -20,7 +19,6 @@
 |------|------|
 | [my-summarize](./my-summarize/) | 批量摘要工作流：读取目录下所有 `.md` 文章，每篇生成 5–8 句中文摘要，保留作者和来源链接，输出为 `summarize.md` |
 | [my-writing](./my-writing/) | 把一个观点写成 1000–1500 字中文分析文章——一篇只处理一个核心判断，用具体场景、连续追问、换角度验证和温和共情的口吻写深写透 |
-| [tiaowu-writing-style](./tiaowu-writing-style/) | 模仿网文作者「跳舞」的风格创作小说——幽默修仙、腹黑主角、西式黑暗奇幻或权谋叙事 |
 
 ### 🗺️ 可视化与地图
 
@@ -36,6 +34,7 @@
 | 技能 | 描述 |
 |------|------|
 | [product-analysis](./product-analysis/) | 通过第一性原理拆解和历史演化分析产品本质，生成以一个核心锚点洞见为中心的客户级 HTML 报告 |
+| [product-mind](./product-mind/) | 以 Steve Jobs 为原型的「产品思维」角色——回答为什么做、为谁做、做到什么程度，给出 GO / NO GO / MVP 判断 |
 | [attends-court](./attends-court/) | 模拟北宋朝堂讨论的结构化思辨框架——以君主主导、多角色对话的形式，从大臣、儒生到现代顾问多角度探讨议题 |
 
 ### 🛠️ 工具类
@@ -61,6 +60,7 @@ daidaini-creating-skills/
 ├── my-writing/                # 深度写作
 ├── one-page-cheat-sheet/      # 一页速查表
 ├── product-analysis/          # 产品分析
+├── product-mind/              # 产品思维（Jobs 式产品判断）
 ├── svg-generation/            # SVG生成
 ├── testing/                   # 测试输出（自动生成，勿手动编辑）
 ├── tiaowu-writing-style/      # 跳舞文风

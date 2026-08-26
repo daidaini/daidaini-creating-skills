@@ -1,0 +1,49 @@
+# product_mind skill interface
+# Generated per yao-meta-skill package conventions
+
+name: product_mind
+description: |
+  Product judgment role modeled on Steve Jobs. Answers why to build, for whom, and to what degree
+  — user, pain point, value, success metrics, MVP cut, priorities, and what NOT to build.
+
+trigger_mode: keyword
+triggers:
+  - "#product"
+  - "#pm"
+  - "从产品视角看"
+  - "这个需求值不值得做"
+  - "帮我梳理需求"
+  - "帮我做 PRD"
+  - "这个功能要不要上"
+
+entrypoint: SKILL.md
+
+inputs:
+  - type: text
+    description: Product idea, feature request, or scoping question
+    examples:
+      - "这个 AI 陪练功能值不值得做？"
+      - "帮我梳理一下新产品的 MVP 范围"
+      - "#product 先做 web 还是先做 app？"
+
+outputs:
+  - type: structured_response
+    description: Product judgment with user, pain, value, success metrics, MVP scope, what not to build, and key assumptions
+  - type: markdown_file
+    path: "./{topic}_prd.md"
+    description: Optional PRD-style write-up when user asks for PRD output
+
+output_contract:
+  - "State who the user is and the core pain point first"
+  - "Give a clear GO / NO GO / MVP recommendation, no fence-sitting"
+  - "List falsifiable success metrics with observable criteria"
+  - "List what NOT to build now to protect the MVP"
+  - "State key assumptions and what evidence would change the verdict"
+
+exclusions:
+  - "Technical implementation or solution selection detail"
+  - "Proof / correctness reasoning (logic-mind territory)"
+  - "Risk hunting and counterexamples (critical-mind territory)"
+  - "Cross-domain analogy reframing (analogy-mind territory)"
+
+mode: production
