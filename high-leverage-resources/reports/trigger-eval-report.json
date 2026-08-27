@@ -1,0 +1,780 @@
+{
+  "threshold": 0.45,
+  "threshold_explanation": "Prompts at or above the threshold are treated as trigger matches. Scores are driven primarily by semantic intent coverage: packaging intent, workflow-to-skill transformation intent, reuse/distribution intent, and eval intent. Explicit exclusions such as summary-only, translation-only, one-off, document-only, or do-not-build directives apply direct penalties and can override otherwise similar wording.",
+  "false_positives": 0,
+  "false_negatives": 0,
+  "precision": 1,
+  "recall": 1,
+  "bucket_stats": {
+    "should_trigger": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1
+    },
+    "should_not_trigger": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1
+    },
+    "near_neighbor": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1
+    }
+  },
+  "family_stats": {
+    "zh-explicit": {
+      "total": 2,
+      "passed": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "en-explicit": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "books-courses": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "efficiency": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "bounded-list": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "curriculum": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "tutorial": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "cheat-sheet": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "summary": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "plan-only": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "fact-question": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "learning-ladder": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "time-boxed-plan": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "platform-comparison": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    },
+    "supplied-material": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1
+    }
+  },
+  "misfires": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "推荐学习 Rust 的高质量资源，不想浪费时间",
+        "family": "zh-explicit",
+        "score": 0.98,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "efficiency_focus",
+            "learning_intent",
+            "resource_curation"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 1,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.06,
+          "concept_evidence": {
+            "positive": {
+              "efficiency_focus": [
+                "不想浪费时间"
+              ],
+              "learning_intent": [
+                "学习",
+                "学"
+              ],
+              "resource_curation": [
+                "高质量资源"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "给我精选的产品经理学习资源",
+        "family": "zh-explicit",
+        "score": 0.776,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent",
+            "resource_curation"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.8,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "学习",
+                "学"
+              ],
+              "resource_curation": [
+                "学习资源"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "best resources to learn SQL for analysts",
+        "family": "en-explicit",
+        "score": 0.833,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent",
+            "resource_curation"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.8,
+          "support_score": 0,
+          "lexical_support": 0.714,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "to learn",
+                "learn"
+              ],
+              "resource_curation": [
+                "best resources"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "What are the best books and courses for learning watercolor?",
+        "family": "books-courses",
+        "score": 0.824,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent",
+            "resource_curation"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.8,
+          "support_score": 0,
+          "lexical_support": 0.6,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "learning"
+              ],
+              "resource_curation": [
+                "best books",
+                "books and courses"
+              ]
+            },
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "I want signal-not-noise resources for learning Kubernetes",
+        "family": "efficiency",
+        "score": 0.535,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "efficiency_focus",
+            "learning_intent"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.48,
+          "support_score": 0,
+          "lexical_support": 0.667,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "efficiency_focus": [
+                "signal not noise"
+              ],
+              "learning_intent": [
+                "learning"
+              ]
+            },
+            "negative": {}
+          }
+        },
+        "boundary_case": true
+      },
+      {
+        "prompt": "推荐五个学习西班牙语最值得投入的资料",
+        "family": "bounded-list",
+        "score": 0.482,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "efficiency_focus",
+            "learning_intent"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0.48,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "efficiency_focus": [
+                "值得投入"
+              ],
+              "learning_intent": [
+                "学习",
+                "学"
+              ]
+            },
+            "negative": {}
+          }
+        },
+        "boundary_case": true
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "给我设计一套从零到精通 Python 的课程体系",
+        "family": "curriculum",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "curriculum_or_ladder"
+          ],
+          "exclusive_negative_concepts": [
+            "curriculum_or_ladder"
+          ],
+          "semantic_coverage": 0,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.56,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "curriculum_or_ladder": [
+                "课程体系"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "Teach me React step by step",
+        "family": "tutorial",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "teaching_or_plan_only"
+          ],
+          "exclusive_negative_concepts": [
+            "teaching_or_plan_only"
+          ],
+          "semantic_coverage": 0,
+          "support_score": 0,
+          "lexical_support": 0.4,
+          "negative_penalty": 0.48,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "teaching_or_plan_only": [
+                "step by step"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "给我做一份 Git 命令速查表",
+        "family": "cheat-sheet",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "summary_or_cheat_sheet"
+          ],
+          "exclusive_negative_concepts": [
+            "summary_or_cheat_sheet"
+          ],
+          "semantic_coverage": 0,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.62,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "summary_or_cheat_sheet": [
+                "速查表"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "总结这五篇机器学习文章",
+        "family": "summary",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "summary_or_cheat_sheet"
+          ],
+          "exclusive_negative_concepts": [
+            "summary_or_cheat_sheet"
+          ],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.62,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "学习",
+                "学"
+              ]
+            },
+            "negative": {
+              "summary_or_cheat_sheet": [
+                "总结"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "给我一个七天学 SQL 的计划，不需要推荐资料",
+        "family": "plan-only",
+        "score": 0.146,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent",
+            "resource_curation"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "teaching_or_plan_only"
+          ],
+          "exclusive_negative_concepts": [
+            "teaching_or_plan_only"
+          ],
+          "semantic_coverage": 0.8,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.48,
+          "coverage_boost": 0.04,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "学"
+              ],
+              "resource_curation": [
+                "推荐资料"
+              ]
+            },
+            "negative": {
+              "teaching_or_plan_only": [
+                "不需要推荐资料",
+                "计划"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "什么是贝叶斯定理？",
+        "family": "fact-question",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "fact_question"
+          ],
+          "exclusive_negative_concepts": [
+            "fact_question"
+          ],
+          "semantic_coverage": 0,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.5,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "fact_question": [
+                "什么是"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "帮我拆成五个阶段学习摄影",
+        "family": "learning-ladder",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "curriculum_or_ladder"
+          ],
+          "exclusive_negative_concepts": [
+            "curriculum_or_ladder"
+          ],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.56,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "学习",
+                "学"
+              ]
+            },
+            "negative": {
+              "curriculum_or_ladder": [
+                "五个阶段"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "做一个 20 小时快速掌握 Excel 的计划",
+        "family": "time-boxed-plan",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "teaching_or_plan_only"
+          ],
+          "exclusive_negative_concepts": [
+            "teaching_or_plan_only"
+          ],
+          "semantic_coverage": 0,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.48,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {
+              "teaching_or_plan_only": [
+                "计划"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "prompt": "比较 Coursera 和 Udemy 哪个平台更好",
+        "family": "platform-comparison",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [],
+          "exclusive_negative_concepts": [],
+          "semantic_coverage": 0,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {},
+            "negative": {}
+          }
+        }
+      },
+      {
+        "prompt": "根据我给你的 PDF 做学习笔记",
+        "family": "supplied-material",
+        "score": 0,
+        "predicted_trigger": false,
+        "expected_trigger": false,
+        "passed": true,
+        "score_detail": {
+          "mode": "semantic-intent",
+          "desired_positive_concepts": [
+            "resource_curation",
+            "learning_intent",
+            "efficiency_focus"
+          ],
+          "matched_desired_concepts": [
+            "learning_intent"
+          ],
+          "extra_positive_concepts": [],
+          "matched_negative_concepts": [
+            "summary_or_cheat_sheet"
+          ],
+          "exclusive_negative_concepts": [
+            "summary_or_cheat_sheet"
+          ],
+          "semantic_coverage": 0.28,
+          "support_score": 0,
+          "lexical_support": 0,
+          "negative_penalty": 0.62,
+          "coverage_boost": 0,
+          "concept_evidence": {
+            "positive": {
+              "learning_intent": [
+                "学习",
+                "学"
+              ]
+            },
+            "negative": {
+              "summary_or_cheat_sheet": [
+                "学习笔记"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

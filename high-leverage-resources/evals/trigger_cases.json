@@ -1,0 +1,25 @@
+{
+  "recommended_threshold": 0.45,
+  "should_trigger": [
+    { "text": "推荐学习 Rust 的高质量资源，不想浪费时间", "family": "zh-explicit" },
+    { "text": "给我精选的产品经理学习资源", "family": "zh-explicit" },
+    { "text": "best resources to learn SQL for analysts", "family": "en-explicit" },
+    { "text": "What are the best books and courses for learning watercolor?", "family": "books-courses" },
+    { "text": "I want signal-not-noise resources for learning Kubernetes", "family": "efficiency" },
+    { "text": "推荐五个学习西班牙语最值得投入的资料", "family": "bounded-list" }
+  ],
+  "should_not_trigger": [
+    { "text": "给我设计一套从零到精通 Python 的课程体系", "family": "curriculum" },
+    { "text": "Teach me React step by step", "family": "tutorial" },
+    { "text": "给我做一份 Git 命令速查表", "family": "cheat-sheet" },
+    { "text": "总结这五篇机器学习文章", "family": "summary" },
+    { "text": "给我一个七天学 SQL 的计划，不需要推荐资料", "family": "plan-only" },
+    { "text": "什么是贝叶斯定理？", "family": "fact-question" }
+  ],
+  "near_neighbor": [
+    { "text": "帮我拆成五个阶段学习摄影", "family": "learning-ladder" },
+    { "text": "做一个 20 小时快速掌握 Excel 的计划", "family": "time-boxed-plan" },
+    { "text": "比较 Coursera 和 Udemy 哪个平台更好", "family": "platform-comparison" },
+    { "text": "根据我给你的 PDF 做学习笔记", "family": "supplied-material" }
+  ]
+}

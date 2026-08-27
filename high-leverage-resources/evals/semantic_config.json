@@ -1,0 +1,44 @@
+{
+  "optimizer_hints": {
+    "capability": "Curate exactly five verified existing learning resources for a topic and a seven-day plan built only from them.",
+    "trigger_actions": ["best resources", "books and courses", "学习资源推荐", "高质量资源", "精选资源", "signal not noise"],
+    "exclusions": ["curriculum design", "step-by-step teaching", "plan without resource curation", "cheat sheet", "summary"]
+  },
+  "fallback_positive_concepts": ["resource_curation", "learning_intent", "efficiency_focus"],
+  "positive_concepts": {
+    "resource_curation": {
+      "weight": 0.52,
+      "phrases": ["best resources", "best books", "best courses", "books and courses", "learning resources", "resource list", "学习资源", "高质量资源", "精选资源", "推荐资料", "学习资料"]
+    },
+    "learning_intent": {
+      "weight": 0.28,
+      "phrases": ["to learn", "learning", "learn", "入门", "学习", "学"]
+    },
+    "efficiency_focus": {
+      "weight": 0.20,
+      "phrases": ["high-leverage", "signal not noise", "不想浪费时间", "值得投入", "高效"]
+    }
+  },
+  "negative_concepts": {
+    "curriculum_or_ladder": {
+      "weight": 0.56,
+      "exclusive": true,
+      "phrases": ["课程体系", "学习阶梯", "五个阶段", "learning ladder", "curriculum"]
+    },
+    "teaching_or_plan_only": {
+      "weight": 0.48,
+      "exclusive": true,
+      "phrases": ["step by step", "教程", "教我", "不需要推荐资料", "计划"]
+    },
+    "summary_or_cheat_sheet": {
+      "weight": 0.62,
+      "exclusive": true,
+      "phrases": ["速查表", "cheat sheet", "总结", "摘要", "学习笔记"]
+    },
+    "fact_question": {
+      "weight": 0.50,
+      "exclusive": true,
+      "phrases": ["什么是", "what is"]
+    }
+  }
+}

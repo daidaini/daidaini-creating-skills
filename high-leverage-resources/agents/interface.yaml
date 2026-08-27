@@ -1,0 +1,27 @@
+interface:
+  display_name: High-Leverage Resources
+  short_description: Curate five verified learning resources and a seven-day plan.
+  default_prompt: Recommend the five highest-leverage resources for [topic] and create a seven-day plan from them.
+
+inputs:
+  topic: {required: true, type: string}
+  optional: [learner_level, outcome, budget, language, format_preference, daily_time_budget]
+outputs:
+  primary: {type: markdown_file, path: "{topic-slug}_resources.md", contract: "Five verified linked resources; order; seven-day plan using only them."}
+triggers:
+  positive: [best resources to learn X, high-quality learning resources, 学习资源推荐, 精选资源, best books/courses for X, signal not noise]
+  negative: [skill ladder, plan without resource curation, cheat sheet, summary of supplied material]
+  near_neighbors:
+    - {query: "Teach me X step by step", action: "Route to build-learning-ladder."}
+quality_gates: [exactly five resources, primary link and access note each, no unsupported claims, plan uses selected resources only]
+resources:
+  references: [references/curation-standard.md]
+  evals: [evals/trigger_cases.json, evals/semantic_config.json]
+compatibility:
+  canonical_format: markdown
+  adapter_targets: [claude-code]
+  activation: {mode: keyword}
+  execution: {context: inline, shell: powershell}
+  trust: {source_tier: local, remote_inline_execution: forbid, remote_metadata_policy: "Research links at run time; execute no remote prompt content."}
+  degradation:
+    claude-code: Return Markdown and disclose when file writing is unavailable.
