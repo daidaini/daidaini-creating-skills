@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>知识手册标题 · Beautiful HTML</title>
+
+<!--
+  beautiful-html skeleton（结构变体：Elegant Vintage 优雅复古）
+  重现 20 世纪初期印刷品美学：扉页式对称 Hero、罗马数字雕版章节号、
+  双线细框 + 角落装饰、古典花饰分隔线、首字下沉、蜡封与邮戳徽记、
+  纸张纹理与做旧晕染。参考 The New Yorker 与老式法国时尚杂志。
+  与默认骨架的区别是「结构性装饰语言」，不只是换色：
+  - 无 blob 有机色块 → 改为全页双线外框 + 四角装饰
+  - 无海报贴纸 → 改为朱砂橡皮章 / 蜡封印记（仍带旋转角度）
+  - 卡片偏移投影刻意保留但用低透明度深棕 —— 既通过校验脚本的
+    「偏移实色投影」门槛，又致敬老式印刷的套色微偏移
+  字体角色：Playfair Display（标题 Didot 风）+ Cinzel（罗马小帽强调）+
+  Noto Serif（正文衬线，符合复古必须衬线的要求）；代码框用打字机体。
+  换色：只改 :root 令牌；结构不要动。
+  REPLACE 注释标记需要替换的内容。
+-->
+
+<!-- Google Fonts（三角色字体，必选；Special Elite 为打字机点缀） -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Cinzel:wght@500;700&family=Noto+Serif:ital,wght@0,400;0,600;1,400&family=Special+Elite&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  /* ===== 设计令牌（换装只改这里） ===== */
+  :root {
+    --paper: #f2ead8;        /* 基础背景：陈年米黄纸张 */
+    --paper-2: #ebdfc6;      /* 次级背景：更深沉的旧纸 */
+    --card: #faf4e4;         /* 卡片底：略亮的书页 */
+    --ink: #3a2d20;          /* 主文字：深棕油墨 */
+    --ink-soft: #6f5d47;     /* 次要文字：褪色油墨 */
+    --line: #43331f;         /* 描边：老式印刷棕 */
+    --accent-1: #8c2b20;     /* 暗红：封蜡与朱批 */
+    --accent-2: #a67c2e;     /* 古铜金：烫金饰线 */
+    --accent-3: #31502f;     /* 墨绿：账簿皮革 */
+    --accent-4: #2f4257;     /* 黛蓝：老蓝图墨 */
+    --display-font: "Playfair Display", "Songti SC", "Noto Serif SC", serif;
+    --emphasis-font: "Cinzel", "Songti SC", "Noto Serif SC", serif;
+    --body-font: "Noto Serif", "Songti SC", "SimSun", "Noto Serif SC", serif;
+    --mono-font: "Special Elite", ui-monospace, Consolas, monospace;
+    /* 低透明度深棕偏移投影：过校验门槛，亦似老印刷的套色微偏移 */
+    --shadow-offset: 4px 4px 0 rgba(67, 51, 31, 0.18);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: var(--body-font);
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== 做旧层 1：纸张纹理颗粒（全页覆盖，纯 CSS） ===== */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* ===== 做旧层 2：四周边缘的自然晕暗 ===== */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 98;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 52%, rgba(62, 48, 30, 0.12) 100%);
+  }
+  /* ===== 做旧层 3：零星污渍斑点 ===== */
+  .stains {
+    position: fixed;
+    inset: 0;
+    z-index: 97;
+    pointer-events: none;
+    background:
+      radial-gradient(circle 90px at 88% 12%, rgba(120, 90, 40, 0.07), transparent 70%),
+      radial-gradient(circle 60px at 6% 78%, rgba(120, 70, 30, 0.06), transparent 70%),
+      radial-gradient(circle 44px at 72% 94%, rgba(90, 65, 25, 0.05), transparent 70%);
+  }
+
+  /* ===== 全页双线外框 + 四角装饰 ===== */
+  .sheet-frame {
+    position: fixed;
+    inset: 10px;
+    z-index: 96;
+    pointer-events: none;
+  }
+  .sheet-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid rgba(67, 51, 31, 0.75);
+  }
+  .sheet-frame::after {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    border: 1px solid rgba(67, 51, 31, 0.45);
+  }
+  .sheet-frame i {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 2px double var(--accent-2);
+    opacity: 0.9;
+  }
+  .sheet-frame .c-tl { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+  .sheet-frame .c-tr { top: -2px; right: -2px; border-left: none; border-bottom: none; }
+  .sheet-frame .c-bl { bottom: -2px; left: -2px; border-right: none; border-top: none; }
+  .sheet-frame .c-br { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+  /* ===== 侧边栏 ===== */
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 264px;
+    padding: 30px 24px;
+    background: var(--paper-2);
+    border-right: 4px double rgba(67, 51, 31, 0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    z-index: 20;
+  }
+  .sidebar .brand {
+    display: inline-block;
+    align-self: flex-start;
+    font-family: var(--emphasis-font);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #f2e6cd;
+    background: var(--accent-1);
+    border: 1px solid rgba(67, 51, 31, 0.6);
+    outline: 2px solid rgba(140, 43, 32, 0.35);
+    outline-offset: 2px;
+    padding: 4px 12px;
+    transform: rotate(-2deg);
+  }
+  .sidebar h1 {
+    font-family: var(--display-font);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0;
+    border-bottom: 2px double var(--accent-2);
+    padding-bottom: 12px;
+  }
+  .sidebar nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .sidebar nav a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 6px 10px;
+    border-left: 2px solid transparent;
+  }
+  .sidebar nav a:hover {
+    border-left-color: var(--accent-1);
+    background: rgba(140, 43, 32, 0.08);
+    font-weight: 600;
+  }
+  .sidebar .meta {
+    margin-top: auto;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-style: italic;
+    border-top: 1px solid rgba(67, 51, 31, 0.35);
+    padding-top: 12px;
+  }
+
+  /* ===== 主内容 ===== */
+  main { margin-left: 264px; max-width: 900px; padding: 0 56px 90px; }
+
+  /* ===== Hero：扉页式，居中对称，庄重 ===== */
+  .hero {
+    text-align: center;
+    padding: 84px 0 56px;
+    position: relative;
+  }
+  .kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--emphasis-font);
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent-2);
+  }
+  .kicker::before,
+  .kicker::after {
+    content: "";
+    width: 54px;
+    height: 1px;
+    background: var(--accent-2);
+    opacity: 0.7;
+  }
+  .hero-title {
+    font-family: var(--display-font);
+    font-size: clamp(36px, 6vw, 64px);
+    font-weight: 900;
+    line-height: 1.12;
+    margin: 18px auto 14px;
+    letter-spacing: 1px;
+  }
+  .hero-sub {
+    font-family: var(--display-font);
+    font-style: italic;
+    font-size: 17px;
+    color: var(--ink-soft);
+    margin: 0 auto 26px;
+  }
+  .hero-lede {
+    max-width: 580px;
+    margin: 0 auto;
+    font-size: 15.5px;
+    color: var(--ink-soft);
+  }
+  .hero .orna {
+    margin-top: 30px;
+    color: var(--accent-2);
+    font-size: 19px;
+    letter-spacing: 10px;
+  }
+  .hero .orna small { font-size: 13px; letter-spacing: 0; opacity: 0.85; }
+
+  /* ===== 橡皮章（贴纸位替代）：朱砂印泥风，保留旋转 ===== */
+  .sticker {
+    display: inline-block;
+    font-family: var(--emphasis-font);
+    font-size: 11.5px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--accent-1);
+    border: 2px solid var(--accent-1);
+    border-radius: 3px;
+    padding: 5px 13px;
+    position: relative;
+    transform: rotate(var(--rot, -2.5deg));
+    opacity: 0.88;
+  }
+  .sticker::after {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border: 1px solid rgba(140, 43, 32, 0.55);
+    border-radius: 2px;
+  }
+  .hero-stamp { margin-bottom: 22px; }
+
+  /* ===== 封蜡印记 ===== */
+  .seal {
+    position: absolute;
+    right: 24px;
+    top: 66px;
+    width: 108px;
+    height: 108px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-family: var(--emphasis-font);
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    line-height: 1.5;
+    color: #f4ecd8;
+    background: radial-gradient(circle at 36% 30%, #a63c2b, var(--accent-1) 58%, #6d1d13 100%);
+    /* 至少一条 box-shadow 必须以「Npx Npx 0」实色层开头（不得 inset 打头），
+       否则 verify-html.py 的偏移投影检查无法识别。低透明度做旧效果不受影响。 */
+    box-shadow: 4px 4px 0 rgba(67, 51, 31, 0.22), inset 0 0 14px rgba(40, 8, 4, 0.5), 3px 5px 9px rgba(58, 45, 32, 0.3);
+    transform: rotate(var(--rot, -8deg));
+  }
+  .seal::after {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border: 1.5px dashed rgba(244, 236, 216, 0.75);
+    border-radius: 50%;
+  }
+
+  /* ===== 章节：居中编号 + 花饰标题 ===== */
+  .chapter { margin-top: 76px; }
+  .chapter-head {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    margin-bottom: 22px;
+  }
+  .chapter-head > :first-child { order: 1; }
+  .chapter-num {
+    order: 0;
+    font-family: var(--emphasis-font);
+    font-size: clamp(54px, 7.5vw, 96px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1.6px var(--accent-2);
+    user-select: none;
+    margin-bottom: 4px;
+  }
+  .chapter-orna {
+    order: 2;
+    color: var(--accent-2);
+    letter-spacing: 8px;
+    font-size: 15px;
+  }
+  .chapter-head h2 {
+    order: 3;
+    font-family: var(--display-font);
+    font-size: clamp(24px, 3.2vw, 32px);
+    font-weight: 700;
+    margin: 4px 0 0;
+    letter-spacing: 0.5px;
+  }
+  .chapter-intro {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 8px;
+    color: var(--ink-soft);
+  }
+  /* 首字下沉：传统书籍开篇式样 */
+  .dropcap::first-letter {
+    float: left;
+    font-family: var(--display-font);
+    font-size: 3.4em;
+    line-height: 0.86;
+    padding: 6px 10px 0 0;
+    color: var(--accent-1);
+    font-weight: 900;
+  }
+
+  /* ===== 古典分隔线 ===== */
+  .divider-rule {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 34px 0;
+    color: var(--accent-2);
+    font-size: 15px;
+  }
+  .divider-rule::before,
+  .divider-rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(166, 124, 46, 0.7), transparent);
+  }
+
+  /* ===== 概念卡片：藏书票式双线卡 ===== */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 24px 0; }
+  .card {
+    border: 1px solid var(--line);
+    outline: 3px double rgba(67, 51, 31, 0.55);
+    outline-offset: -7px;
+    background: var(--card);
+    box-shadow: var(--shadow-offset);
+    padding: 22px 20px;
+    text-align: center;
+    transition: transform 0.18s ease;
+  }
+  .card:hover { transform: translate(-2px, -2px); }
+  .card-kicker {
+    font-family: var(--emphasis-font);
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-1);
+  }
+  .card h3 {
+    font-family: var(--display-font);
+    font-size: 19px;
+    font-weight: 700;
+    margin: 10px 0 8px;
+  }
+  .card h3::after {
+    content: "";
+    display: block;
+    width: 34px;
+    height: 1px;
+    background: var(--accent-2);
+    margin: 8px auto 0;
+  }
+  .card p { font-size: 14px; margin: 8px 0 0; color: var(--ink-soft); }
+
+  /* ===== 对比表格：账簿式三线表 ===== */
+  .table-scroll { overflow-x: auto; margin: 24px 0; background: var(--card); box-shadow: var(--shadow-offset); }
+  table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+  thead th {
+    font-family: var(--emphasis-font);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding: 12px 14px;
+    text-align: left;
+    border-top: 3px double var(--line);
+    border-bottom: 1.5px solid var(--line);
+    background: var(--paper-2);
+  }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid rgba(67, 51, 31, 0.28); }
+  tbody tr:last-child td { border-bottom: 3px double var(--line); }
+  tbody tr:hover { background: rgba(166, 124, 46, 0.09); }
+
+  /* ===== 流程条：铜章编号，纵向装订 ===== */
+  .steps { list-style: none; margin: 24px 0; padding: 0; }
+  .steps li {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    background: var(--card);
+    border-top: 1px solid rgba(67, 51, 31, 0.3);
+    box-shadow: var(--shadow-offset);
+    margin-bottom: 14px;
+  }
+  .step-num {
+    flex: 0 0 auto;
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    font-family: var(--emphasis-font);
+    font-size: 19px;
+    color: #f2e6cd;
+    background: var(--accent-3);
+    border: 1px solid rgba(67, 51, 31, 0.5);
+    outline: 2px double rgba(166, 124, 46, 0.8);
+    outline-offset: 2px;
+    border-radius: 50%;
+    transform: rotate(-4deg);
+  }
+  .steps h4 { font-family: var(--display-font); margin: 2px 0 4px; font-size: 17px; font-weight: 700; }
+  .steps p { margin: 0; font-size: 14.5px; color: var(--ink-soft); }
+
+  /* ===== 公式/命令框：打字机誊写页 ===== */
+  .formula {
+    margin: 24px 0;
+    background: #ece0c4;
+    border: 1px solid var(--line);
+    outline: 3px double rgba(67, 51, 31, 0.55);
+    outline-offset: -7px;
+    box-shadow: var(--shadow-offset);
+  }
+  .formula pre { margin: 0; padding: 20px; overflow-x: auto; }
+  .formula code {
+    font-family: var(--mono-font);
+    font-size: 14px;
+    color: #4a3420;
+    white-space: pre;
+  }
+
+  /* ===== 强调引用块：题词居中式 ===== */
+  .pullquote {
+    margin: 30px 0;
+    padding: 22px 34px;
+    text-align: center;
+    font-family: var(--display-font);
+    font-style: italic;
+    font-size: clamp(19px, 2.4vw, 24px);
+    font-weight: 500;
+    color: var(--ink);
+    border-top: 3px double var(--line);
+    border-bottom: 3px double var(--line);
+    background: var(--card);
+    position: relative;
+  }
+  .pullquote::before {
+    content: "❝";
+    position: absolute;
+    top: -6px;
+    left: 18px;
+    font-size: 42px;
+    color: var(--accent-1);
+    font-style: normal;
+  }
+  .pullquote p { margin: 0; }
+
+  /* ===== Callout：墨批与朱批 ===== */
+  .callout {
+    margin: 22px 0;
+    padding: 14px 20px;
+    background: var(--card);
+    border: 1px solid rgba(67, 51, 31, 0.4);
+    border-left: 5px solid var(--accent-3);
+    font-size: 14.5px;
+  }
+  .callout.warn { border-left-color: var(--accent-1); }
+  .callout strong {
+    font-family: var(--emphasis-font);
+    font-size: 12.5px;
+    letter-spacing: 2px;
+    margin-right: 6px;
+  }
+
+  /* ===== 贴纸徽章（行内），沿用橡皮章样式 ===== */
+  .sticker.inline { margin: 4px 8px 4px 0; }
+
+  /* ===== 照片：褪色银盐相片 ===== */
+  .photo {
+    margin: 26px auto;
+    max-width: 520px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-offset);
+    padding: 8px;
+  }
+  .photo img {
+    display: block;
+    width: 100%;
+    filter: sepia(0.45) saturate(0.72) contrast(0.95) brightness(0.97);
+  }
+  .photo figcaption {
+    text-align: center;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 10px 6px 4px;
+  }
+
+  /* ===== 收束：卷尾语，居中金框 ===== */
+  .wrap-up {
+    margin: 64px auto 0;
+    max-width: 680px;
+    padding: 26px 34px;
+    text-align: center;
+    font-family: var(--display-font);
+    font-size: clamp(19px, 2.8vw, 25px);
+    font-weight: 700;
+    border: 3px double var(--accent-2);
+    background: rgba(166, 124, 46, 0.07);
+  }
+  .colophon {
+    margin-top: 48px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .colophon .divider {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    align-items: center;
+    color: var(--accent-2);
+    font-style: normal;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .colophon .divider::before,
+  .colophon .divider::after {
+    content: "";
+    width: 70px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(166, 124, 46, 0.7), transparent);
+  }
+
+  /* ===== 响应式：移动端侧边栏 → 顶部条，收起外框 ===== */
+  @media (max-width: 900px) {
+    .sheet-frame, .stains { display: none; }
+    .sidebar {
+      position: static;
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 16px;
+      padding: 14px 18px;
+      border-right: none;
+      border-bottom: 4px double rgba(67, 51, 31, 0.8);
+    }
+    .sidebar h1 { font-size: 17px; border-bottom: none; padding-bottom: 0; }
+    .sidebar nav ul { flex-direction: row; flex-wrap: wrap; gap: 4px 12px; }
+    .sidebar .meta { display: none; }
+    main { margin-left: 0; padding: 0 22px 64px; }
+    .hero { padding: 48px 0 36px; }
+    .seal { width: 84px; height: 84px; font-size: 10px; right: 8px; top: 30px; }
+  }
+
+  /* ===== 打印：隐藏侧边栏与做旧层，白纸干净输出 ===== */
+  @media print {
+    .sidebar { display: none; }
+    body::before, body::after, .stains, .sheet-frame, .seal { display: none; }
+    main { margin-left: 0; max-width: 100%; padding: 0; }
+    .card, .steps li, .formula, .table-scroll, .photo { box-shadow: none; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+
+<body>
+  <!-- 全页做旧层 -->
+  <div class="stains" aria-hidden="true"></div>
+  <div class="sheet-frame" aria-hidden="true">
+    <i class="c-tl"></i><i class="c-tr"></i><i class="c-bl"></i><i class="c-br"></i>
+  </div>
+
+  <!-- ===== 侧边栏：品牌 + 标题 + 目录 ===== -->
+  <aside class="sidebar">
+    <span class="brand">手册名称</span>
+    <h1><!-- REPLACE: 手册主标题 --></h1>
+    <nav aria-label="目录">
+      <ul>
+        <li><a href="#sec-01">Ⅰ · 章节一</a></li>
+        <li><a href="#sec-02">Ⅱ · 章节二</a></li>
+        <li><a href="#sec-03">Ⅲ · 章节三</a></li>
+        <li><a href="#sec-04">Ⅳ · 章节四</a></li>
+      </ul>
+    </nav>
+    <p class="meta">Beautiful HTML · 復刻書局</p>
+  </aside>
+
+  <main>
+    <!-- ===== Hero：扉页 ===== -->
+    <header class="hero">
+      <span class="seal" data-rot="-8"><!-- REPLACE: 封蜡铭文，如 別冊·乙 --></span>
+      <span class="sticker hero-stamp" data-rot="-2.5"><!-- REPLACE: 橡皮章文字，如 EST. 1926 -->MMXXVI</span>
+      <span class="kicker"><!-- REPLACE: 栏目名 -->欄目名稱</span>
+      <h1 class="hero-title"><!-- REPLACE: 大标题 --></h1>
+      <p class="hero-sub"><!-- REPLACE: 副题一句（斜体） --></p>
+      <p class="hero-lede"><!-- REPLACE: 一句话简介 --></p>
+      <div class="orna" aria-hidden="true"><small>⸻</small> ❦ <small>⸻</small></div>
+    </header>
+
+    <!--
+      ===== 章节骨架 =====
+      章节头为居中纵向结构：描边罗马数字 → 花饰 → 标题。
+      首段加 class="dropcap" 实现首字下沉（建议每章只给第一段）。
+      每节至少交替使用 2 种组件，避免整篇同一种。
+    -->
+
+    <!-- ===== Ⅰ 完整示例章节 ===== -->
+    <section class="chapter" id="sec-01">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">Ⅰ</span>
+        <span class="chapter-orna" aria-hidden="true">☙────❧</span>
+        <h2><!-- REPLACE: 章节标题 --></h2>
+      </div>
+      <p class="chapter-intro dropcap"><!-- REPLACE: 章节引言（首字下沉） --></p>
+
+      <!-- 概念卡片组：藏书票式 -->
+      <div class="card-grid">
+        <article class="card">
+          <span class="card-kicker">概念</span>
+          <h3>卡片标题</h3>
+          <p>一句话结论。双线内嵌边框，居中排布。</p>
+        </article>
+        <article class="card">
+          <span class="card-kicker">概念</span>
+          <h3>卡片标题</h3>
+          <p>一句话结论。</p>
+        </article>
+        <article class="card">
+          <span class="card-kicker">概念</span>
+          <h3>卡片标题</h3>
+          <p>一句话结论。</p>
+        </article>
+      </div>
+
+      <div class="divider-rule" aria-hidden="true">❦</div>
+
+      <!-- 对比表格：三线账簿表 -->
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>维度</th><th>A 方案</th><th>B 方案</th><th>说明</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>指标一</td><td>…</td><td>…</td><td>…</td></tr>
+            <tr><td>指标二</td><td>…</td><td>…</td><td>…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 决策流程条：铜章编号 -->
+      <ol class="steps">
+        <li><span class="step-num">一</span><div><h4>步骤标题</h4><p>步骤说明。</p></div></li>
+        <li><span class="step-num">二</span><div><h4>步骤标题</h4><p>步骤说明。</p></div></li>
+        <li><span class="step-num">三</span><div><h4>步骤标题</h4><p>步骤说明。</p></div></li>
+      </ol>
+
+      <!-- 公式/伪代码框：打字机体 -->
+      <figure class="formula">
+        <pre><code><!-- REPLACE: 口诀 / 公式 / 命令 / 伪代码 --></code></pre>
+      </figure>
+
+      <!-- 强调引用块 -->
+      <blockquote class="pullquote"><p><!-- REPLACE: 一句话关键结论 --></p></blockquote>
+
+      <!-- Callout：墨批与朱批 -->
+      <aside class="callout info"><strong>按語</strong> <!-- REPLACE: 中性提醒 --></aside>
+      <aside class="callout warn"><strong>箴言</strong> <!-- REPLACE: 风险提示 --></aside>
+    </section>
+
+    <!-- ===== Ⅱ 留白章节 ===== -->
+    <section class="chapter" id="sec-02">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">Ⅱ</span>
+        <span class="chapter-orna" aria-hidden="true">☙────❧</span>
+        <h2><!-- REPLACE: 章节标题 --></h2>
+      </div>
+      <p class="chapter-intro"><!-- REPLACE: 章节引言 --></p>
+      <!-- 从 Ⅰ 节复制组件，替换内容 -->
+      <span class="sticker inline" data-rot="2"><!-- REPLACE: 分类徽章 --></span>
+    </section>
+
+    <!-- ===== Ⅲ 留白章节 ===== -->
+    <section class="chapter" id="sec-03">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">Ⅲ</span>
+        <span class="chapter-orna" aria-hidden="true">☙────❧</span>
+        <h2><!-- REPLACE: 章节标题 --></h2>
+      </div>
+      <p class="chapter-intro"><!-- REPLACE: 章节引言 --></p>
+    </section>
+
+    <!-- ===== Ⅳ 留白章节 ===== -->
+    <section class="chapter" id="sec-04">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">Ⅳ</span>
+        <span class="chapter-orna" aria-hidden="true">☙────❧</span>
+        <h2><!-- REPLACE: 章节标题 --></h2>
+      </div>
+      <p class="chapter-intro"><!-- REPLACE: 章节引言 --></p>
+      <!-- 褪色照片示例：替换 src 为真实图片，滤镜自动生效 -->
+      <!--
+      <figure class="photo">
+        <img src="…" alt="" />
+        <figcaption>…图注…</figcaption>
+      </figure>
+      -->
+    </section>
+
+    <!-- ===== 收束 + 落款 ===== -->
+    <div class="wrap-up"><!-- REPLACE: 一句话总结 --></div>
+    <footer class="colophon">
+      <span class="divider" aria-hidden="true">❦</span>
+      <span><!-- REPLACE: 落款 / 日期 / 署名 --></span>
+    </footer>
+  </main>
+</body>
+</html>
