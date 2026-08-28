@@ -1,6 +1,6 @@
 ---
 name: beautiful-html
-description: "Create a design-conscious, flip-through-able static HTML knowledge manual as a single self-contained file: magazine/studio-grade typography, custom Google Fonts, hand-crafted offset shadows (not blur), rotated sticker badges, hollow outline chapter numbers, fixed sidebar TOC, hero section, and a mixed component palette — explicitly avoiding the generic `AI template` look of blue-purple gradients and uniform rounded shadow cards. Includes an Elegant Vintage structural variant (early-20th-century print aesthetic: aged paper texture, double-rule frames, wax seal, roman-numeral engravings, serif-only typography) with its own ready-made skeleton. Accepts an optional style argument: passing a preset name or style keyword (e.g. `beautiful-html 赛博朋克`, `vintage`, `swiss`) selects that style preset from the 换装 table; if no style argument is given, defaults to the Scandinavian + pop-art warm-oatmeal look. Use when the user wants 有设计感的 HTML 知识手册, 杂志感排版 HTML 页面, 风格化的 HTML 静态页面, 知识手册生成器, 优雅复古风格页面, 复古印刷风手册, vintage/old-print style HTML, stylish HTML documentation, a designed static HTML manual/page, or to transform long notes/summaries/methodologies into a polished single-page HTML handbook. Do NOT use for interactive web apps or JS-framework SPAs (React/Vue), live data dashboards with dynamic data binding, multi-page websites, email HTML, or anything requiring a build server or runtime backend."
+description: "Create a design-conscious, flip-through-able static HTML knowledge manual from long text (summaries, notes, methodology): one self-contained .html file that opens by double-clicking, skinnable via an optional style keyword, avoiding the generic AI-template look. Trigger on: 有设计感的 HTML 知识手册, 杂志感排版 HTML 页面, 风格化的 HTML 静态页面, 知识手册生成器, 优雅复古/复古印刷风页面, vintage/old-print style HTML, stylish HTML documentation, designed static HTML manual/page, 把长笔记/总结/方法论做成精美单页 HTML 手册. NOT for: interactive web apps, JS-framework SPAs (React/Vue), live data dashboards, multi-page websites, email HTML, or anything requiring a build server/runtime."
 license: MIT
 ---
 
@@ -22,6 +22,22 @@ Turn arbitrary long text (technical summaries, knowledge points, methodology) in
 - Multi-page site or CMS template → out of scope.
 - Email HTML (no inline CSS constraints here, but also no need for this design system).
 - The user just wants a quick plain Markdown-to-HTML dump without design intent.
+
+## Style argument（风格参数）
+
+One optional style keyword may follow the trigger to pick a preset; otherwise default to the Scandinavian + pop-art preset with a warm oatmeal base.
+
+- `beautiful-html 赛博朋克` / `cyberpunk` → Cyberpunk preset
+- `beautiful-html swiss` → Swiss preset
+- `beautiful-html vintage` / `优雅复古` / `复古印刷` / `老式杂志风格` → Elegant Vintage variant
+- A color keyword (e.g. `beautiful-html 莫兰迪绿`) → re-skin the default preset with that palette
+
+Two structural families exist:
+
+- **Default（北欧撞色 / pop-art）:** magazine/studio typography, offset solid shadows, rotated sticker badges, hollow chapter numbers, fixed sidebar TOC, hero — [template/skeleton.html](template/skeleton.html).
+- **Elegant Vintage（优雅复古）:** early-20th-century print aesthetic (aged-paper texture, double-rule frames, wax seal, hollow roman-numeral chapters, serif-only typography) — [template/skeleton-vintage.html](template/skeleton-vintage.html).
+
+Full 换装 table (Scandinavian pop, Wabi-sabi, Bauhaus, Cyberpunk, Editorial, Swiss, Retro-print, Elegant Vintage): [Style Presets](references/style-presets.md).
 
 ## Core flow (5 steps)
 
