@@ -192,8 +192,9 @@
     padding-top: 12px;
   }
 
-  /* ===== 主内容 ===== */
-  main { margin-left: 264px; max-width: 900px; padding: 0 56px 90px; }
+  /* ===== 主内容：占满侧边栏以外剩余空间，内容块在其中居中 ===== */
+  main { margin-left: 264px; padding: 0 56px 90px; }
+  main > * { max-width: 900px; margin-left: auto; margin-right: auto; }
 
   /* ===== Hero：扉页式，居中对称，庄重 ===== */
   .hero {
@@ -605,7 +606,8 @@
   @media print {
     .sidebar { display: none; }
     body::before, body::after, .stains, .sheet-frame, .seal { display: none; }
-    main { margin-left: 0; max-width: 100%; padding: 0; }
+    main { margin-left: 0; padding: 0; }
+    main > * { max-width: none; }
     .card, .steps li, .formula, .table-scroll, .photo { box-shadow: none; }
     a { color: inherit; text-decoration: none; }
   }

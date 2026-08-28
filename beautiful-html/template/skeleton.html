@@ -110,8 +110,9 @@
     color: var(--ink-soft);
   }
 
-  /* ===== 主内容 ===== */
-  main { margin-left: 264px; max-width: 900px; padding: 0 48px 80px; }
+  /* ===== 主内容：占满侧边栏以外剩余空间，内容块在其中居中 ===== */
+  main { margin-left: 264px; padding: 0 48px 80px; }
+  main > * { max-width: 900px; margin-left: auto; margin-right: auto; }
 
   /* ===== Hero ===== */
   .hero {
@@ -343,7 +344,8 @@
   /* ===== 打印：隐藏侧边栏与交互装饰 ===== */
   @media print {
     .sidebar { display: none; }
-    main { margin-left: 0; max-width: 100%; padding: 0; }
+    main { margin-left: 0; padding: 0; }
+    main > * { max-width: none; }
     .card, .steps li, .formula, .pullquote, .callout, table {
       box-shadow: none;
     }
