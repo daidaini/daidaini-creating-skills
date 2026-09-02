@@ -2,6 +2,7 @@
 name: d3-offline-map
 description: Build an offline, zero-dependency, custom-drawn geographic map (choropleth / self-drawn regions) as a single double-clickable HTML using Natural Earth TopoJSON/GeoJSON + D3.js. Use when the user wants to render region boundary data offline without online map APIs, without a server, or wants to color/shade regions by per-region values. Triggers include "自绘地图", "免费地图数据 自绘", "offline map D3", "省份着色地图", "行政区划 离线绘制", "Natural Earth D3", "standalone map without API key". Do NOT use when the user needs online tile basemaps, live POI/geocoding APIs, sub-county/sub-province precision, or a backend GIS/PostGIS pipeline.
 license: MIT
+disable-model-invocation: true
 ---
 
 # D3 Offline Map

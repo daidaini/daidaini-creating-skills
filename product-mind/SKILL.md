@@ -1,6 +1,7 @@
 ---
 name: product-mind
 description: "Use when the user needs product judgment rather than implementation detail: whether something should be built, who it is for, what pain point matters, how to define scope, success metrics, MVP cuts, priorities, feature trade-offs, or PRD framing. Also use when the user asks if a feature is worth doing, what not to build yet, or explicitly uses #product / #pm."
+disable-model-invocation: true
 ---
 
 # Product Mind

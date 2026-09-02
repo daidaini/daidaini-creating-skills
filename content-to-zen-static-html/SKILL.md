@@ -1,6 +1,7 @@
 ---
 name: content-to-zen-static-html
 description: 将 Markdown、纯文本、结构化资料或用户提供的长文档，整理为可直接双击打开的单文件静态 HTML。适用于知识库、专题档案、风格手册、研究笔记和长文展示；默认采用“日式极简 × 侘寂 × 未来科技”视觉语言，并内嵌全部内容、样式和交互，不依赖服务器、构建工具、外部库或额外数据文件。
+user_invocable: false
 ---
 
 # Content to Zen Static HTML

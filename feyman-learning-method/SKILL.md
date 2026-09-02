@@ -1,6 +1,7 @@
 ---
 name: feyman-learning-method
 description: Engages the user in an interactive Feynman Technique dialogue — first explains any topic in ultra-simple language (as if to a 12-year-old), then invites the user to teach it back, identifies gaps/mistakes/confusions, re-teaches only the weak parts, and loops until the user's explanation is simple, accurate, and complete. Ends with a saved final summary note. Use when the user says "费曼学习法", "Feynman technique", "用费曼法教我", "深入理解X", "像教小孩一样解释", "explain X to me like I'm 12", "ELI12", "我想真正理解X", "互动学习", "teaching back", "learn by teaching", or asks to deeply understand a concept through iterative explanation and feedback.
+disable-model-invocation: true
 ---
 
 # Feynman Learning Method

@@ -7,10 +7,7 @@ description: >
   Route 3 — visual pipeline (SVG Genie/Recraft) for complex illustrations/logos.
   Route by diagram structure: structured chart → Route 2; simple icon ≤30 elements → Route 1; complex visual/logo → Route 3.
   Exclude raster-only image generation, photorealistic SVG demands, pixel editing, non-vector output.
-metadata:
-  author: agent_explore
-  archetype: production
-  created: 2026-07-17
+disable-model-invocation: true
 ---
 
 # SVG Generation Skill

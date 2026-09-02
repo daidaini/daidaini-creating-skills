@@ -1,6 +1,7 @@
 ---
 name: high-leverage-resources
 description: Researches and curates exactly five high-leverage existing learning resources for a scoped topic, then creates a realistic 7-day plan using only those resources. Each resource is availability-checked and linked to a primary source. Use for “best resources to learn X”, “高质量学习资源”, “学习资源推荐”, “精选资源”, “best books/courses for X”, or “signal not noise”. Do not use for a step-by-step curriculum or skill ladder, a plan without resource curation, a cheat sheet, or a summary of supplied material.
+disable-model-invocation: true
 ---
 
 # High-Leverage Resources

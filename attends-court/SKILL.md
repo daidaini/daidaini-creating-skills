@@ -1,6 +1,7 @@
 ---
 name: attends-court
 description: Structured court-deliberation framework modeled loosely on Northern Song dynasty state discussions. Use when user says "朝议", "廷议", "朝堂讨论", "皇上", or wants to explore a topic through a ruler-led, multi-perspective discussion with ministers, philosophers, and modern advisers. Also use when the user wants a topic to be 拆解 into role-based viewpoints rather than a plain summary. Do NOT use for general debate or argumentation without a ruler-frame; do NOT use if the user just wants a straightforward Q&A or summary.
+disable-model-invocation: true
 ---
 
 ## Usage

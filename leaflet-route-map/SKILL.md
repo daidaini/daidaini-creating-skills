@@ -2,6 +2,7 @@
 name: leaflet-route-map
 description: Build a complete Leaflet route map demo (HTML) or Google My Maps-compatible KML with test route data, markers, route polyline, local vendored Leaflet assets, and browser verification. Use when the user asks to 绘制路线图, draw routes on a map, make a Google-Maps-like route demo, Leaflet polyline map, OSRM test route map, a standalone HTML map with route lines, or export route to Google My Maps KML. Do NOT use for D3 choropleth/region coloring, full GIS routing engines, production navigation, legal/compliance map publishing, or fully offline basemaps unless offline tiles are explicitly provided.
 license: MIT
+disable-model-invocation: true
 ---
 
 # Leaflet Route Map

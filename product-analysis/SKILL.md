@@ -4,6 +4,7 @@ description: >-
   Analyze a product's essence via first-principles deconstruction and historical evolution, then generate a client-ready HTML report.
   Trigger on: 产品分析, 拆解产品, 产品报告, 产品第一性原理, 产品演化, product analysis, "what should X really be", "why is X the way it is".
   NOT for: investment-specific analysis (use ljg-invest), feature-only analysis, abstract concept analysis, quick factual lookups, or marketing overviews.
+disable-model-invocation: true
 ---
 
 # Product Analysis: First Principles + Historical Evolution

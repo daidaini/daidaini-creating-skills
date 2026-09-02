@@ -1,12 +1,7 @@
 ---
 name: one-page-cheat-sheet
 description: Generates a one-page cheat sheet (一页速查表) for any topic — a scannable, visual, beginner-friendly summary that can be reviewed in 5 minutes. Use when the user asks for "cheat sheet", "速查表", "quick reference", "复习资料", "cram sheet", "备忘录", "知识点总结", "面试准备", "考前速览", "one-pager", "study guide", "记忆卡", or says they need to quickly review a topic before an exam, interview, meeting, or presentation. Also trigger when the user asks for a concise summary of a topic with examples and common mistakes, or says "帮我整理一下重点" / "给我一个浓缩版" / "整理重点".
-metadata:
-  version: 2.0.0
-  author: Yao Team
-  maturity: production
-  tags: [cheat-sheet, study, reference, learning, exam-prep]
-  review_cadence: quarterly
+disable-model-invocation: true
 ---
 
 # One-Page Cheat Sheet
