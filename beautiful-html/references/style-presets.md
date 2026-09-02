@@ -12,8 +12,9 @@
 | 瑞士国际主义 | Swiss Style 网格排版 | 纯白 + 单一强调红 | Helvetica Neue / Inter |
 | 复古杂志 | 70年代复古印刷 | 卡其/砖红/橄榄绿 | Cooper / Fraunces |
 | 优雅复古 ★ | 20世纪初印刷品 / Elegant Vintage | 米黄陈纸 + 深棕/暗红/古铜金/墨绿 | Playfair Display + Cinzel + Noto Serif |
+| 禅意未来 ★ | 禅 / 侘寂 / 日式极简 / 未来科技 | 暖白/雾灰 + 炭黑 + 电子蓝/青绿 | 系统字体栈（无 Google Fonts） |
 
-★ 标记的「优雅复古」是唯一带专属骨架模板的预设：它的装饰语言（花纹边框、蜡封、雕版数字、纸张做旧）与默认贴纸拼贴风差异过大，不能靠只换令牌达成，请直接从 `template/skeleton-vintage.html` 起步（见下文专节）。
+★ 标记的「优雅复古」和「禅意未来」是带独立路由的预设：优雅复古有专属骨架模板 `template/skeleton-vintage.html`；禅意未来则委托给 `content-to-zen-static-html` 技能，不使用 beautiful-html 的任何骨架或预设。
 
 ## 如何换装
 
@@ -35,6 +36,32 @@
 - 风格：斯堪的纳维亚极简 + 波普艺术拼贴
 - 配色：燕麦米白 `#f6f1e7` 打底，珊瑚红/芥末黄/青绿/薰衣草紫点缀
 - 字体：Fraunces（标题）+ Archivo Black（强调/数字）+ Inter（正文）
+
+## 禅意未来 preset（Zen / 侘寂 / 日式极简 / 未来科技）
+
+当用户请求中出现禅、侘寂、wabi-sabi、日式极简、Japanese minimalism、未来科技、futuristic tech 等关键词时，**不启用 beautiful-html 的任何骨架或预设**，而是委托给 `content-to-zen-static-html` 技能。
+
+**为什么需要独立路由**：beautiful-html 的设计语言（偏移实色投影、旋转贴纸、空心章节数字、Google Fonts 引入）本质上是"杂志拼贴风"，与禅意未来主义的"留白 × 材质 × 电子反馈"方向冲突。若强行套用 beautiful-html 骨架，会得到"贴纸拼贴穿禅服"的错误结果。`content-to-zen-static-html` 拥有独立的视觉规则（系统字体栈、单强调色、低密度布局、纸张/石材质感、未来科技点缀），输出同样是单文件静态 HTML，但遵循完全不同的美学体系。
+
+**路由规则**：
+
+1. 检测到禅相关关键词 → 停止 beautiful-html 流程，不加载任何模板或预设。
+2. 将用户内容与意图传递给 `content-to-zen-static-html` 技能。
+3. 该技能以"日式极简 × 侘寂 × 未来科技"为默认视觉方向，输出单文件、可离线、无外部依赖的 HTML。
+4. beautiful-html 的验证脚本 `verify-html.py` 不适用于禅意输出（因无偏移投影、空心数字等要求），应使用 `content-to-zen-static-html` 自身的验证清单。
+
+**禅意风格的配色参考**（来自 `content-to-zen-static-html`）：
+
+- 暖白/雾灰打底，炭黑文字
+- 单一电子蓝或柔和青绿色作为强调色
+- 细线、进度反馈和安静动效
+- 纸张纤维、细微噪点、不完美痕迹
+
+**禅意风格的字体参考**（来自 `content-to-zen-static-html`）：
+
+- 仅使用系统字体栈，不加载 Google Fonts 或外部字体
+- 中文：`"Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif`
+- 等宽：`"SFMono-Regular", "Cascadia Code", Consolas, monospace`
 
 ## 优雅复古 preset（Elegant Vintage，专属骨架）
 

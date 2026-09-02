@@ -2,7 +2,7 @@
 
 The complete visual rules for a `beautiful-html` manual. Generate against these rules; the [Quick Checklist](#快速检查清单) at the end is the self-check gate.
 
-> **结构变体**：本文件描述默认风格（贴纸拼贴）的规则。若用户指定「优雅复古 / vintage / 老式印刷品」，改用结构变体模板 `template/skeleton-vintage.html`，其装饰规则见 [Style Presets → 优雅复古](style-presets.md#优雅复古-presetelegant-vintage专属骨架)。下面的「人做的设计」痕迹在复古变体中以等价物达成（贴纸→橡皮章/蜡封、blob→双线外框、偏移投影→低透明度做旧投影），校验脚本对两者同样适用。
+> **结构变体**：本文件描述默认风格（贴纸拼贴）的规则。若用户指定「优雅复古 / vintage / 老式印刷品」，改用结构变体模板 `template/skeleton-vintage.html`，其装饰规则见 [Style Presets → 优雅复古](style-presets.md#优雅复古-presetelegant-vintage专属骨架)。若用户指定「禅 / 侘寂 / 日式极简 / 未来科技」，则委托给 `content-to-zen-static-html` 技能，不使用 beautiful-html 骨架或预设。下面的「人做的设计」痕迹在复古变体中以等价物达成（贴纸→橡皮章/蜡封、blob→双线外框、偏移投影→低透明度做旧投影），校验脚本对两者同样适用。
 
 ## 1. 设计风格（Design Style）
 
