@@ -2,7 +2,6 @@
 name: d3-offline-map
 description: Build an offline, zero-dependency, custom-drawn geographic map (choropleth / self-drawn regions) as a single double-clickable HTML using Natural Earth TopoJSON/GeoJSON + D3.js. Use when the user wants to render region boundary data offline without online map APIs, without a server, or wants to color/shade regions by per-region values. Triggers include "自绘地图", "免费地图数据 自绘", "offline map D3", "省份着色地图", "行政区划 离线绘制", "Natural Earth D3", "standalone map without API key". Do NOT use when the user needs online tile basemaps, live POI/geocoding APIs, sub-county/sub-province precision, or a backend GIS/PostGIS pipeline.
 license: MIT
-disable-model-invocation: true
 ---
 
 # D3 Offline Map
@@ -19,15 +18,15 @@ Render a custom-drawn geographic map as one offline HTML file: no API key, no se
 
 - Need live online basemaps, POI search, geocoding, routing → use 高德/天地图/腾讯 JS API instead.
 - Need county/township precision → Natural Earth 1:10m is too coarse; use OSM (Geofabrik) or webmap.cn 1:25万.
-- Need a backend / spatial database → use the PostGIS route (china-1m-geodata-postgis-mcp) instead.
+- Need a backend / spatial database (PostGIS etc.) → out of scope for this skill.
 
 ## Core flow (5 steps)
 
 1. **Get boundary data** → put `*.topo.json` / `*.geo.json` in `./data/`. China province pack (mainland + Taiwan + HK/Macao) is already proven: see [Workflow](references/workflow.md) for sources.
 2. **Vendor the libs** → `curl` D3 v5 + topojson-client into `./vendor/` so no CDN at runtime. Snippet in [Workflow](references/workflow.md).
-3. **Pack data into `data.js`** → run `node scripts/build-data.js [file:alias ...] -o data.js` to emit `window.MAPS = {...}`. The alias form keeps template keys stable: `node scripts/build-data.js data/zh-mainland-provinces.topo.json:mainland data/zh-chn-twn.topo.json:chnTwn data/zh-hkg-mac.topo.json:hkMac -o data.js`.
+3. **Pack data into `data.js`** → from the output directory, run `node <skill-dir>/scripts/build-data.js [file:alias ...] -o data.js` (`<skill-dir>` is the "Base directory for this skill" stated when the skill loads) to emit `window.MAPS = {...}`. The alias form keeps template keys stable: `node <skill-dir>/scripts/build-data.js data/zh-mainland-provinces.topo.json:mainland data/zh-chn-twn.topo.json:chnTwn data/zh-hkg-mac.topo.json:hkMac -o data.js`.
 4. **Copy template** → `cp template/index.html ./index.html`. Inspect property field names your data exposes (e.g. `provinces` object, `name` field, `GU_A3` filter for Taiwan, `NAME` for HK/Macao) and adjust the few data-specific lines flagged by `// DATA-SPECIFIC:` comments in the template.
-5. **Verify in a real browser** → open the file via `file://`, check: `<svg>` has N region paths, fills differ by value, console has 0 errors, take a screenshot. Do not trust "the code looks right" — projection params, object names, and property field names all silently produce a blank page.
+5. **Verify in a real browser** → if a browser-automation tool (chrome-devtools / playwright MCP) is available, drive it yourself: navigate to the `file://` URL of `index.html`, run the console checklist in [Workflow](references/workflow.md), take a screenshot. If not, hand the file to the user and ask them to open it and paste the checklist result. Do not trust "the code looks right" — projection params, object names, and property field names all silently produce a blank page.
 
 ## Success criteria (must all pass)
 

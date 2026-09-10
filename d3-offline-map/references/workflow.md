@@ -30,8 +30,8 @@ curl -sS -L -o vendor/d3.v5.min.js            https://cdn.jsdelivr.net/npm/d3@5.
 curl -sS -L -o vendor/topojson-client.min.js  https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js
 # sanity: head -c 80 each; d3 file starts with "// https://d3js.org v5.16.0"
 
-# 3. Pack into data.js (run from skill parent dir)
-node .agents/skills/d3-offline-map/scripts/build-data.js \
+# 3. Pack into data.js (run from the output directory; <SKILL-DIR> = the skill's base directory)
+node "<SKILL-DIR>/scripts/build-data.js" \
   data/zh-mainland-provinces.topo.json:mainland \
   data/zh-chn-twn.topo.json:chnTwn \
   data/zh-hkg-mac.topo.json:hkMac \
@@ -41,7 +41,7 @@ node .agents/skills/d3-offline-map/scripts/build-data.js \
 #         packed hkMac   <- ... | objects=layer1
 
 # 4. Copy template
-cp .agents/skills/d3-offline-map/template/index.html ./index.html
+cp "<SKILL-DIR>/template/index.html" ./index.html
 
 # 5. Open in a browser (file:// double-click works)
 ```
@@ -87,7 +87,9 @@ const path2 = d3.geoPath().projection(proj2);
 // draw rect frame, label, then the HK/Macao paths with path2
 ```
 
-## Verification checklist (run in browser DevTools console)
+## Verification checklist
+
+**Automated (browser-automation MCP such as chrome-devtools / playwright):** navigate to the `file://` URL of `index.html`, `evaluate_script` the snippet below, then `take_screenshot`. **Manual fallback:** ask the user to open the file and run the snippet in the DevTools console.
 
 ```js
 JSON.stringify({
