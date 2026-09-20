@@ -1,6 +1,6 @@
 ---
 name: svg-generation
-description: Generate SVG diagrams from structured JSON or natural language. Three routes: Route 1 — direct LLM SVG for simple icons/UI; Route 2 — structured JSON + layout engine (Glyphic) for flowcharts/architecture/ERD/UML/sequence etc. (recommended); Route 3 — visual pipeline (SVG Genie/Recraft) for complex illustrations/logos. Route by diagram structure: structured chart → Route 2; simple icon ≤30 elements → Route 1; complex visual/logo → Route 3. Exclude raster-only image generation, photorealistic SVG demands, pixel editing, non-vector output.
+description: Generate SVG diagrams from structured JSON or natural language. Three routes：Route 1 — direct LLM SVG for simple icons/UI; Route 2 — structured JSON + layout engine (Glyphic) for flowcharts/architecture/ERD/UML/sequence etc. (recommended); Route 3 — visual pipeline (SVG Genie/Recraft) for complex illustrations/logos. Route by diagram structure：structured chart → Route 2; simple icon ≤30 elements → Route 1; complex visual/logo → Route 3. Exclude raster-only image generation, photorealistic SVG demands, pixel editing, non-vector output.
 disable-model-invocation: true
 ---
 
