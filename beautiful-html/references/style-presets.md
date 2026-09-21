@@ -7,14 +7,14 @@
 | 本次案例 | 斯堪的纳维亚极简 + 波普拼贴 | 燕麦米白 + 珊瑚红/芥末黄/青绿/薰衣草紫 | Fraunces + Archivo Black + Inter |
 | 日式极简 | Wabi-sabi 侘寂风 | 灰白/米色 + 靛蓝/朱红点缀 | Noto Serif JP + Inter |
 
-| 赛博朋克 | Cyberpunk 霓虹故障风 | 深黑背景 + 荧光青/品红/黄绿 | Orbitron / Space Mono |
+| 赛博朋克 ★ | Neo-Tokyo Daylight / 亮色霓虹科技编辑风 | 冷白/淡青底 + 青/品红/黄绿信号色 | Orbitron / Space Mono / Noto Sans SC |
 
 | 瑞士国际主义 | Swiss Style 网格排版 | 纯白 + 单一强调红 | Helvetica Neue / Inter |
 
 | 优雅复古 ★ | 20世纪初印刷品 / Elegant Vintage | 米黄陈纸 + 深棕/暗红/古铜金/墨绿 | Playfair Display + Cinzel + Noto Serif |
 | 禅意未来 ★ | 禅 / 侘寂 / 日式极简 / 未来科技 | 暖白/雾灰 + 炭黑 + 电子蓝/青绿 | 系统字体栈（无 Google Fonts） |
 
-★ 标记的「优雅复古」和「禅意未来」是带独立路由的预设：优雅复古有专属骨架模板 `template/skeleton-vintage.html`；禅意未来则委托给 `content-to-zen-static-html` 技能，不使用 beautiful-html 的任何骨架或预设。
+★ 标记的「赛博朋克」「优雅复古」和「禅意未来」是带独立路由的预设：赛博朋克有专属骨架模板 `template/skeleton-cyberpunk.html`；优雅复古有专属骨架模板 `template/skeleton-vintage.html`；禅意未来则委托给 `content-to-zen-static-html` 技能，不使用 beautiful-html 的任何骨架或预设。
 
 ## 如何换装
 
@@ -36,6 +36,19 @@
 - 风格：斯堪的纳维亚极简 + 波普艺术拼贴
 - 配色：燕麦米白 `#f6f1e7` 打底，珊瑚红/芥末黄/青绿/薰衣草紫点缀
 - 字体：Fraunces（标题）+ Archivo Black（强调/数字）+ Inter（正文）
+
+## 赛博朋克 preset（Cyberpunk / Neo-Tokyo Daylight，专属骨架）
+
+触发词：cyberpunk、赛博朋克、霓虹故障、未来都市、Neo-Tokyo、科技编辑风。使用 `template/skeleton-cyberpunk.html`，而不是默认拼贴骨架。
+
+**设计意图**：赛博朋克不等于低可读性的黑底屏幕。该预设采用“亮色赛博朋克”：冷白/淡青背景承担长文阅读，荧光青、品红、黄绿只承担信号、重点和交互状态；深色仅用于公式框等短内容反差区。
+
+- **配色令牌**：冷白底 `#eefaff`，淡青辅助底 `#d9f1fb`，深蓝墨色 `#10243d`；信号色为青 `#007d94`、品红 `#c72f89`、黄绿 `#6d9800`、琥珀 `#a86600`。
+- **字体角色**：Orbitron 用于标题与大号章节数；Space Mono 用于标签、编号和代码；Noto Sans SC 用于中文长文，避免 Orbitron 被用于正文而降低可读性。
+- **结构性装饰**：细密工程网格、浅扫描线、斜置线框/圆形、文字轻微双色错位。装饰在浅色底上低对比呈现，不遮挡正文。
+- **组件语言**：白色面板 + 实色偏移阴影；卡片交替使用青/品红阴影；黄绿承担章节内的标签和流程编号；深蓝公式框只用于短代码、流程式或命令。
+- **禁则**：不使用满屏黑底；不使用蓝紫渐变；不以荧光文字承载整段正文；不让故障效果影响中文阅读；不把每个组件都做成发光边框。
+- **响应式与打印**：移动端侧栏变顶栏、表格横滚；打印时去掉网格、扫描线、偏移阴影和霓虹色，转成黑白高对比版。
 
 ## 禅意未来 preset（Zen / 侘寂 / 日式极简 / 未来科技）
 
