@@ -1,0 +1,29 @@
+interface:
+  display_name: "Geographic Map Artifact"
+  short_description: "Build verified local route, choropleth, or boundary-plus-route map artifacts"
+  default_prompt: "Use $geographic-map-artifact to create a local map artifact in my target folder. Choose route, choropleth, or composite mode; keep all geographic source coordinates in [lon, lat] order; verify the result in a real browser and save a screenshot when possible."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual-or-description"
+    paths:
+      - "SKILL.md"
+      - "references/routing-and-data-contract.md"
+      - "references/verification-and-boundaries.md"
+  execution:
+    context: "inline"
+    shell: "bash"
+    browser_verification: "recommended"
+  trust:
+    source_tier: "local"
+    network_policy: "allow-for-explicitly-approved-library-downloads-route-fetches-and-online-tiles"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    no_network: "use only existing local libraries and supplied/local data; do not select an online-tile Leaflet basemap"
+    no_browser: "perform static data-shape checks, but mark visual and screenshot evidence as unavailable"
+    generic: "neutral-source"
