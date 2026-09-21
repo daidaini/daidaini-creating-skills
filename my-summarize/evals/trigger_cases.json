@@ -7,7 +7,8 @@
     { "text": "summarize articles in this directory", "family": "en-explicit" },
     { "text": "给 output/2026-03-24/ 生成摘要", "family": "short" },
     { "text": "今天抓的文章太多了，帮我做个摘要汇总", "family": "colloquial" },
-    { "text": "output/2026-03-28 这个目录，摘要", "family": "minimal" }
+    { "text": "output/2026-03-28 这个目录，摘要", "family": "minimal" },
+    { "text": "帮我把这个目录的文章做成摘要，输出 HTML", "family": "html-output" }
   ],
   "should_not_trigger": [
     { "text": "帮我总结一下这篇文章", "family": "single-article" },
