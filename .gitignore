@@ -1,4 +1,8 @@
 testing
+examples/
 
-examples
-.playwright-mcp
+.playwright-mcp/
+.workbuddy/
+.agents/
+.pi/
+.claude/

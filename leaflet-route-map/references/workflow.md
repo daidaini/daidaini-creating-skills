@@ -22,7 +22,9 @@ target/
 │     └─ images/
 │        ├─ marker-icon.png
 │        ├─ marker-icon-2x.png
-│        └─ marker-shadow.png
+│        ├─ marker-shadow.png
+│        ├─ layers.png              # required when using L.control.layers
+│        └─ layers-2x.png
 └─ scripts/
    └─ convert-kml.py              # reusable KML generation script
 ```
@@ -56,6 +58,9 @@ curl -L --fail -o target/vendor/leaflet/leaflet.js https://unpkg.com/leaflet@1.9
 curl -L --fail -o target/vendor/leaflet/images/marker-icon.png https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png
 curl -L --fail -o target/vendor/leaflet/images/marker-icon-2x.png https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png
 curl -L --fail -o target/vendor/leaflet/images/marker-shadow.png https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png
+# Only needed when using L.control.layers; without them the layer switcher renders as a blank box:
+curl -L --fail -o target/vendor/leaflet/images/layers.png https://unpkg.com/leaflet@1.9.4/dist/images/layers.png
+curl -L --fail -o target/vendor/leaflet/images/layers-2x.png https://unpkg.com/leaflet@1.9.4/dist/images/layers-2x.png
 ```
 
 If network is unavailable, ask the user for existing Leaflet assets or copy from a known local vendor folder.

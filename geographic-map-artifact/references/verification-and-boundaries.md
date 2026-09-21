@@ -4,6 +4,8 @@
 
 Open the generated `index.html` in a real browser. Run checks appropriate to the selected mode and save `screenshot.png` if browser tooling is available.
 
+Session rule: perform open, checks, and screenshot inside one browser session/script. Isolated script sessions may close between calls and reset the page to `about:blank`, silently invalidating later checks. Keep `eval` expressions single-line and self-contained; multi-line snippets can be truncated by argument tokenization.
+
 ### Route checks
 
 ```js

@@ -48,6 +48,7 @@ Follow the detailed process in [Workflow](references/workflow.md):
 
 - Leaflet `L.polyline` expects `[lat, lon]`; OSRM/GeoJSON coordinates are `[lon, lat]`.
 - Vendored Leaflet does not make the basemap offline. OpenStreetMap tile URLs still require network.
+- Chinese basemap tile providers (Gaode/Tencent) render in GCJ-02. WGS84 route/marker data (OSRM, GPS) sits hundreds of meters off their roads when zoomed in. State this in the README and/or offer an OSM (WGS84) layer toggle.
 - Do not claim “fully offline” unless tiles are local, e.g. `./tiles/{z}/{x}/{y}.png`.
 - For `file://` friendliness, save route data as a JS file such as `window.ROUTE_DATA = ...` instead of fetching JSON at runtime.
 - KML coordinates use `lon,lat` order (same as GeoJSON/OSRM, no conversion needed).
