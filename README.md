@@ -1,6 +1,8 @@
 # Daidaini's Creating Skills
 
-一套面向 Claude Code / Zed AI Agent 的自定义技能集合，涵盖学习方法论、内容创作、数据可视化、产品分析等多个领域。每个技能都是自包含的 `SKILL.md` 定义，可直接加载使用。
+一套面向 Claude Code / Zed AI Agent 等工具的自定义技能（Skills）集合，覆盖学习方法论、内容创作、HTML 交付物、离线地图可视化、产品分析与思辨、实用工具六个方向。每个技能是一个自包含目录，入口为 `SKILL.md`，可直接加载使用。
+
+当前共 **15 个技能**。
 
 ## 技能清单
 
@@ -8,7 +10,7 @@
 
 | 技能 | 描述 |
 |------|------|
-| [build-learning-ladder](./build-learning-ladder/) | 为任意主题搭建 5 级渐进式学习阶梯，每级含掌握标准、核心概念、实操练习、常见误区和自测清单 |
+| [build-learning-ladder](./build-learning-ladder/) | 为任意主题搭建 5 级渐进式学习阶梯，每级含掌握标准、核心概念、实操练习、常见误区和自测清单，可选输出设计感单页 HTML |
 | [feyman-learning-method](./feyman-learning-method/) | 交互式费曼学习法对话——用 12 岁孩子能懂的话讲解，邀请你教回来，定位薄弱点，循环直到真正掌握 |
 | [high-leverage-resources](./high-leverage-resources/) | 精选 Top 5 高杠杆学习资源（书/课/视频等）并附详细理由，再用这些资源规划 7 天学习路径 |
 | [one-page-cheat-sheet](./one-page-cheat-sheet/) | 生成任意主题的一页速查表——可视化、易扫读、初学者友好，5 分钟可复习完。适用于备考、面试、会议和快速回顾 |
@@ -17,19 +19,25 @@
 
 | 技能 | 描述 |
 |------|------|
-| [my-summarize](./my-summarize/) | 批量摘要工作流：读取目录下所有 `.md` 文章，每篇生成 5–8 句中文摘要，保留作者和来源链接，输出为 `summarize.md` |
+| [my-summarize](./my-summarize/) | 批量摘要工作流：读取目录下所有 `.md` 文章，每篇生成 5–8 句中文摘要，保留作者和来源链接，输出 `summarize.md`；明确要求 HTML 时自动路由到 beautiful-html |
 | [my-writing](./my-writing/) | 把一个观点写成 1000–1500 字中文分析文章——一篇只处理一个核心判断，用具体场景、连续追问、换角度验证和温和共情的口吻写深写透 |
 
-### 🗺️ 可视化与地图
+### 🎨 HTML 交付物
 
 | 技能 | 描述 |
 |------|------|
-| [d3-offline-map](./d3-offline-map/) | 基于 D3.js + Natural Earth TopoJSON/GeoJSON 构建零依赖离线自定义地图（分级填色 / 自绘区域），单文件 HTML 双击即可打开 |
-| [leaflet-route-map](./leaflet-route-map/) | 构建完整的 Leaflet 路线图 Demo（HTML）或 Google My Maps 兼容的 KML，含测试路线数据、标记点、路线折线、本地 Leaflet 资源和浏览器验证 |
-| [svg-generation](./svg-generation/) | 从结构化 JSON 或自然语言生成 SVG 图表——三条路径：LLM 直出（简单图标）、JSON + 布局引擎（流程图/架构图）、视觉管线（复杂插画） |
-| [beautiful-html](./beautiful-html/) | 生成设计感十足、杂志级别的静态 HTML 知识手册，单文件自包含——定制字体、偏移阴影、贴纸徽章、侧边栏目录和丰富组件 |
+| [beautiful-html](./beautiful-html/) | 生成设计感十足、可翻页浏览的静态 HTML 知识手册，单文件自包含——定制字体、贴纸徽章、侧边栏目录和丰富组件，附 `verify-html.py` 静态校验 |
+| [content-to-zen-static-html](./content-to-zen-static-html/) | 将 Markdown / 长文档整理为双击即开的单文件静态 HTML，默认「日式极简 × 侘寂 × 未来科技」视觉语言，不依赖服务器和外部库 |
 
-### 🔍 分析与研究
+### 🗺️ 地图与可视化
+
+| 技能 | 描述 |
+|------|------|
+| [geographic-map-artifact](./geographic-map-artifact/) | 地图产物统一入口：按需求路由到路线图 / 分级填色图 / 两者合成模式，附数据契约与浏览器验证门槛 |
+| [d3-offline-map](./d3-offline-map/) | 基于 D3.js + Natural Earth TopoJSON/GeoJSON 构建零依赖离线自定义地图（分级填色 / 自绘区域），单文件 HTML 双击即可打开 |
+| [leaflet-route-map](./leaflet-route-map/) | 构建完整 Leaflet 路线图 Demo（HTML）或 Google My Maps 兼容 KML，含 OSRM 路线、标记点、本地化资源和 `convert-kml.py` 转换脚本 |
+
+### 🔍 产品分析与思辨
 
 | 技能 | 描述 |
 |------|------|
@@ -43,60 +51,58 @@
 |------|------|
 | [youtube-audio-downloader](./youtube-audio-downloader/) | 使用 yt-dlp + Node.js 运行时 + 远程 EJS 挑战求解器下载 YouTube 音频为 MP3，绕过机器人检测、403 错误和 n-challenge 防护 |
 
+## 触发方式
+
+技能的 frontmatter 决定其调用模式：
+
+- **模型自动触发**：描述写在 `description` 中，agent 按语义匹配自动调用（如 build-learning-ladder、d3-offline-map、my-summarize）。
+- **仅手动调用**：带 `disable-model-invocation: true` 的技能（attends-court、beautiful-html、feyman-learning-method、high-leverage-resources、leaflet-route-map、one-page-cheat-sheet、product-analysis、product-mind）不会被自动触发，需要显式点名使用。
+
 ## 目录结构
 
 ```
 daidaini-creating-skills/
-├── 20-hour-focus-learning/    # 20小时聚焦学习
-├── attends-court/             # 朝议思辨
-├── beautiful-html/            # 精美HTML生成
-├── build-learning-ladder/     # 学习阶梯
-├── d3-offline-map/            # D3离线地图
-├── examples/                  # 技能运行示例输出
-├── feyman-learning-method/    # 费曼学习法
-├── high-leverage-resources/   # 高杠杆资源
-├── leaflet-route-map/         # Leaflet路线图
-├── my-summarize/              # 批量摘要
-├── my-writing/                # 深度写作
-├── one-page-cheat-sheet/      # 一页速查表
-├── product-analysis/          # 产品分析
-├── product-mind/              # 产品思维（Jobs 式产品判断）
-├── svg-generation/            # SVG生成
-├── testing/                   # 测试输出（自动生成，勿手动编辑）
-├── tiaowu-writing-style/      # 跳舞文风
-├── youtube-audio-downloader/  # YouTube音频下载
-├── CLAUDE.md                  # Claude Code 配置
+├── <skill-name>/              # 每个技能一个自包含目录
+│   ├── SKILL.md               # 入口：YAML frontmatter + 工作流正文
+│   ├── agents/interface.yaml  # 机器可读契约（触发词/输入输出/排除项）
+│   ├── references/            # 按需加载的方法论、风格规范
+│   ├── assets/ template/      # HTML 报告模板、页面骨架
+│   ├── scripts/               # 数据打包、KML 转换、静态校验等辅助脚本
+│   ├── evals/                 # 触发词正负例与语义评测配置
+│   └── reports/               # 边界报告、风险画像、触发评测结果
+├── examples/                  # 技能运行示例输出（部分历史示例已入库）
+├── testing/                   # 测试产物（gitignore，勿手动编辑）
+├── AGENTS.md                  # 面向所有 agent 的仓库工作指南
+├── CLAUDE.md                  # Claude Code 入口（引用 AGENTS.md）
 └── README.md                  # 本文件
 ```
 
-## 使用方式
+## 安装使用
 
-### 在 Claude Code 中使用
+### Claude Code
 
-将技能目录复制到 Claude Code 的技能目录下：
+将技能目录复制到 Claude Code 技能目录：
 
 ```bash
-# macOS
+# macOS / Linux
 cp -r <skill-name> ~/.claude/skills/
 
 # Windows
-xcopy /E /I <skill-name> %APPDATA%\Claude\skills\<skill-name>
+xcopy /E /I <skill-name> %USERPROFILE%\.claude\skills\<skill-name>
 ```
 
-重启 Claude Code 后即可通过触发词调用对应技能。
-
-### 在 Zed 中使用
-
-将技能目录放置到 Zed 的 agent skills 目录下：
+### Zed / 通用 agent（Agent Client Protocol）
 
 ```bash
-# Windows
+# macOS / Linux
 cp -r <skill-name> ~/.agents/skills/
+
+# Windows（目录链接，整仓一次接入）
+mklink /J %USERPROFILE%\.agents\skills\daidaini-skills <本仓库路径>
 ```
 
-## 约定
+用链接方式安装时，仓库编辑即时生效，无需重复复制。
 
-- 每个技能在独立目录中，入口为 `SKILL.md`，含 YAML frontmatter（name, description 等）
-- 技能目录自包含所需的 `assets/`、`references/` 等资源
-- 输出文件默认保存到当前工作目录
-- `testing/` 目录存放测试生成的文件，不纳入版本管理
+### pi
+
+pi 会扫描 `~/.agents/skills/` 下的 `SKILL.md`，与 Zed 安装方式相同。
