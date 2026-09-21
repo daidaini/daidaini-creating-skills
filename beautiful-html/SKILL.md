@@ -83,7 +83,7 @@ This skill is **user-manual-trigger only**. It must not be invoked automatically
 ## References
 
 - [Design System](references/design-system.md) — full visual rules: style cues, color system, font system, structure, technical + content requirements, and the quick checklist.
-- [Style Presets](references/style-presets.md) — the 换装 reference table (Scandinavian pop, Wabi-sabi, Bauhaus, Cyberpunk, Editorial, Swiss, Retro-print, Elegant Vintage) and how to swap style/color/font variables. Elegant Vintage has its own structural skeleton and dedicated section.
+- [Style Presets](references/style-presets.md) — the 换装 reference table (Scandinavian pop, Wabi-sabi, Cyberpunk, Swiss, Elegant Vintage) and how to swap style/color/font variables. Elegant Vintage has its own structural skeleton and dedicated section.
 - [Component Library](references/component-library.md) — the parts inventory with concrete HTML/CSS recipes for each component, plus the vintage-variant component substitution table.
 - [Skeleton Template](template/skeleton.html) — verified single-file starting point for the default design language (tokens + all components) with placeholder content.
 - [Vintage Skeleton](template/skeleton-vintage.html) — Elegant Vintage structural variant: aged-paper texture layers, double-rule frame with corner ornaments, wax seal, rubber-stamp badges, hollow roman-numeral chapters, drop caps, sepia photos.

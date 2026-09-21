@@ -6,11 +6,11 @@
 |---|---|---|---|
 | 本次案例 | 斯堪的纳维亚极简 + 波普拼贴 | 燕麦米白 + 珊瑚红/芥末黄/青绿/薰衣草紫 | Fraunces + Archivo Black + Inter |
 | 日式极简 | Wabi-sabi 侘寂风 | 灰白/米色 + 靛蓝/朱红点缀 | Noto Serif JP + Inter |
-| 包豪斯 | Bauhaus 几何构成 | 原色三原色（红黄蓝）+ 黑白 | Futura / Archivo + 几何无衬线 |
+
 | 赛博朋克 | Cyberpunk 霓虹故障风 | 深黑背景 + 荧光青/品红/黄绿 | Orbitron / Space Mono |
-| 学术手册 | 编辑排版 Editorial | 象牙白 + 深绿/暗红点缀 | Playfair Display + Source Serif |
+
 | 瑞士国际主义 | Swiss Style 网格排版 | 纯白 + 单一强调红 | Helvetica Neue / Inter |
-| 复古杂志 | 70年代复古印刷 | 卡其/砖红/橄榄绿 | Cooper / Fraunces |
+
 | 优雅复古 ★ | 20世纪初印刷品 / Elegant Vintage | 米黄陈纸 + 深棕/暗红/古铜金/墨绿 | Playfair Display + Cinzel + Noto Serif |
 | 禅意未来 ★ | 禅 / 侘寂 / 日式极简 / 未来科技 | 暖白/雾灰 + 炭黑 + 电子蓝/青绿 | 系统字体栈（无 Google Fonts） |
 
