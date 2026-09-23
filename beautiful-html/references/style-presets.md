@@ -4,7 +4,8 @@
 
 | 风格方向 | 风格关键词 | 配色关键词 | 字体建议 |
 |---|---|---|---|
-| 本次案例 | 斯堪的纳维亚极简 + 波普拼贴 | 燕麦米白 + 珊瑚红/芥末黄/青绿/薰衣草紫 | Fraunces + Archivo Black + Inter |
+| 默认 ★ | 20世纪初印刷品 / Elegant Vintage | 米黄陈纸 + 深棕/暗红/古铜金/墨绿 | Playfair Display + Cinzel + Noto Serif |
+| `style=pop` / `style=scandi` | 斯堪的纳维亚极简 + 波普拼贴 | 燕麦米白 + 珊瑚红/芥末黄/青绿/薰衣草紫 | Fraunces + Archivo Black + Inter |
 | 日式极简 | Wabi-sabi 侘寂风 | 灰白/米色 + 靛蓝/朱红点缀 | Noto Serif JP + Inter |
 
 | 赛博朋克 ★ | Cyberpunk Neon Night / 霓虹故障科技编辑风 | 深黑底 + 荧光青/品红/黄绿 | Orbitron / Space Mono / Noto Sans SC |
@@ -18,8 +19,8 @@
 
 ## 如何换装
 
-1. 保持 `template/skeleton.html` 的结构、组件类名、布局逻辑不动。
-2. 只替换模板顶部的设计令牌（CSS 变量）：
+1. 先按风格选择骨架：未指定 `style` 时用 `template/skeleton-vintage.html`；`style=pop` / `style=scandi` 时用 `template/skeleton.html`；`style=cyberpunk` 时用 `template/skeleton-cyberpunk.html`。
+2. 保持所选骨架的结构、组件类名、布局逻辑不动；只替换允许调整的设计令牌（CSS 变量）：
 
    - `--paper` / `--ink`：基础色（背景 + 文字）
    - `--accent-1..4`：3-4 个跳跃点缀色
@@ -29,17 +30,25 @@
 3. 替换 Google Fonts `<link>` 中的字体为 preset 建议字体。
 4. 复跑 `scripts/verify-html.py` 与浏览器检查。
 
-## 默认 preset（Scandinavian + pop-art）
+## 默认 preset（Elegant Vintage / 复古印刷风）
 
-当用户只说「有设计感」、未指定风格时，用默认值：
+当用户只说「有设计感」、未指定风格时，用 `template/skeleton-vintage.html`：
 
-- 风格：斯堪的纳维亚极简 + 波普艺术拼贴
+- 风格：20世纪初印刷品 / Elegant Vintage
+- 配色：陈年米黄纸 `#f2ead8` 打底，深棕油墨 `#3a2d20`，暗红/古铜金/墨绿/黛蓝点缀
+- 字体：Playfair Display（标题）+ Cinzel（强调）+ Noto Serif（正文）+ Special Elite（公式框）
+- 结构：双线外框、扉页式 Hero、朱砂橡皮章、封蜡印记、空心罗马章节号和藏书票式卡片
+
+## Scandinavian + pop-art preset（显式选择）
+
+只有用户明确指定 `style=pop`、`style=scandi`、斯堪的纳维亚或波普拼贴时，才使用 `template/skeleton.html`：
+
 - 配色：燕麦米白 `#f6f1e7` 打底，珊瑚红/芥末黄/青绿/薰衣草紫点缀
 - 字体：Fraunces（标题）+ Archivo Black（强调/数字）+ Inter（正文）
 
 ## 赛博朋克 preset（Cyberpunk Neon Night，专属骨架）
 
-触发词：cyberpunk、赛博朋克、霓虹故障、未来都市、Neo-Tokyo、科技编辑风。使用 `template/skeleton-cyberpunk.html`，而不是默认拼贴骨架。
+触发词：cyberpunk、赛博朋克、霓虹故障、未来都市、Neo-Tokyo、科技编辑风。使用 `template/skeleton-cyberpunk.html`，而不是默认复古印刷骨架。
 
 **设计意图**：采用深黑背景、荧光信号色和有限故障效果，营造夜间未来都市的编辑感；中文正文使用冷白和蓝灰，而不是大面积荧光文字，以保持长文阅读的对比度。
 
@@ -80,15 +89,15 @@
 
 重现 20 世纪初期印刷品美学（参考 The New Yorker 与老式法国时尚杂志）。触发词：优雅复古、复古印刷、老式杂志、vintage、旧书/藏书票/铅印质感。
 
-**与其他 preset 的本质区别**：复古的典雅来自「结构性装饰语言」，不只是配色与字体。若在默认骨架上仅换色换字体，得到的仍是贴纸拼贴风穿旧衣服，不是老印刷品。因此使用专属骨架 `template/skeleton-vintage.html`，它已实现全部下述要素：
+**与其他 preset 的本质区别**：复古的典雅来自「结构性装饰语言」，不只是配色与字体。它同时是未指定风格时的默认输出。不要在波普拼贴骨架上仅换色换字体，否则得到的仍是贴纸拼贴风穿旧衣服，不是老印刷品。使用 `template/skeleton-vintage.html`，它已实现全部下述要素：
 
 - **配色令牌**：陈年米黄纸 `#f2ead8` 打底；深棕油墨 `#3a2d20` 文字；点缀色为暗红（封蜡/朱批）`#8c2b20`、古铜金（烫金饰线）`#a67c2e`、墨绿（账簿皮革）`#31502f`、黛蓝（老蓝图墨）`#2f4257`
 - **字体角色**：Playfair Display（Didot 风标题）+ Cinzel（罗马小帽强调）+ Noto Serif（正文衬线）+ Special Elite（打字机体，公式框专用）
 - **做旧三层**：SVG 噪点纸张纹理（`body::before`）+ 四周晕暗（`body::after`）+ 零星污渍（`.stains`）——纯 CSS，无外部图片
-- **全页双线外框 + 四角金饰**（`.sheet-frame`）：替代默认风格的 blob 色块
+- **全页双线外框 + 四角金饰**（`.sheet-frame`）：替代波普拼贴风的 blob 色块
 - **扉页式居中对称 Hero**：栏目名 kicker 带饰线、副题斜体、花饰 `❦` 分隔——替代左对齐海报式 Hero
 - **描边罗马数字章节号 + 花饰 `☙────❧`**：金棕描边，替代黑色粗描边阿拉伯数字
-- **组件替代对照**（类名与默认骨架一致，装饰语言更换）：
+- **组件替代对照**（类名与波普拼贴骨架一致，装饰语言更换）：
   - 贴纸 → 朱砂橡皮章（双线内框 + 印泥透感，仍保留旋转）
   - 新增封蜡印记 `.seal`（Hero 右上，径向渐变红蜡 + 虚线内圈）
   - 卡片 → 藏书票式双线卡（`outline` 内嵌双线 + 居中排布）
@@ -98,7 +107,7 @@
   - 引用块 → 居中题词式（上下 double 边 + 大引号）
   - callout 标签 → 按語 / 箴言
   - 新增首字下沉 `.dropcap`（每章第一段）与褪色照片 `.photo`（sepia 滤镜）
-- **换装守则**：类名与布局逻辑与默认骨架一致，仍只改令牌即可微调配色；但不要删掉做旧层、外框、罗马数字这些结构性装饰——它们才是这个风格的身份所在
+- **换装守则**：类名与布局逻辑与波普拼贴骨架一致，仍只改令牌即可微调配色；但不要删掉做旧层、外框、罗马数字这些结构性装饰——它们才是这个风格的身份所在
 - **投影注意**：复古投影刻意用低透明度深棕做旧，但必须保证至少一条 `box-shadow` 以 `Npx Npx 0` 实色层**开头**（`inset` 层不能放第一位），否则 `verify-html.py` 的偏移投影检查识别不到（正则要求声明以偏移层开头）。骨架中已按此写好，改样式时保持这一点
 - 响应式与打印：移动端收起外框与做旧层、侧边栏折叠为顶部条；打印隐藏全部装饰层，输出干净白纸版式
 

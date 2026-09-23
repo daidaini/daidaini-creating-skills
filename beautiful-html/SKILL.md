@@ -26,15 +26,16 @@ Turn arbitrary long text (technical summaries, knowledge points, methodology) in
 
 ## Style parameter（风格参数）
 
-One optional `style` parameter may be passed to select a preset; otherwise default to the Scandinavian + pop-art preset with a warm oatmeal base.
+One optional `style` parameter may be passed to select a preset; otherwise default to the Elegant Vintage / 复古印刷 preset.
 
 | Parameter value | Preset |
 |---|---|
 | `zen` | Delegates to `content-to-zen-static-html` skill (Japanese Minimalism × Wabi-Sabi × Futuristic Tech). See [Zen routing](#zen-routing). |
-| `cyberpunk` | Cyberpunk preset |
+| `cyberpunk` | Dark neon Cyberpunk preset |
 | `swiss` | Swiss preset |
-| `vintage` / `elegant` | Elegant Vintage variant |
-| A color keyword (e.g. `style=莫兰迪绿`) | Re-skin the default preset with that palette |
+| `vintage` / `elegant` | Elegant Vintage variant; also the default when `style` is omitted |
+| `pop` / `scandi` | Scandinavian + pop-art variant; explicit selection only |
+| A color keyword (e.g. `style=莫兰迪绿`) | Re-skin the default Elegant Vintage palette with that color direction |
 
 ### Zen routing
 
@@ -46,10 +47,10 @@ This skill is **user-manual-trigger only**. It must not be invoked automatically
 
 ## Core flow (5 steps)
 
-1. **Confirm target + design variables.** Target file/folder, style parameter (see [Style Presets](references/style-presets.md)) or custom style keywords, color keywords, and whether Google Fonts over the network is acceptable. If the user only says "有设计感" without details, default to the Scandinavian + pop-art preset with warm oatmeal base. If the user passes `style=cyberpunk`, use the dark neon cyberpunk structural variant: start from [template/skeleton-cyberpunk.html](template/skeleton-cyberpunk.html) and follow [Style Presets → 赛博朋克](references/style-presets.md#赛博朋克-presetcyberpunk专属骨架). If the user passes `style=vintage` / `style=elegant`, use the Elegant Vintage structural variant: start from [template/skeleton-vintage.html](template/skeleton-vintage.html) instead of the default skeleton, and follow [Style Presets → 优雅复古](references/style-presets.md#优雅复古-presetelegant-vintage专属骨架). If the user passes `style=zen`, delegate to the `content-to-zen-static-html` skill instead — do not use the beautiful-html skeleton or presets.
+1. **Confirm target + design variables.** Target file/folder, style parameter (see [Style Presets](references/style-presets.md)) or custom style keywords, color keywords, and whether Google Fonts over the network is acceptable. If the user only says "有设计感" without details, default to the Elegant Vintage / 复古印刷 preset and [template/skeleton-vintage.html](template/skeleton-vintage.html). If the user passes `style=pop` / `style=scandi`, explicitly select the Scandinavian + pop-art [template/skeleton.html](template/skeleton.html). If the user passes `style=cyberpunk`, use the dark neon cyberpunk structural variant: start from [template/skeleton-cyberpunk.html](template/skeleton-cyberpunk.html) and follow [Style Presets → 赛博朋克](references/style-presets.md#赛博朋克-presetcyberpunk专属骨架). If the user passes `style=zen`, delegate to the `content-to-zen-static-html` skill instead — do not use the beautiful-html skeleton or presets.
 2. **Plan content structure.** Read the source content. Preserve ALL key information, tables, categories, and logic. Split/merge into chapters of "one screen to one-and-a-half screens" each. Decide which components each section needs (avoid repeating one component for the whole page — see [Component Library](references/component-library.md)).
    If the source is Markdown, parse structural syntax (headings, emphasis, lists, quotes, tables, fenced code blocks) into the corresponding HTML elements and components — never render raw markers (heading hashes, `*`/`_`, fence backticks) as body text; markers inside code blocks are content and get escaped. For dense tables or deep nesting, optionally pre-convert with `pandoc input.md -f gfm -t html --no-highlight` and map the fragment into components; pandoc is a build-time tool only, its output must be fully inlined, and the page must not depend on it. Skip this for simple documents.
-3. **Generate the page.** Start from the skeleton matching the chosen preset — [template/skeleton.html](template/skeleton.html) for the default pop-art look, [template/skeleton-cyberpunk.html](template/skeleton-cyberpunk.html) for dark neon cyberpunk, [template/skeleton-vintage.html](template/skeleton-vintage.html) for Elegant Vintage: copy it, replace the design-token variables (fonts, colors, decorative shapes) and fill each chapter with the planned content using the component classes. Keep class names stable and legible so colors/content stay easy to modify.
+3. **Generate the page.** Start from the skeleton matching the chosen preset — [template/skeleton-vintage.html](template/skeleton-vintage.html) for the default Elegant Vintage look, [template/skeleton.html](template/skeleton.html) only for explicit `style=pop` / `style=scandi`, [template/skeleton-cyberpunk.html](template/skeleton-cyberpunk.html) for dark neon cyberpunk: copy it, replace the design-token variables (fonts, colors, decorative shapes) and fill each chapter with the planned content using the component classes. Keep class names stable and legible so colors/content stay easy to modify.
 4. **Verify against the checklist.** Run `python scripts/verify-html.py <file>` for the static checklist (fonts, no default gradient, offset shadows, rotated elements, hollow numbers, responsive, print, semantics, single-file). Then open in a real browser: check sidebar anchor jumps, mobile collapse, horizontal table scroll, console has 0 errors, take a screenshot. See [Design System → Quick Checklist](references/design-system.md#快速检查清单).
 5. **Deliver.** Report the output file path, the visual identity used, and any content-structure decisions made (chapters merged/split) so nothing was silently dropped.
 
@@ -85,7 +86,7 @@ This skill is **user-manual-trigger only**. It must not be invoked automatically
 - [Design System](references/design-system.md) — full visual rules: style cues, color system, font system, structure, technical + content requirements, and the quick checklist.
 - [Style Presets](references/style-presets.md) — the 换装 reference table (Scandinavian pop, Wabi-sabi, Cyberpunk, Swiss, Elegant Vintage) and how to swap style/color/font variables. Cyberpunk and Elegant Vintage each have a structural skeleton and dedicated section.
 - [Component Library](references/component-library.md) — the parts inventory with concrete HTML/CSS recipes for each component, plus the vintage-variant component substitution table.
-- [Skeleton Template](template/skeleton.html) — verified single-file starting point for the default design language (tokens + all components) with placeholder content.
+- [Pop Skeleton](template/skeleton.html) — verified single-file Scandinavian + pop-art variant, selected only with `style=pop` / `style=scandi`.
 - [Cyberpunk Skeleton](template/skeleton-cyberpunk.html) — dark neon structural variant: deep-black grid base, cyan/magenta/acid signal colors, technical typography, solid offset shadows, and print-safe fallbacks.
 - [Vintage Skeleton](template/skeleton-vintage.html) — Elegant Vintage structural variant: aged-paper texture layers, double-rule frame with corner ornaments, wax seal, rubber-stamp badges, hollow roman-numeral chapters, drop caps, sepia photos.
 - [Verification Script](scripts/verify-html.py) — static checklist runner.
