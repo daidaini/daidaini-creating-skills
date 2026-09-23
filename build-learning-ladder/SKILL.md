@@ -1,6 +1,6 @@
 ---
 name: build-learning-ladder
-description: Builds a progressive learning ladder (学习阶梯) for any topic — from complete beginner to confident practitioner. Each level includes mastery standards, concepts, a hands-on exercise, common mistakes, and a self-check. Output is structured markdown, optionally converted to a designed single-page HTML. Use when the user wants to learn something step-by-step, asks "how to learn X", "learning roadmap for X", "帮我拆解学X的路线", "一步步学X", "怎么学X", "从零学X", "学习路线", "学习阶梯", or asks for structured curriculum design, learning stages, difficulty tiers, or a "skill tree".
+description: Builds a progressive learning ladder (学习阶梯) for any topic — from complete beginner to confident practitioner. Each level includes mastery standards, concepts, a hands-on exercise, common mistakes, and a self-check. Output is structured markdown; when HTML is explicitly requested, a single self-contained offline HTML page (日式极简 × 侘寂 style via content-to-zen-static-html by default, magazine flip-through via beautiful-html on request). Use when the user wants to learn something step-by-step, asks "how to learn X", "learning roadmap for X", "帮我拆解学X的路线", "一步步学X", "怎么学X", "从零学X", "学习路线", "学习阶梯", or asks for structured curriculum design, learning stages, difficulty tiers, or a "skill tree".
 ---
 
 # Build Learning Ladder
@@ -23,7 +23,7 @@ Transform any learning topic into a **progressive ladder** — from zero to conf
 3. **Build the ladder.** Generate the 5-level structure with all 8 sections per level. See [Level Structure](references/level-structure.md).
 4. **Quality check.** Verify against the quality checklist before delivering. See [Quality Checklist](references/quality-checklist.md).
 5. **Save output.** Write to `{topic-slug}_learning_ladder.md` in the working directory. Tell the user the file path.
-6. **Optional: Convert to HTML.** If the user wants a designed flip-through page, use the `beautiful-html` skill to convert the markdown ladder into a single self-contained HTML file. See [HTML Output Guide](references/html-output-guide.md).
+6. **Optional: Export HTML (only when explicitly requested).** When the user clearly asks for HTML output, generate a single self-contained HTML file. Default route: follow the `content-to-zen-static-html` skill's generation method and 「日式极简 × 侘寂 × 未来科技」 style; use `beautiful-html` only when the user asks for a magazine flip-through design. See [HTML Output Guide](references/html-output-guide.md).
 
 ## The 5-Level Structure (Summary)
 
@@ -61,4 +61,4 @@ Match the user's language. Warm, coach-like tone — you're a guide, not a lectu
 - [Domain Patterns](references/domain-patterns.md) — domain detection and level naming tables
 - [Level Structure](references/level-structure.md) — the full 8-section template
 - [Quality Checklist](references/quality-checklist.md) — must-do / must-not-do rules
-- [HTML Output Guide](references/html-output-guide.md) — converting to designed HTML via `beautiful-html`
+- [HTML Output Guide](references/html-output-guide.md) — HTML export routes: `content-to-zen-static-html` (default) and `beautiful-html` (magazine style)

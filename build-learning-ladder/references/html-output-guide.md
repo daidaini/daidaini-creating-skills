@@ -2,28 +2,37 @@
 
 ## When to Convert to HTML
 
-After generating the markdown ladder, the user may want a designed, flip-through-able HTML page. This is especially useful for:
+Markdown (`{topic-slug}_learning_ladder.md`) is the primary deliverable. Only produce HTML when the user explicitly asks: "生成HTML", "导出HTML", "做成网页", "HTML版本", "单文件 HTML", "offline HTML", or simply "HTML".
 
-- Long-term reference (learners revisit the ladder over weeks/months)
-- Sharing with others (a designed page is more engaging than raw markdown)
-- Topics where visual hierarchy helps (e.g., comparing 5 levels side by side)
+Two routes — pick by the user's wording, do not mix:
 
-**Trigger phrases:** "生成HTML", "做成网页", "做成好看的页面", "HTML版本", "导出HTML", or simply "HTML".
+| Route | When | Basis |
+|-------|------|-------|
+| **A — Zen static (default)** | Plain HTML export request with no style preference, or "单文件/离线/静态 HTML" | Generation method and "日式极简 × 侘寂 × 未来科技" style of the `content-to-zen-static-html` skill |
+| **B — Magazine flip-through** | User asks for 杂志风, 可翻阅, 海报感, poster-like designed pages | The `beautiful-html` skill |
 
-## How to Convert
+## Route A (default): via content-to-zen-static-html
 
-Use the `beautiful-html` skill to transform the markdown ladder into a single self-contained HTML file. The conversion follows these steps:
+Delegate to the sibling skill `content-to-zen-static-html` and follow its workflow against its own `SKILL.md`. Ladder-specific notes:
 
-### Step 1: Confirm Design Direction
+1. **Source**: the markdown ladder just generated. Content must pass through verbatim — the HTML is a design transformation, not an edit.
+2. **Content model**: the ladder is a linear long-form document, not an item archive. Do not force条目化. Organize as: opening 5-level overview → one chapter per level (Levels 1–5, each chapter holding its 8 sections in order) → closing "Road Ahead". Use the level names for `#tocNav` links. Categories (`#catNav`) are optional; if uncertain, ship only 「全部」.
+3. **Generation path**: the skill's default 方式 A — copy its `template/zen-base.html`, replace every `ZEN:EDIT` marker, keep the template CSS/JS and interactions (search, TOC highlight, progress bar, theme toggle, mobile drawer) intact. 方式 B (embedded JSON) only if its stated conditions are met — normally they are not for a 5-level ladder.
+4. **Style**: keep the default 「日式极简 × 侘寂 × 未来科技」. If the topic suggests a different feel, only swap the single accent color and font variables in `:root` / `[data-theme="dark"]` per the skill's 风格定制 invariants (system fonts, no CDN, charcoal not pure black in dark mode).
+5. **Verification (mandatory)**: run `python <content-to-zen-static-html目录>/scripts/verify-html.py <输出文件>.html` until exit 0, then do the skill's browser check over file:// (anchors, search, theme, mobile, console clean).
+6. **Save**: `{topic-slug}_learning_ladder.html` in the working directory.
 
-Ask the user (or default):
-- **Style preset**: If the user doesn't specify, default to "Scandinavian + pop-art" with warm oatmeal base (the beautiful-html default)
-- **Color keywords**: Match the topic's feel (e.g., "coffee" → warm browns; "coding" → deep navy + electric blue)
-- **Language**: The HTML should match the ladder's language (Chinese ladder → Chinese UI labels in HTML)
+## Route B: via beautiful-html
 
-### Step 2: Map Content to Components
+Use the `beautiful-html` skill's 5-step flow (confirm design variables → plan structure → generate → verify → deliver), with these mappings and defaults.
 
-The ladder's structure maps naturally to beautiful-html components:
+### Confirm Design Direction
+
+- **Style preset**: default "Scandinavian + pop-art" with warm oatmeal base (the beautiful-html default)
+- **Color keywords**: match the topic's feel (e.g., "coffee" → warm browns; "coding" → deep navy + electric blue)
+- **Language**: HTML labels match the ladder's language (Chinese ladder → Chinese UI)
+
+### Map Content to Components
 
 | Ladder Section | Beautiful-HTML Component |
 |---------------|--------------------------|
@@ -41,25 +50,7 @@ The ladder's structure maps naturally to beautiful-html components:
 
 **Critical:** Mix at least 2-3 different component types per level section. Don't use the same component for everything — that creates the "AI template" look.
 
-### Step 3: Generate Using Beautiful-HTML Workflow
-
-Follow the beautiful-html skill's 5-step flow:
-
-1. **Confirm target + design variables** — style preset, color keywords, Google Fonts OK
-2. **Plan content structure** — split the 5 levels into "one screen to one-and-a-half screens" each
-3. **Generate the page** — use the skeleton template, fill with ladder content
-4. **Verify** — run the verification script, check in browser
-5. **Deliver** — save to `{topic-slug}_learning_ladder.html`
-
-### Step 4: Save
-
-Output file: `{topic-slug}_learning_ladder.html` in the working directory.
-
-## Content Preservation Rule
-
-**All source content must be preserved.** The HTML is a design transformation — not an edit. Every section, every bullet point, every mistake from the markdown must appear in the HTML. Re-flow into sections, don't delete.
-
-## Design Tips for Learning Ladders
+### Design Tips for Learning Ladders
 
 - Use **offset solid shadows** for level cards (not blur shadows)
 - Use **rotated sticker badges** for level numbers or "Level 1" labels
@@ -67,3 +58,7 @@ Output file: `{topic-slug}_learning_ladder.html` in the working directory.
 - The **sidebar TOC** should show all 5 levels for quick navigation
 - **Each level should have a distinct visual rhythm** — alternate between dense and airy sections
 - Use **warm encouraging colors** — this is a motivational document, not a corporate report
+
+## Content Preservation Rule (both routes)
+
+**All source content must be preserved.** Every section, every bullet point, every mistake from the markdown must appear in the HTML. Re-flow into sections, don't delete. Both routes require the output to be a single self-contained `.html` that opens by double-click with no server, and both must pass their verification steps (script + real-browser check) before delivery.
