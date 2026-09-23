@@ -68,6 +68,9 @@
 # beautiful-html 产物静态检查（exit 0 = 无 FAIL）
 python beautiful-html/scripts/verify-html.py <path-to.html> [--strict]
 
+# content-to-zen-static-html 产物静态检查（exit 0 = 无 FAIL）
+python content-to-zen-static-html/scripts/verify-html.py <path-to.html> [--expect-entries N]
+
 # d3-offline-map：把 TopoJSON/GeoJSON 内联为 window.MAPS（绕开 file:// CORS）
 node d3-offline-map/scripts/build-data.js <file[:alias] ...> [-o data.js]
 
