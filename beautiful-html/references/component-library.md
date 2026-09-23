@@ -117,11 +117,28 @@ blob：不规则圆角有机色块，叠在 Hero 背景上；大号无衬线标�
 <footer class="colophon">…风格化落款…</footer>
 ```
 
+## 11. 内联 SVG 流程图
+
+源内容有 Mermaid、ASCII 流程，或存在多分支/反馈回路等用图更易理解的关系时，可将该部分绘制为**内联 `<svg>`**；简单线性步骤仍优先用 `.steps`，不必为装饰而画图。先核对节点、方向、条件、回路与标签，图中不新增源内容未表达的关系；若源内容是在讲解图语法，则保留转义后的原始代码。
+
+```html
+<figure class="diagram">
+  <svg viewBox="0 0 640 240" role="img" aria-labelledby="flow-title flow-desc" xmlns="http://www.w3.org/2000/svg">
+    <title id="flow-title">流程标题</title>
+    <desc id="flow-desc">用文字说明节点、方向及分支条件。</desc>
+    <!-- 内联节点、箭头和标签；所有来自输入的文字须进行 HTML/XML 转义 -->
+  </svg>
+  <figcaption>简短文字说明；复杂流程可在图后补充逐步说明。</figcaption>
+</figure>
+```
+
+给 SVG 设 `viewBox` 与 `width: 100%; height: auto;`，在手机和打印视图检查标签及箭头不重叠、文字可读；过宽时为容器提供横向滚动或改为纵向排布。使用当前风格的配色/线条，不加载 Mermaid 运行时、外链图片或外部脚本。`<title>`/`<desc>` 和图外说明应让不看图的人也能理解关键逻辑；重复使用多张图时确保各 SVG 的 ID 唯一。
+
 ## 组合建议
 
 - 概念密集段 → 卡片组
 - 对比/分级 → 表格
-- 决策/操作顺序 → 流程条
+- 决策/操作顺序 → 流程条；复杂分支/循环 → 内联 SVG 流程图
 - 口诀/公式/命令 → 公式框
 - 关键结论 → 强调引用块 + 贴纸徽章
 - 边界/风险 → warn callout；补充说明 → info callout
