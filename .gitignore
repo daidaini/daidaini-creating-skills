@@ -6,3 +6,5 @@ examples/
 .agents/
 .pi/
 .claude/
+
+*.png
