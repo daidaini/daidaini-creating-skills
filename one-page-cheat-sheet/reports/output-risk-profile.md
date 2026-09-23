@@ -15,6 +15,7 @@
 | Mermaid diagram too complex | **Low** | Medium | Best-practices reference caps at 15 nodes |
 | Too many sections → crammed, unreadable | **Medium** | Medium | One-page constraint forces ruthless cutting |
 | Fake or misleading examples | **Low** | High | Examples must be concrete and realistic — no "2+2=4" examples |
+| HTML export drifts from the sheet or leaves the zen route | **Medium** | High | Markdown first; route only on explicit HTML ask; follow html-output-guide; verify-html.py exit 0 |
 
 ## Failure Mode Taxonomy
 
@@ -40,7 +41,7 @@
 | Preflight | Narrow broad topics before generation |
 | Inline rules | Must Do / Must NOT Do in SKILL.md |
 | Template | 8-section structure enforces completeness |
-| References | output-template.md and best-practices.md for detail |
+| References | output-template.md, best-practices.md, html-output-guide.md |
 | Self-check | Section 6 checklist catches prerequisite gaps |
 
 ## Reviewer Notes

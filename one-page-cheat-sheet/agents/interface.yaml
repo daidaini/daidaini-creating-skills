@@ -3,7 +3,7 @@
 # Schema: skill-agent-interface v1
 
 name: one-page-cheat-sheet
-version: 2.0.0
+version: 2.1.0
 description: "Generate a one-page cheat sheet for any topic"
 maturity: production
 
@@ -31,6 +31,7 @@ triggers:
     - "step by step tutorial"
     - "详细教程"
     - "系统学习"
+    - "把这篇长文转成单文件 HTML"
   near_neighbors:
     - query: "explain [topic]"
       action: "not a cheat sheet request — route to general Q&A"
@@ -54,7 +55,14 @@ outputs:
   primary:
     type: markdown_file
     path: "{topic-slug}_cheat_sheet.md"
-    description: "The one-page cheat sheet markdown file"
+    description: "The one-page cheat sheet markdown file. Always written."
+  html:
+    type: html_file
+    path: "{topic-slug}_cheat_sheet.html"
+    required: false
+    when: "user explicitly asks for HTML, 网页, or 单文件 HTML"
+    style: "content-to-zen-static-html"
+    description: "Single-file offline HTML. Same 8 sections as the markdown. Do not hand-author a second design."
   structure:
     sections:
       - "1. What It Is (In One Sentence)"
@@ -72,7 +80,12 @@ outputs:
     - "3-4 real beginner mistakes"
     - "bullets, not paragraphs"
 
+exclusions:
+  - "deep dive, learning path, single-term lookup, persuasive writing"
+  - "generic long-document HTML conversion with no cheat-sheet request — use content-to-zen-static-html directly"
+
 resources:
   references:
     - "references/output-template.md"
     - "references/best-practices.md"
+    - "references/html-output-guide.md"

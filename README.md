@@ -13,7 +13,7 @@
 | [build-learning-ladder](./build-learning-ladder/) | 为任意主题搭建 5 级渐进式学习阶梯，每级含掌握标准、核心概念、实操练习、常见误区和自测清单，可选输出设计感单页 HTML |
 | [feyman-learning-method](./feyman-learning-method/) | 交互式费曼学习法对话——用 12 岁孩子能懂的话讲解，邀请你教回来，定位薄弱点，循环直到真正掌握 |
 | [high-leverage-resources](./high-leverage-resources/) | 精选 Top 5 高杠杆学习资源（书/课/视频等）并附详细理由，再用这些资源规划 7 天学习路径 |
-| [one-page-cheat-sheet](./one-page-cheat-sheet/) | 生成任意主题的一页速查表——可视化、易扫读、初学者友好，5 分钟可复习完。适用于备考、面试、会议和快速回顾 |
+| [one-page-cheat-sheet](./one-page-cheat-sheet/) | 生成任意主题的一页速查表——可视化、易扫读、初学者友好，5 分钟可复习完。默认 Markdown；明确要求 HTML 时再出日式极简×侘寂单文件页。适用于备考、面试、会议和快速回顾 |
 
 ### ✍️ 内容创作
 

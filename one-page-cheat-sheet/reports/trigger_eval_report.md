@@ -1,8 +1,8 @@
 # Trigger Evaluation Report
 
 **Date**: (auto-generated)
-**Total cases**: 23
-**Passed**: 23
+**Total cases**: 27
+**Passed**: 27
 **Failed**: 0
 **Pass rate**: 100%
 
@@ -26,6 +26,11 @@
 | 帮我做一份 Git 操作的备忘录 | True | True | PASS |
 | 记忆卡：英语不规则动词 | True | True | PASS |
 | show me a cheat sheet for Linux commands | True | True | PASS |
+| cheat sheet for everything about programming | True | True | PASS |
+| 速查表 | True | True | PASS |
+| cheat sheet | True | True | PASS |
+| 给我一份 SQL JOIN 速查表，输出 HTML | True | True | PASS |
+| React hooks cheat sheet，做成单文件 HTML | True | True | PASS |
 | 给我一个详细的 Python 教程 | False | False | PASS |
 | deep dive into React performance | False | False | PASS |
 | comprehensive tutorial on Docker | False | False | PASS |
@@ -33,9 +38,8 @@
 | 什么是 REST API | False | False | PASS |
 | 比较 React 和 Vue 的区别 | False | False | PASS |
 | 帮我写一篇关于气候变化的文章 | False | False | PASS |
-| cheat sheet for everything about programming | True | True | PASS |
-| 速查表 | True | True | PASS |
-| cheat sheet | True | True | PASS |
+| 把这篇长文转成单文件 HTML | False | False | PASS |
+| 用 content-to-zen-static-html 把笔记做成网页 | False | False | PASS |
 
 ## Coverage Gaps
 

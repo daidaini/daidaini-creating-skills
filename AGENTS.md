@@ -24,7 +24,7 @@
 | beautiful-html | 杂志级可翻阅单文件 HTML 知识手册 | 仅手动 |
 | feyman-learning-method | 交互式费曼学习对话 | 仅手动 |
 | high-leverage-resources | Top-5 学习资源精选 + 7 天计划 | 仅手动 |
-| one-page-cheat-sheet | 一页速查表（5 分钟复习） | 仅手动 |
+| one-page-cheat-sheet | 一页速查表（5 分钟复习）；明确要 HTML 时走 content-to-zen-static-html | 仅手动 |
 | product-analysis | 第一性原理 + 历史演化 → 客户交付 HTML 报告 | 仅手动 |
 | product-mind | Jobs 式产品判断（GO/NO GO/MVP） | 仅手动 |
 
@@ -59,6 +59,7 @@
 
 - attends-court → `./议事-{议题关键词}.md`
 - my-summarize → `{目录}/summarize.md`（要求 HTML 时再出 `{目录}/summarize.html`，由 beautiful-html 生成）
+- one-page-cheat-sheet → `{topic-slug}_cheat_sheet.md`（明确要 HTML 时再出 `{topic-slug}_cheat_sheet.html`，由 content-to-zen-static-html 生成）
 - product-analysis → `{product_name}_analysis.html`
 - 地图/HTML 类技能 → 单文件、可双击直接打开、不依赖服务器
 
@@ -91,7 +92,7 @@ python my-summarize/evals/run_trigger_eval.py
 1. 新建/改进/评测技能走 `yao-meta-skill`（位于 `C:\Users\admin\.agents\skills\yao-meta-skill`）。
 2. 修改触发词或职责边界时，同步更新该技能的 `agents/interface.yaml` 与 `evals/trigger_cases.json`，并重跑对应 trigger eval。
 3. `description` 的改动直接影响路由，改后必须用正反例验证，不要凭感觉改。
-4. 跨技能路由关系要维护：my-summarize → beautiful-html；geographic-map-artifact → leaflet-route-map / d3-offline-map。改上游先查下游引用。
+4. 跨技能路由关系要维护：my-summarize → beautiful-html；one-page-cheat-sheet → content-to-zen-static-html（仅明确 HTML 请求）；geographic-map-artifact → leaflet-route-map / d3-offline-map。改上游先查下游引用。
 5. HTML 类技能的样式规则在各自 `references/`（design-system、style-presets、soul 等），改模板与改文档一起提交。
 
 ## 注意事项

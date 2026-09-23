@@ -1,13 +1,13 @@
 {
   "name": "one-page-cheat-sheet",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "owner": "Yao Team",
-  "updated_at": "2025-07-04",
+  "updated_at": "2026-08-14",
   "review_cadence": "quarterly",
   "status": "active",
   "maturity_tier": "production",
   "lifecycle_stage": "production",
-  "description": "Generates a one-page cheat sheet (一页速查表) for any topic",
+  "description": "Generates a one-page cheat sheet (一页速查表). Markdown by default; explicit HTML requests route to content-to-zen-static-html.",
   "tags": ["cheat-sheet", "study", "reference", "learning", "exam-prep"],
   "platforms": ["claude-code", "generic-agent"],
   "gates": {
@@ -19,6 +19,8 @@
   "known_failure_modes": [
     "topic too broad → output exceeds one page",
     "topic too niche → hard to find real-world examples",
-    "user wants deep dive → boundary violation"
+    "user wants deep dive → boundary violation",
+    "HTML requested but page hand-written instead of content-to-zen-static-html",
+    "HTML conversion expands the sheet into a tutorial"
   ]
 }

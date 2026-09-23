@@ -1,6 +1,6 @@
 ---
 name: one-page-cheat-sheet
-description: Generates a one-page cheat sheet (一页速查表) for any topic — a scannable, visual, beginner-friendly summary that can be reviewed in 5 minutes. Use when the user asks for "cheat sheet", "速查表", "quick reference", "复习资料", "cram sheet", "备忘录", "知识点总结", "面试准备", "考前速览", "one-pager", "study guide", "记忆卡", or says they need to quickly review a topic before an exam, interview, meeting, or presentation. Also trigger when the user asks for a concise summary of a topic with examples and common mistakes, or says "帮我整理一下重点" / "给我一个浓缩版" / "整理重点".
+description: Generates a one-page cheat sheet (一页速查表) for any topic — a scannable, visual, beginner-friendly summary that can be reviewed in 5 minutes. Default output is markdown. When the user explicitly asks for HTML, also write one offline single-file HTML page in the 日式极简 × 侘寂 × 未来科技 style by following content-to-zen-static-html; do not hand-write a second design. Use when the user asks for "cheat sheet", "速查表", "quick reference", "复习资料", "cram sheet", "备忘录", "知识点总结", "面试准备", "考前速览", "one-pager", "study guide", "记忆卡", or says they need to quickly review a topic before an exam, interview, meeting, or presentation. Also trigger when the user asks for a concise summary of a topic with examples and common mistakes, or says "帮我整理一下重点" / "给我一个浓缩版" / "整理重点". Do NOT use for deep dives, learning paths, single-term lookups, persuasive writing, or generic long-document HTML conversion with no cheat-sheet request.
 disable-model-invocation: true
 ---
 
@@ -24,6 +24,7 @@ Output is a **浓缩学习地图 (condensed learning map)**. Every section earns
 - Step-by-step learning paths
 - Single definitions or quick lookups
 - Persuasive or argumentative writing
+- Generic long-document HTML conversion with no cheat-sheet request (use `content-to-zen-static-html` directly)
 
 ## Preflight
 
@@ -75,13 +76,23 @@ Adjust emphasis by topic type. See [references/best-practices.md](references/bes
 
 ## Save Output
 
-- File: `{topic-slug}_cheat_sheet.md` in working directory
-- Content: full cheat sheet output
-- Tell the user the file path after saving
+- Markdown (always): `{topic-slug}_cheat_sheet.md` in the working directory. This is the source of truth.
+- HTML (only when explicitly requested): `{topic-slug}_cheat_sheet.html` beside the markdown. Route to `content-to-zen-static-html`. Do not invent another visual system, and do not skip the markdown file.
+- Tell the user the file path(s) after saving.
+
+Explicit HTML requests include: HTML, html 版, 做成网页, 单文件 HTML, 离线 HTML, 导出 HTML. A plain cheat-sheet request with no HTML wording stays markdown-only.
+
+## HTML Output
+
+When HTML is requested, follow [references/html-output-guide.md](references/html-output-guide.md). Short form:
+
+1. Write the markdown cheat sheet first. HTML is a design pass over that file, not a rewrite or a longer tutorial.
+2. Generate with `content-to-zen-static-html` 方式 A (`template/zen-base.html`). Keep its CSS/JS. Do not load Mermaid, fonts, or other CDN assets; turn diagrams into a table, `<pre>` decision tree, or inline SVG.
+3. Run `python <content-to-zen-static-html目录>/scripts/verify-html.py <输出文件>.html` until exit 0, then open the file in a real browser (file://) and check anchors, search, theme, mobile layout, and a clean console.
 
 ## Bundled Resources
 
-Self-contained. Detailed template and examples in `references/output-template.md`. Domain adaptation depth in `references/best-practices.md`.
+Self-contained. Detailed template and examples in `references/output-template.md`. Domain adaptation depth in `references/best-practices.md`. HTML export route in `references/html-output-guide.md`.
 
 ---
 

@@ -13,6 +13,7 @@ from pathlib import Path
 SKILL_DIR = Path(__file__).resolve().parent.parent
 SKILL_MD = SKILL_DIR / "SKILL.md"
 INTERFACE = SKILL_DIR / "agents" / "interface.yaml"
+CASES = SKILL_DIR / "evals" / "trigger_cases.json"
 REPORT = SKILL_DIR / "reports" / "trigger_eval_report.md"
 
 def extract_description(path):
@@ -63,38 +64,12 @@ def load_interface_triggers(path):
     return result
 
 def test_cases():
-    """Return (input, expected_trigger: bool) pairs."""
-    return [
-        # Should trigger (positive)
-        ("给我一个 Python 的 cheat sheet", True),
-        ("帮我整理一下重点", True),
-        ("我需要 SQL JOIN 的速查表", True),
-        ("can you give me a quick reference for React hooks", True),
-
-        ("给我一个浓缩版的 Kubernetes 知识点总结", True),
-        ("cram sheet for statistics exam", True),
-        ("one-pager on Docker networking", True),
-        ("复习资料 - CSS Grid 布局", True),
-        ("考前速览：线性代数公式", True),
-        ("study guide for machine learning interview", True),
-        ("帮我做一份 Git 操作的备忘录", True),
-        ("记忆卡：英语不规则动词", True),
-        ("show me a cheat sheet for Linux commands", True),
-        
-        # Should NOT trigger (negative)
-        ("给我一个详细的 Python 教程", False),
-        ("deep dive into React performance", False),
-        ("comprehensive tutorial on Docker", False),
-        ("帮我规划一个系统学习路径", False),
-        ("什么是 REST API", False),
-        ("比较 React 和 Vue 的区别", False),
-        ("帮我写一篇关于气候变化的文章", False),
-        
-        # Edge cases
-        ("cheat sheet for everything about programming", True),  # triggers but should warn about scope
-        ("速查表", True),  # minimal trigger
-        ("cheat sheet", True),  # minimal trigger
-    ]
+    """Return (input, expected_trigger: bool) pairs from evals/trigger_cases.json."""
+    data = json.loads(CASES.read_text(encoding="utf-8"))
+    cases = [(item["text"], True) for item in data["should_trigger"]]
+    cases += [(item["text"], False) for item in data["should_not_trigger"]]
+    cases += [(item["text"], False) for item in data.get("near_neighbor", [])]
+    return cases
 
 def run_eval():
     desc = extract_description(SKILL_MD)
