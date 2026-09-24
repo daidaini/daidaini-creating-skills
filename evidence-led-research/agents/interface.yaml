@@ -1,0 +1,28 @@
+interface:
+  display_name: "Evidence-led Research"
+  short_description: "先核对证据，再给有边界的研究结论与决策建议"
+  default_prompt: "Use $evidence-led-research to investigate this decision with traceable evidence. Distinguish facts, assumptions and unknowns, test competing explanations where needed, and report boundaries without changing code by default."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+  activation:
+    mode: "manual-or-description"
+    paths:
+      - "SKILL.md"
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local"
+    network_policy: "use-only-when-needed-for-external-evidence"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    no_network: "report that external claims could not be checked; work with local evidence"
+    no_data: "state which evidence is missing and what would distinguish the hypotheses"
+    openai: "use local evidence and permitted research tools; do not assume delegated execution"
+    claude: "use local evidence and permitted research tools; do not assume delegated execution"
+    generic: "neutral-source"

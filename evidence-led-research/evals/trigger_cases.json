@@ -1,0 +1,24 @@
+{
+  "recommended_threshold": 0.3,
+  "should_trigger": [
+    {"text": "先查一下仓库的重试机制和生产日志：失败率上升到底是限流还是超时？给出证据再决定要不要改阈值。", "family": "root-cause"},
+    {"text": "现在准备把风控阈值从 0.7 调到 0.5，历史样本里误报/漏报会怎么变？先评估风险，不要改配置。", "family": "threshold"},
+    {"text": "比较单体和消息队列方案对我们这套结算系统的影响；不知道约束是否真实，先把未知列出来。", "family": "architecture"},
+    {"text": "Could you investigate whether the new prompt caused the lower pass rate? Check alternative explanations before recommending a change.", "family": "prompt-evaluation"},
+    {"text": "我怀疑这次接口慢是数据库索引没命中，但也可能是第三方 API 抖动。看一下现有记录再判断。", "family": "causal-ambiguity"},
+    {"text": "不用写代码，帮我查明历史数据是否支持这个异常检测算法的假设，并指出目前不能证明的地方。", "family": "data-validation"}
+  ],
+  "should_not_trigger": [
+    {"text": "把这句英文翻译成中文。", "family": "translation"},
+    {"text": "解释一下 Python 的 enumerate 是什么，用一句话。", "family": "direct-answer"},
+    {"text": "这个文章目录的所有 md 做逐篇摘要，输出 summarize.md。", "family": "summary-neighbor"},
+    {"text": "给登录按钮加一个 loading 状态并运行已有测试；需求已经明确。", "family": "implementation"},
+    {"text": "按我给的 PRD 直接实现订单列表分页，不要写评估报告。", "family": "implementation-neighbor"}
+  ],
+  "near_neighbor": [
+    {"text": "先快速看一眼堆栈定位报错，然后直接修复 bug 并跑测试。", "family": "debug-and-implement"},
+    {"text": "简短比较一下两个标准库函数有什么不同，不用查资料。", "family": "lightweight-comparison"},
+    {"text": "把这份调研报告浓缩成三条结论，不需要重新核实来源。", "family": "summarization"},
+    {"text": "评估现有 skill 的触发词覆盖率并修改它的 description。", "family": "skill-maintenance"}
+  ]
+}

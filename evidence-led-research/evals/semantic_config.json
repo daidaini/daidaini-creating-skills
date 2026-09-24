@@ -1,0 +1,14 @@
+{
+  "fallback_positive_concepts": ["investigation", "decision_evaluation", "causal_validation"],
+  "positive_concepts": {
+    "investigation": {"weight": 0.45, "phrases": ["调查", "研究", "查明", "排查", "根因", "先查", "investigate", "root cause", "先判断", "怀疑", "看一下现有记录"]},
+    "decision_evaluation": {"weight": 0.35, "phrases": ["评估", "比较", "决定", "阈值", "风险", "方案", "evaluate", "recommendation"]},
+    "causal_validation": {"weight": 0.2, "phrases": ["证据", "验证", "解释", "假设", "数据", "日志", "原因", "alternative explanations"]}
+  },
+  "negative_concepts": {
+    "direct_implementation": {"weight": 0.8, "exclusive": true, "phrases": ["直接实现", "直接修复", "修复 bug", "加一个 loading", "运行已有测试"]},
+    "summarization": {"weight": 0.8, "exclusive": true, "phrases": ["摘要", "浓缩成", "翻译"]},
+    "direct_answer": {"weight": 0.8, "exclusive": true, "phrases": ["一句话", "两句话", "用一句话", "什么是缓存穿透", "简短比较"]},
+    "skill_maintenance": {"weight": 0.8, "exclusive": true, "phrases": ["触发词", "description"]}
+  }
+}
