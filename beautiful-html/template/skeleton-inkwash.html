@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>REPLACE_TITLE · 水墨宣纸</title>
+
+<!--
+  beautiful-html skeleton (preset: 水墨宣纸 / Ink-wash Xuan Paper)
+  换装守则：只改 :root 令牌 + Google Fonts link + SVG 装饰内容，结构不动。
+  REPLACE 注释标记需要替换的内容。
+
+  设计意图：
+  - 宣纸米色基底 + 朱砂印章 + 竖排题签 + 中文数字章节号
+  - 内联 SVG 飞雁竹影作为边角装饰，不抢戏
+  - 卡片用描边 + 偏移实色阴影（第一层必须是 Npx Npx 0 实色）
+  - 至少一个旋转装饰元素（朱砂方印 / 题签）
+-->
+
+<!-- Google Fonts（三角色字体，必选） -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&family=Noto+Serif+SC:wght@400;500;700&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  /* ===== 设计令牌（换装只改这里） ===== */
+  :root {
+    --paper: #f4efe6;          /* 宣纸米色 */
+    --paper-2: #ece4d4;        /* 次级底色：浅米黄 */
+    --card-bg: rgba(255, 253, 249, 0.82);
+    --ink: #2a2a2a;            /* 主文字：深墨 */
+    --ink-soft: #525252;       /* 次要文字：淡墨 */
+    --ink-faint: #7b7873;      /* 极淡文字 */
+    --line: #2a2a2a;           /* 描边色：与主文字同色 */
+    --line-soft: rgba(120, 110, 95, 0.22);
+    --accent-red: #a8332a;     /* 朱砂 */
+    --accent-red-deep: #912720;/* 印泥深 */
+    --accent-green: #31502f;   /* 墨绿（账簿皮革） */
+    --accent-indigo: #2f4257;  /* 黛蓝（老蓝图墨） */
+    --display-font: "Ma Shan Zheng", "ZCOOL XiaoWei", "Noto Serif SC", "Songti SC", serif;
+    --emphasis-font: "ZCOOL XiaoWei", "Noto Serif SC", "Songti SC", serif;
+    --body-font: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
+    --shadow-offset: 4px 4px 0 var(--ink); /* 偏移实色阴影（首层必须 Npx Npx 0） */
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    font-family: var(--body-font);
+    color: var(--ink);
+    background-color: var(--paper);
+    /* 宣纸光晕与质感：双 radial-gradient 模拟纸张不均匀受光 */
+    background-image:
+      radial-gradient(ellipse at 85% 15%, rgba(215, 205, 190, 0.4) 0%, transparent 60%),
+      radial-gradient(ellipse at 15% 80%, rgba(225, 218, 206, 0.5) 0%, transparent 65%);
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ===== 背景装饰：内联 SVG 飞雁竹影 ===== */
+  .bg-decoration {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-bamboo {
+    top: -20px;
+    right: -20px;
+    width: 320px;
+    height: 480px;
+    opacity: 0.16;
+    filter: blur(0.3px);
+  }
+  .bg-birds {
+    top: 140px;
+    right: 260px;
+    width: 140px;
+    opacity: 0.22;
+  }
+
+  /* ===== 侧栏：左固定竖排题签 + 朱砂方印 + 顶部目录 ===== */
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 220px;
+    padding: 36px 22px;
+    background: transparent;
+    border-right: 1px solid var(--line-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    z-index: 20;
+  }
+  /* 竖排题签：用 writing-mode 模拟题签 */
+  .vertical-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .vertical-text {
+    writing-mode: vertical-rl;
+    letter-spacing: 0.45em;
+    font-family: var(--display-font);
+    font-size: 1.6rem;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .vertical-kicker {
+    writing-mode: vertical-rl;
+    letter-spacing: 0.4em;
+    font-family: var(--emphasis-font);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+  }
+  /* 朱砂方印：双线内框 + 印泥透感 + 旋转 */
+  .seal {
+    align-self: flex-start;
+    width: 44px;
+    height: 44px;
+    border: 1.5px solid var(--accent-red-deep);
+    border-radius: 3px;
+    color: var(--accent-red);
+    font-family: var(--display-font);
+    font-size: 14px;
+    line-height: 1.1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    writing-mode: vertical-rl;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0 1px 0 var(--accent-red-deep),
+      0 2px 6px rgba(168, 51, 42, 0.18);
+    transform: rotate(-4deg);
+  }
+  /* 目录导航（顶部横排，仅在窄屏使用，宽屏保持竖排题签） */
+  .sidebar nav {
+    margin-top: auto;
+  }
+  .sidebar nav .nav-label {
+    font-family: var(--emphasis-font);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .sidebar nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .sidebar nav a {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+    font-family: var(--body-font);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-left: 2px solid transparent;
+    transition: all 0.18s ease;
+  }
+  .sidebar nav a:hover {
+    color: var(--accent-red);
+    border-left-color: var(--accent-red);
+    background: rgba(168, 51, 42, 0.06);
+  }
+  .sidebar .meta {
+    font-family: var(--emphasis-font);
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 1px;
+    line-height: 1.7;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line-soft);
+  }
+
+  /* ===== 主内容：占满侧边栏以外剩余空间 ===== */
+  main {
+    margin-left: 220px;
+    padding: 0 56px 90px;
+    position: relative;
+    z-index: 1;
+  }
+  main > * { max-width: 880px; margin-left: auto; margin-right: auto; }
+
+  /* ===== Hero ===== */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 84px 0 56px;
+    text-align: center;
+    border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 56px;
+  }
+  .hero-kicker {
+    display: inline-block;
+    font-family: var(--emphasis-font);
+    font-size: 0.82rem;
+    letter-spacing: 0.4em;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .hero-title {
+    font-family: var(--display-font);
+    font-size: clamp(34px, 5.5vw, 60px);
+    line-height: 1.18;
+    margin: 16px 0 18px;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .hero-lede {
+    max-width: 620px;
+    font-size: 17px;
+    color: var(--ink-soft);
+    margin: 0 auto;
+    line-height: 1.85;
+  }
+  .hero-seal {
+    margin-top: 26px;
+    display: inline-block;
+    width: 56px;
+    height: 56px;
+    border: 2px solid var(--accent-red-deep);
+    border-radius: 4px;
+    color: var(--accent-red);
+    font-family: var(--display-font);
+    font-size: 18px;
+    line-height: 1.1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    writing-mode: vertical-rl;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow:
+      2px 2px 0 var(--accent-red-deep),
+      3px 3px 10px rgba(168, 51, 42, 0.18);
+    transform: rotate(-3deg);
+  }
+
+  /* ===== 章节 ===== */
+  .chapter {
+    margin-top: 72px;
+    background: var(--card-bg);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: 40px 44px;
+    /* 偏移实色阴影（首层 4px 4px 0，verify-html.py 硬约束） */
+    box-shadow:
+      4px 4px 0 rgba(45, 40, 35, 0.85),
+      0 0 0 1px rgba(120, 110, 95, 0.18);
+    scroll-margin-top: 24px;
+  }
+  .chapter-head {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .chapter-num {
+    display: block;
+    font-family: var(--display-font);
+    font-size: clamp(56px, 8vw, 96px);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--accent-red);
+    user-select: none;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .chapter-head h2 {
+    font-family: var(--display-font);
+    font-size: clamp(22px, 3.2vw, 30px);
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+  }
+  .chapter-head::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 1px;
+    background: var(--ink);
+    margin: 18px auto 0;
+    opacity: 0.4;
+  }
+  .chapter p { margin: 14px 0; }
+  .chapter-intro { color: var(--ink-soft); font-size: 16px; }
+
+  /* ===== 概念卡片 ===== */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin: 26px 0;
+  }
+  .card {
+    border: 1px solid var(--line-soft);
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow:
+      3px 3px 0 rgba(45, 40, 35, 0.85),
+      0 0 0 1px rgba(120, 110, 95, 0.12);
+    padding: 20px;
+    transition: all 0.2s ease;
+  }
+  .card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow:
+      5px 5px 0 rgba(45, 40, 35, 0.85),
+      0 0 0 1px rgba(120, 110, 95, 0.18);
+    border-color: rgba(168, 51, 42, 0.3);
+  }
+  .card-kicker {
+    display: inline-block;
+    font-family: var(--emphasis-font);
+    font-size: 0.74rem;
+    letter-spacing: 0.3em;
+    color: var(--accent-red);
+    margin-bottom: 8px;
+  }
+  .card h3 {
+    font-family: var(--display-font);
+    font-size: 18px;
+    margin: 6px 0 10px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+  }
+  .card p { font-size: 14.5px; margin: 0; color: var(--ink-soft); line-height: 1.85; }
+
+  /* ===== 对比表格（三线账簿表） ===== */
+  .table-scroll {
+    overflow-x: auto;
+    margin: 26px 0;
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow:
+      3px 3px 0 rgba(45, 40, 35, 0.85);
+  }
+  table {
+    width: 100%;
+    min-width: 520px;
+    border-collapse: collapse;
+    font-size: 14.5px;
+  }
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-family: var(--emphasis-font);
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--ink-soft);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: rgba(168, 51, 42, 0.04); }
+
+  /* ===== 决策流程条（铜章编号） ===== */
+  .steps {
+    list-style: none;
+    margin: 26px 0;
+    padding: 0;
+  }
+  .steps li {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 18px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid var(--line-soft);
+    box-shadow:
+      3px 3px 0 rgba(45, 40, 35, 0.85);
+  }
+  .step-num {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: var(--accent-green);
+    color: #f4efe6;
+    font-family: var(--display-font);
+    font-size: 18px;
+    border: 1.5px solid var(--accent-green);
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 2px var(--accent-green),
+      0 0 0 4px var(--paper);
+    transform: rotate(-3deg);
+  }
+  .steps h4 {
+    font-family: var(--display-font);
+    margin: 0 0 6px;
+    font-size: 17px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .steps p { margin: 0; font-size: 14.5px; color: var(--ink-soft); line-height: 1.85; }
+
+  /* ===== 公式/伪代码框（米黄纸底） ===== */
+  .formula {
+    margin: 26px 0;
+    background: var(--paper-2);
+    border: 1px solid var(--line-soft);
+    box-shadow:
+      3px 3px 0 rgba(45, 40, 35, 0.85);
+  }
+  .formula figcaption {
+    padding: 10px 16px;
+    color: var(--ink);
+    background: rgba(168, 51, 42, 0.08);
+    font-family: var(--emphasis-font);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .formula pre { margin: 0; padding: 20px; overflow-x: auto; }
+  .formula code {
+    font-family: ui-monospace, "Cascadia Mono", "Songti SC", Consolas, monospace;
+    font-size: 13.5px;
+    color: var(--ink);
+    white-space: pre;
+    line-height: 1.85;
+  }
+
+  /* ===== 强调引用块（题词式） ===== */
+  .pullquote {
+    margin: 30px 0;
+    padding: 26px 30px;
+    background: rgba(236, 230, 219, 0.5);
+    border-top: 1px double var(--ink);
+    border-bottom: 1px double var(--ink);
+    border-left: 3px solid var(--accent-red);
+    font-family: var(--display-font);
+    font-size: clamp(18px, 2.4vw, 24px);
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.7;
+    letter-spacing: 0.06em;
+    transform: rotate(-0.4deg);
+  }
+  .pullquote p { margin: 0; }
+  .pullquote::before {
+    content: "“";
+    display: inline-block;
+    margin-right: 4px;
+    color: var(--accent-red);
+    font-size: 1.4em;
+    line-height: 0;
+    vertical-align: -0.3em;
+  }
+
+  /* ===== 高亮强调（朱砂色） ===== */
+  .em-red {
+    color: var(--accent-red);
+    font-weight: 600;
+    border-bottom: 1px dashed rgba(168, 51, 42, 0.4);
+    padding-bottom: 2px;
+  }
+
+  /* ===== Callout（按語/箴言） ===== */
+  .callout {
+    margin: 22px 0;
+    padding: 16px 20px;
+    border: 1px solid var(--line-soft);
+    border-left: 4px solid var(--accent-green);
+    background: rgba(255, 255, 255, 0.55);
+    box-shadow:
+      3px 3px 0 rgba(45, 40, 35, 0.85);
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.85;
+  }
+  .callout.warn { border-left-color: var(--accent-red); }
+  .callout strong {
+    font-family: var(--emphasis-font);
+    letter-spacing: 0.15em;
+    color: var(--ink);
+    margin-right: 6px;
+  }
+  .callout.warn strong { color: var(--accent-red); }
+  .callout.info strong { color: var(--accent-green); }
+
+  /* ===== 贴纸徽章（朱砂小章） ===== */
+  .sticker {
+    display: inline-block;
+    font-family: var(--emphasis-font);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    padding: 4px 12px;
+    border: 1.5px solid var(--accent-red-deep);
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--accent-red);
+    box-shadow:
+      2px 2px 0 var(--accent-red-deep);
+    transform: rotate(-2deg);
+  }
+  .sticker.inline { margin: 4px 6px 4px 0; }
+
+  /* ===== 收束 / 落款 ===== */
+  .wrap-up {
+    margin-top: 64px;
+    padding: 28px 32px;
+    text-align: center;
+    font-family: var(--display-font);
+    font-size: clamp(18px, 2.6vw, 24px);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border-top: 1px dashed var(--line-soft);
+    border-bottom: 1px dashed var(--line-soft);
+    background: rgba(255, 253, 249, 0.6);
+    color: var(--ink);
+  }
+  .colophon {
+    margin-top: 40px;
+    text-align: center;
+    font-family: var(--emphasis-font);
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.2em;
+  }
+  .colophon .divider {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--accent-red);
+    font-family: var(--display-font);
+    font-size: 20px;
+    transform: rotate(-3deg);
+  }
+  .colophon-seal {
+    display: inline-block;
+    margin-top: 14px;
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid var(--accent-red-deep);
+    color: var(--accent-red);
+    font-family: var(--display-font);
+    font-size: 13px;
+    line-height: 1.1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    writing-mode: vertical-rl;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.5);
+    transform: rotate(-3deg);
+  }
+
+  /* ===== 响应式：移动端侧边栏 → 顶部条 ===== */
+  @media (max-width: 900px) {
+    .sidebar {
+      position: static;
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 16px;
+      padding: 18px 22px;
+      border-right: none;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .vertical-title { flex-direction: row; align-items: center; }
+    .vertical-text { writing-mode: horizontal-tb; font-size: 1.1rem; }
+    .vertical-kicker { display: none; }
+    .sidebar nav {
+      order: 3;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .sidebar nav .nav-label { display: none; }
+    .sidebar nav ul { flex-direction: row; flex-wrap: wrap; gap: 4px 10px; }
+    .sidebar nav a {
+      padding: 4px 8px;
+      font-size: 12px;
+      border-left: none;
+      border-bottom: 2px solid transparent;
+    }
+    .sidebar nav a:hover {
+      border-left-color: transparent;
+      border-bottom-color: var(--accent-red);
+    }
+    .seal { width: 36px; height: 36px; font-size: 12px; }
+    .bg-bamboo { width: 180px; opacity: 0.08; }
+    .bg-birds { display: none; }
+    .sidebar .meta { display: none; }
+    main { margin-left: 0; padding: 0 20px 70px; }
+    .hero { padding: 48px 0 36px; }
+    .chapter { padding: 28px 22px; }
+  }
+
+  /* ===== 打印：隐藏侧栏与交互装饰 ===== */
+  @media print {
+    .sidebar { display: none; }
+    .bg-decoration { display: none; }
+    .hero-seal { display: none; }
+    .colophon-seal { display: none; }
+    main { margin-left: 0; padding: 0; }
+    main > * { max-width: none; }
+    body { background: #fff; color: #111; }
+    .card, .steps li, .formula, .pullquote, .callout, .chapter, .table-scroll, .wrap-up {
+      box-shadow: none;
+      background: #fff;
+      border-color: #222;
+    }
+    .chapter p, td, .chapter-intro, .hero-lede, .callout, .colophon { color: #333; }
+    .chapter-num, .hero-title, .chapter-head h2, .card h3, .steps h4, .wrap-up {
+      color: #111;
+      -webkit-text-stroke-color: #111;
+    }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+
+<body>
+  <!-- ===== 背景装饰：内联 SVG ===== -->
+  <!-- 竹影（右上角） -->
+  <svg class="bg-decoration bg-bamboo" viewBox="0 0 320 480" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <!-- 主竹竿 -->
+    <path d="M 180 0 Q 175 120 178 240 Q 181 360 176 480" stroke="#2a2a2a" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- 竹节 -->
+    <line x1="178" y1="60" x2="178" y2="68" stroke="#2a2a2a" stroke-width="3" opacity="0.7"/>
+    <line x1="179" y1="140" x2="179" y2="148" stroke="#2a2a2a" stroke-width="3" opacity="0.7"/>
+    <line x1="177" y1="220" x2="177" y2="228" stroke="#2a2a2a" stroke-width="3" opacity="0.7"/>
+    <line x1="178" y1="310" x2="178" y2="318" stroke="#2a2a2a" stroke-width="3" opacity="0.7"/>
+    <line x1="177" y1="400" x2="177" y2="408" stroke="#2a2a2a" stroke-width="3" opacity="0.7"/>
+    <!-- 副竹竿 -->
+    <path d="M 250 40 Q 247 160 250 280 Q 253 400 248 480" stroke="#2a2a2a" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <line x1="250" y1="100" x2="250" y2="106" stroke="#2a2a2a" stroke-width="2" opacity="0.5"/>
+    <line x1="250" y1="200" x2="250" y2="206" stroke="#2a2a2a" stroke-width="2" opacity="0.5"/>
+    <line x1="250" y1="320" x2="250" y2="326" stroke="#2a2a2a" stroke-width="2" opacity="0.5"/>
+    <!-- 竹叶（叶片 path，模拟笔锋） -->
+    <path d="M 178 80 Q 110 50 60 70 Q 100 75 178 80 Z" fill="#2a2a2a" opacity="0.6"/>
+    <path d="M 178 80 Q 140 110 100 130 Q 140 110 178 80 Z" fill="#2a2a2a" opacity="0.55"/>
+    <path d="M 250 170 Q 190 150 140 170 Q 180 175 250 170 Z" fill="#2a2a2a" opacity="0.55"/>
+    <path d="M 250 170 Q 210 200 170 220 Q 210 200 250 170 Z" fill="#2a2a2a" opacity="0.5"/>
+    <path d="M 178 280 Q 120 260 70 280 Q 110 285 178 280 Z" fill="#2a2a2a" opacity="0.6"/>
+    <path d="M 178 280 Q 140 310 100 320 Q 140 310 178 280 Z" fill="#2a2a2a" opacity="0.5"/>
+    <path d="M 250 360 Q 200 340 150 360 Q 190 365 250 360 Z" fill="#2a2a2a" opacity="0.5"/>
+    <path d="M 250 360 Q 210 400 170 410 Q 210 400 250 360 Z" fill="#2a2a2a" opacity="0.5"/>
+  </svg>
+
+  <!-- 飞雁（右上方，人字队列） -->
+  <svg class="bg-decoration bg-birds" viewBox="0 0 140 100" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#2a2a2a" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.7">
+      <!-- 领头雁 -->
+      <path d="M 10 30 Q 22 22 34 30"/>
+      <path d="M 34 30 Q 46 22 58 30"/>
+      <!-- 第二只 -->
+      <path d="M 30 50 Q 40 44 50 50"/>
+      <path d="M 50 50 Q 60 44 70 50"/>
+      <!-- 第三只（更高更小） -->
+      <path d="M 60 20 Q 66 16 72 20"/>
+      <path d="M 72 20 Q 78 16 84 20"/>
+      <!-- 第四只（最远） -->
+      <path d="M 90 38 Q 96 34 102 38"/>
+      <path d="M 102 38 Q 108 34 114 38"/>
+      <!-- 第五只（最低最小） -->
+      <path d="M 110 60 Q 114 57 118 60"/>
+      <path d="M 118 60 Q 122 57 126 60"/>
+    </g>
+  </svg>
+
+  <!-- ===== 侧边栏：竖排题签 + 朱砂方印 + 目录 ===== -->
+  <aside class="sidebar">
+    <div class="vertical-title">
+      <span class="vertical-text">REPLACE_SIDEBAR_TITLE</span>
+      <span class="vertical-kicker">REPLACE_SIDEBAR_KICKER</span>
+      <span class="seal" aria-label="印章">REPLACE_SEAL_TEXT</span>
+    </div>
+    <nav aria-label="目录">
+      <p class="nav-label">目录</p>
+      <ul>
+        <li><a href="#sec-01">壹 · REPLACE_CHAPTER_1</a></li>
+        <li><a href="#sec-02">贰 · REPLACE_CHAPTER_2</a></li>
+        <li><a href="#sec-03">叁 · REPLACE_CHAPTER_3</a></li>
+        <li><a href="#sec-04">肆 · REPLACE_CHAPTER_4</a></li>
+      </ul>
+    </nav>
+    <p class="meta">BEAUTIFUL HTML · 水墨宣纸<br />宣纸基底 / 朱砂印章 / 宋体衬线</p>
+  </aside>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <header class="hero">
+      <span class="hero-kicker">REPLACE_HERO_KICKER</span>
+      <h1 class="hero-title"><!-- REPLACE_HERO_TITLE --></h1>
+      <p class="hero-lede"><!-- REPLACE_HERO_DESC --></p>
+      <span class="hero-seal" aria-label="朱砂方印">REPLACE_HERO_SEAL</span>
+    </header>
+
+    <!--
+      ===== 章节骨架 =====
+      壹节是完整示例（演示卡片/表格/流程/公式/引用/callout/徽章）。
+      贰-肆节是留白模板：把示例节复制后替换内容即可。
+      每节至少交替使用 2 种组件，避免整篇同一种。
+    -->
+
+    <!-- ===== 壹 完整示例章节 ===== -->
+    <section class="chapter" id="sec-01">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">壹</span>
+        <h2>REPLACE_CHAPTER_1_TITLE</h2>
+      </div>
+      <p class="chapter-intro"><!-- REPLACE_CHAPTER_1_INTRO --></p>
+
+      <!-- 概念卡片组 -->
+      <div class="card-grid">
+        <article class="card">
+          <span class="card-kicker">REPLACE_CARD_1_TAG</span>
+          <h3>REPLACE_CARD_1_TITLE</h3>
+          <p>REPLACE_CARD_1_BODY</p>
+        </article>
+        <article class="card">
+          <span class="card-kicker">REPLACE_CARD_2_TAG</span>
+          <h3>REPLACE_CARD_2_TITLE</h3>
+          <p>REPLACE_CARD_2_BODY</p>
+        </article>
+        <article class="card">
+          <span class="card-kicker">REPLACE_CARD_3_TAG</span>
+          <h3>REPLACE_CARD_3_TITLE</h3>
+          <p>REPLACE_CARD_3_BODY</p>
+        </article>
+      </div>
+
+      <!-- 对比表格（三线账簿表） -->
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>REPLACE_TABLE_HEAD_1</th><th>REPLACE_TABLE_HEAD_2</th><th>REPLACE_TABLE_HEAD_3</th><th>REPLACE_TABLE_HEAD_4</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>REPLACE_ROW_1_COL_1</td><td>REPLACE_ROW_1_COL_2</td><td>REPLACE_ROW_1_COL_3</td><td>REPLACE_ROW_1_COL_4</td></tr>
+            <tr><td>REPLACE_ROW_2_COL_1</td><td>REPLACE_ROW_2_COL_2</td><td>REPLACE_ROW_2_COL_3</td><td>REPLACE_ROW_2_COL_4</td></tr>
+            <tr><td>REPLACE_ROW_3_COL_1</td><td>REPLACE_ROW_3_COL_2</td><td>REPLACE_ROW_3_COL_3</td><td>REPLACE_ROW_3_COL_4</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 决策流程条（铜章编号） -->
+      <ol class="steps">
+        <li>
+          <span class="step-num">一</span>
+          <div>
+            <h4>REPLACE_STEP_1_TITLE</h4>
+            <p>REPLACE_STEP_1_BODY</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">二</span>
+          <div>
+            <h4>REPLACE_STEP_2_TITLE</h4>
+            <p>REPLACE_STEP_2_BODY</p>
+          </div>
+        </li>
+        <li>
+          <span class="step-num">三</span>
+          <div>
+            <h4>REPLACE_STEP_3_TITLE</h4>
+            <p>REPLACE_STEP_3_BODY</p>
+          </div>
+        </li>
+      </ol>
+
+      <!-- 公式/伪代码框（米黄纸底） -->
+      <figure class="formula">
+        <figcaption>REPLACE_FORMULA_CAPTION</figcaption>
+        <pre><code>REPLACE_FORMULA_BODY</code></pre>
+      </figure>
+
+      <!-- 强调引用块（题词式） -->
+      <blockquote class="pullquote">
+        <p><span class="em-red">REPLACE_QUOTE_HIGHLIGHT</span> · REPLACE_QUOTE_BODY</p>
+      </blockquote>
+
+      <!-- Callout：info 与 warn -->
+      <aside class="callout info"><strong>按语</strong>REPLACE_CALLOUT_INFO</aside>
+      <aside class="callout warn"><strong>箴言</strong>REPLACE_CALLOUT_WARN</aside>
+    </section>
+
+    <!-- ===== 贰 留白章节 ===== -->
+    <section class="chapter" id="sec-02">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">贰</span>
+        <h2>REPLACE_CHAPTER_2_TITLE</h2>
+      </div>
+      <p class="chapter-intro">REPLACE_CHAPTER_2_INTRO</p>
+      <!-- 从 壹节复制组件，替换内容 -->
+      <span class="sticker inline">REPLACE_STICKER</span>
+    </section>
+
+    <!-- ===== 叁 留白章节 ===== -->
+    <section class="chapter" id="sec-03">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">叁</span>
+        <h2>REPLACE_CHAPTER_3_TITLE</h2>
+      </div>
+      <p class="chapter-intro">REPLACE_CHAPTER_3_INTRO</p>
+    </section>
+
+    <!-- ===== 肆 留白章节 ===== -->
+    <section class="chapter" id="sec-04">
+      <div class="chapter-head">
+        <span class="chapter-num" aria-hidden="true">肆</span>
+        <h2>REPLACE_CHAPTER_4_TITLE</h2>
+      </div>
+      <p class="chapter-intro">REPLACE_CHAPTER_4_INTRO</p>
+    </section>
+
+    <!-- ===== 收束 + 落款 ===== -->
+    <div class="wrap-up">REPLACE_WRAP_UP</div>
+    <footer class="colophon">
+      <span class="divider">❦ ✦ ❦</span>
+      <span>REPLACE_COLOPHON</span>
+      <span class="colophon-seal" aria-label="尾章">REPLACE_FOOTER_SEAL</span>
+    </footer>
+  </main>
+</body>
+</html>
