@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>知识手册标题 · Beautiful HTML</title>
+<title>知识手册标题</title>
 
 <!--
   beautiful-html skeleton (default preset: 斯堪的纳维亚极简 + 波普拼贴)
@@ -104,12 +104,6 @@
     border-color: var(--line);
     box-shadow: 3px 3px 0 var(--line);
   }
-  .sidebar .meta {
-    margin-top: auto;
-    font-size: 12px;
-    color: var(--ink-soft);
-  }
-
   /* ===== 主内容：占满侧边栏以外剩余空间，内容块在其中居中 ===== */
   main { margin-left: 264px; padding: 0 48px 80px; }
   main > * { max-width: 900px; margin-left: auto; margin-right: auto; }
@@ -336,7 +330,6 @@
     }
     .sidebar h1 { font-size: 17px; }
     .sidebar nav ul { flex-direction: row; flex-wrap: wrap; gap: 6px 10px; }
-    .sidebar .meta { display: none; }
     main { margin-left: 0; padding: 0 20px 60px; }
     .hero { padding: 48px 0 36px; }
   }
@@ -367,7 +360,6 @@
         <li><a href="#sec-04">04 · 章节四</a></li>
       </ul>
     </nav>
-    <p class="meta">Beautiful HTML · 设计感知识手册</p>
   </aside>
 
   <main>
@@ -480,7 +472,7 @@
     <div class="wrap-up"><!-- REPLACE: 一句话总结 --></div>
     <footer class="colophon">
       <span class="divider">✦ ✦ ✦</span>
-      <span><!-- REPLACE: 落款 / 日期 / 署名 --></span>
+      <span><!-- REPLACE: 文档落款：署名 / 日期 / 来源（与技能无关；不需要可删除本行） --></span>
     </footer>
   </main>
 </body>

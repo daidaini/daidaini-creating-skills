@@ -68,6 +68,7 @@ This skill is **user-manual-trigger only**. It must not be invoked automatically
 - Responsive: sidebar becomes top bar on mobile; wide tables scroll horizontally. Print: `@media print` hides the sidebar.
 - Semantic tags: `aside`, `nav`, `section`, `article`, `table`, etc.
 - All source content preserved — no omissions for the sake of styling; diagram conversions retain steps, branches and labels, with an accessible textual explanation; ends with a one-line summary + styled sign-off.
+- **No generator branding:** the output must not name the skill anywhere (title, sidebar, footer, comments — no "Beautiful HTML"/"beautiful-html") and must not carry template slogans. The colophon sign-off holds document info only (author / date / source) or is omitted. `verify-html.py` fails the build on leftovers.
 - Markdown input fully parsed into elements/components; no raw Markdown markers in rendered prose (markers inside escaped code blocks are fine).
 - Browser check: 0 console errors, anchor nav works, no overflow that clips content.
 

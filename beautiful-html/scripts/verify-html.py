@@ -134,6 +134,21 @@ def main() -> int:
         results.append((FAIL, f"{leftover} unfilled REPLACE placeholder(s) remain",
                         "fill or remove all REPLACE comments"))
 
+    # --- 11. No generator/skill branding in output ---
+    skill_hits = re.findall(r"beautiful[\s-]*html", src, re.I)
+    if skill_hits:
+        results.append((FAIL, f"generator/skill branding present ({len(skill_hits)}x)",
+                        "remove skill names from title, sidebar and footer; the page must carry no 'Beautiful HTML' text"))
+    else:
+        results.append((PASS, "no generator/skill branding", ""))
+    chrome = " ".join(re.findall(r"<(?:footer|aside)[\s\S]*?</(?:footer|aside)>", src, re.I))
+    chrome_slogans = re.findall(r"设计感知识手册|TEMPLATE READY|CYBERPUNK PRESET", chrome, re.I)
+    if chrome_slogans:
+        results.append((FAIL, f"template slogan in sidebar/footer ({len(chrome_slogans)}x)",
+                        "sidebar/footer sign-off must be document info only (author / date / source)"))
+    else:
+        results.append((PASS, "sidebar/footer free of template slogans", ""))
+
     # --- Report ---
     statuses = {"PASS": 0, "WARN": 0, "FAIL": 0}
     print(f"verify: {args.html}")

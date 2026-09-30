@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>知识手册标题 · Beautiful HTML</title>
+<title>知识手册标题</title>
 
 <!--
   beautiful-html skeleton（结构变体：Elegant Vintage 优雅复古）
@@ -183,15 +183,6 @@
     background: rgba(140, 43, 32, 0.08);
     font-weight: 600;
   }
-  .sidebar .meta {
-    margin-top: auto;
-    font-size: 12px;
-    color: var(--ink-soft);
-    font-style: italic;
-    border-top: 1px solid rgba(67, 51, 31, 0.35);
-    padding-top: 12px;
-  }
-
   /* ===== 主内容：占满侧边栏以外剩余空间，内容块在其中居中 ===== */
   main { margin-left: 264px; padding: 0 56px 90px; }
   main > * { max-width: 900px; margin-left: auto; margin-right: auto; }
@@ -596,7 +587,6 @@
     }
     .sidebar h1 { font-size: 17px; border-bottom: none; padding-bottom: 0; }
     .sidebar nav ul { flex-direction: row; flex-wrap: wrap; gap: 4px 12px; }
-    .sidebar .meta { display: none; }
     main { margin-left: 0; padding: 0 22px 64px; }
     .hero { padding: 48px 0 36px; }
     .seal { width: 84px; height: 84px; font-size: 10px; right: 8px; top: 30px; }
@@ -633,7 +623,6 @@
         <li><a href="#sec-04">Ⅳ · 章节四</a></li>
       </ul>
     </nav>
-    <p class="meta">Beautiful HTML · 復刻書局</p>
   </aside>
 
   <main>
@@ -761,7 +750,7 @@
     <div class="wrap-up"><!-- REPLACE: 一句话总结 --></div>
     <footer class="colophon">
       <span class="divider" aria-hidden="true">❦</span>
-      <span><!-- REPLACE: 落款 / 日期 / 署名 --></span>
+      <span><!-- REPLACE: 文档落款：署名 / 日期 / 来源（与技能无关；不需要可删除本行） --></span>
     </footer>
   </main>
 </body>

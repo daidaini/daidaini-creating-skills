@@ -304,6 +304,15 @@ def main() -> int:
     else:
         results.append((PASS, "no ZEN:EDIT placeholder", ""))
 
+    # --- generator/skill branding in title & footer ---
+    chrome = " ".join(re.findall(r"<(?:title|footer|aside)[\s\S]*?</(?:title|footer|aside)>", src, re.I))
+    brand = re.findall(r"content-to-zen|beautiful[\s-]*html|Japanese Minimalism|Wabi-Sabi × Futuristic Tech|纯静态单文件|无外部依赖", chrome, re.I)
+    if brand:
+        results.append((FAIL, f"generator branding in title/footer/sidebar ({len(brand)}x: {', '.join(sorted(set(brand)))})",
+                        "sign-off must carry document info only (author / date / source); remove skill names and style slogans"))
+    else:
+        results.append((PASS, "no generator branding in title/footer/sidebar", ""))
+
     # --- Report ---
     n_fail = sum(1 for s, _, _ in results if s == FAIL)
     n_warn = sum(1 for s, _, _ in results if s == WARN)
