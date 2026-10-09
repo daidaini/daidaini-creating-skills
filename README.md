@@ -51,6 +51,10 @@
 |------|------|
 | [youtube-audio-downloader](./youtube-audio-downloader/) | 使用 yt-dlp + Node.js 运行时 + 远程 EJS 挑战求解器下载 YouTube 音频为 MP3，绕过机器人检测、403 错误和 n-challenge 防护 |
 
+## 提示词示例
+
+按技能查看可直接复制并修改的提示词：[技能提示词示例](./skill-prompt-examples.md)。
+
 ## 触发方式
 
 技能的 frontmatter 决定其调用模式：
