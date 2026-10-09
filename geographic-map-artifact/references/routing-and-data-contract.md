@@ -1,101 +1,56 @@
 # Routing and Data Contract
 
-## Choose one rendering mode
+## Layers and renderer are separate decisions
 
-| Signal in the request | Use | Do not use |
-|---|---|---|
-| Route, itinerary, delivery path, stops, distance, KML/My Maps | `route` | D3 choropleth unless region analysis is also required |
-| Province/country/administrative areas colored by a metric; must open offline | `choropleth` | Leaflet tile map |
-| Colored regions plus routes, lines, stops, branches, or facilities | `composite` | Leaflet by default; choose it only when an online tile-map experience is more important than full offline operation |
-| Address search, traffic, live navigation, real-time route calculation | out of scope | all three modes |
+- `route`: lines/stops, or standalone point locations; optional distance/duration and KML.
+- `choropleth`: boundaries colored by a metric.
+- `composite`: regions plus routes and/or points.
+- D3 defaults for offline reports/custom projections; Leaflet defaults for interactive route browsing. Leaflet also supports choropleths/composites with GeoJSON. Offline Leaflet needs no tiles when a vector-only view meets the request.
+- Live navigation/traffic, address search, POI and production GIS are outside scope.
 
-For `route`, follow the sibling package `../../leaflet-route-map/`. For `choropleth`, follow `../../d3-offline-map/`. This package owns selection, the shared contract, and the composite workflow; it deliberately does not duplicate their scripts or templates.
+Consult `../../leaflet-route-map/references/workflow.md` for route sources/KML, or `../../d3-offline-map/references/workflow.md` for boundary sources/TopoJSON. Prefer the generic templates over adapting the China-specific example.
 
-## Shared coordinate rule
+## Shared payload (input.json)
 
-All source and packed geography uses standard GeoJSON order:
-
-```text
-[longitude, latitude]
+```json
+{
+  "meta": {
+    "title": "Regional coverage",
+    "source": "User-supplied data",
+    "date": "2026-10-09",
+    "coordinateSystem": "WGS84",
+    "synthetic": false,
+    "ringConvention": "regional",
+    "metric": "Coverage"
+  },
+  "valueProperty": "code",
+  "regions": {
+    "type": "FeatureCollection",
+    "features": []
+  },
+  "values": {"A": 0, "B": 47, "C": null},
+  "routes": [{
+    "id": "r1", "name": "Delivery", "color": "#e76f51",
+    "geometry": {"type": "LineString", "coordinates": [[120,30],[121,31]]}
+  }],
+  "points": [{"id": "p1", "name": "Depot", "coordinates": [120,30]}]
+}
 ```
 
-This applies to GeoJSON, OSRM geometry, KML coordinates, D3 input, and `window.MAP_DATA`.
+Replace empty features with real Polygon/MultiPolygon features if regions are requested. Routes/points/regions are optional, but at least one nonempty layer is required. A pure route/point payload can omit regions/values/valueProperty.
 
-Only Leaflet rendering accepts the reversed order:
+- All coordinates are `[lon,lat]`. Require known WGS84 provenance; the declaration is not automatic CRS verification. Transform GCJ-02/projected data beforehand.
+- Convert TopoJSON using `topojson.feature` before preflight. Select requested features and inspect object/property names.
+- `valueProperty` names a stable, unique region property. `values` keys match it exactly; missing/null is no-data, numeric zero is valid. Extra unmatched keys fail rather than silently disappearing. Aliases require an explicit collision-checked mapping.
+- Routes are LineString/MultiLineString with at least two distinct positions per line. Supplied distanceMeters/durationSeconds must be finite and nonnegative; omit unknown statistics. These fields do not establish road-routing accuracy.
+- `ringConvention=regional` (default): adapt ordinary, nonpolar local rings to D3 clockwise exteriors/counterclockwise holes on a copy. Rings spanning 180? longitude, 90? latitude, or touching poles are rejected for specialist preparation. This is not a topology/self-intersection validator.
+- `ringConvention=d3`: explicitly preprocessed spherical geometry; preserve winding. The agent must verify spherical area, holes and clipping, particularly for antimeridian/hemisphere-scale data. Do not use the flag merely to suppress an error.
+- `meta.basemap="osm"` enables online tiles in the Leaflet template. Without it, Leaflet is a local vector view. D3 does not add tiles.
 
-```js
-const toLeafletLatLng = ([lon, lat]) => [lat, lon];
-```
+## Render and package
 
-Never mutate stored route or point coordinates to Leaflet order. Convert at rendering time only.
+Draw region fill/strokes, then routes, then points and labels. Share one projection across D3 layers. Fit the union of requested layers so an outlying stop is not accidentally excluded. Check source extent for accidental far-away coordinates before fitting.
 
-## Composite payload
+Use `vendor-assets.js` with Node 18+; fixed D3 5.16.0 / Leaflet 1.9.4 files are reused from an OS temporary cache, or an explicit `--cache directory`. Cached bytes are checked against recorded SHA-256; this detects cache corruption, not independent supply-chain authenticity. No network is needed on a valid cache hit. No CDN is referenced at runtime.
 
-For a D3 composite map, create a local JavaScript file loaded before the rendering script:
-
-```js
-window.MAP_DATA = {
-  meta: {
-    title: "Regional coverage and delivery route",
-    source: "Supplied internal data",
-    offline: true
-  },
-  regions: {
-    type: "FeatureCollection",
-    features: []
-  },
-  valueProperty: "name",
-  values: {
-    "Region A": 92,
-    "Region B": 47
-  },
-  routes: [
-    {
-      id: "delivery-01",
-      name: "Delivery route",
-      color: "#2563eb",
-      geometry: {
-        type: "LineString",
-        coordinates: [[121.47, 31.23], [120.15, 30.28]]
-      }
-    }
-  ],
-  points: [
-    {
-      id: "shanghai",
-      name: "Shanghai depot",
-      kind: "start",
-      coordinates: [121.47, 31.23]
-    }
-  ]
-};
-```
-
-Requirements:
-
-- `regions` must be a GeoJSON `FeatureCollection` by the time rendering begins. Convert TopoJSON with `topojson.feature(...)` during preprocessing or at the top of the page.
-- `valueProperty` names the region feature property used as a `values` key.
-- `routes[].geometry` must be GeoJSON `LineString` or `MultiLineString`.
-- `points[].coordinates` is `[lon, lat]`.
-- A region with no value must use an explicit neutral fill and appear in the legend or README as “no data”.
-
-## Composite render order
-
-1. Determine the projection from `regions` using `projection.fitExtent(...)` when possible.
-2. Draw base region paths and bind values to a color scale.
-3. Draw boundaries/strokes for readability.
-4. Draw each route with `d3.geoPath(projection)` using its GeoJSON geometry.
-5. Project each point with `projection(point.coordinates)` and draw markers/labels.
-6. Add metric and overlay legends without obscuring dense geography.
-
-Do not separately project routes and regions: a route and its intended region must share one projection.
-
-## Offline classification
-
-| Classification | Libraries | Data | Basemap |
-|---|---|---|---|
-| Fully offline D3 | local | local JS payload | custom SVG boundary paths |
-| Leaflet with online OSM tiles | local | local | network required |
-| Fully offline Leaflet | local | local | supplied local tiles or local tile server |
-
-State the actual classification in the README and UI. “No API key” does not mean “offline”.
+Default delivery is a **folder**, not a single file. `bundle-html.js` inlines local script/style dependencies of the supplied templates only; online tile calls remain online. A local tile server requires a running service and cannot be described as server-free. Do not bulk-download OSM public tiles; use an offline-permitted source when tiles are actually needed.

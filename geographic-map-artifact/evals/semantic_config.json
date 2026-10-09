@@ -1,0 +1,38 @@
+{
+  "fallback_positive_concepts": [
+    "map_artifact"
+  ],
+  "positive_concepts": {
+    "map_artifact": {
+      "weight": 1.0,
+      "phrases": [
+        "绘制路线图",
+        "路线地图",
+        "route map",
+        "省份着色地图",
+        "自绘地图",
+        "离线地图",
+        "合成地图",
+        "choropleth",
+        "offline geographic map"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "outside_scope": {
+      "weight": 1.0,
+      "exclusive": true,
+      "phrases": [
+        "实时导航",
+        "地理编码",
+        "附近餐馆",
+        "POI",
+        "正式公开地图",
+        "地图审核",
+        "skill",
+        "思维导图",
+        "解释"
+      ]
+    }
+  }
+}

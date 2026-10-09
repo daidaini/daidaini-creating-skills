@@ -9,7 +9,7 @@ compatibility:
     - "claude"
     - "generic"
   activation:
-    mode: "manual-or-description"
+    mode: "manual"
     paths:
       - "SKILL.md"
       - "references/workflow.md"
@@ -23,6 +23,8 @@ compatibility:
     remote_inline_execution: "forbid"
     remote_metadata_policy: "allow-metadata-only"
   degradation:
+    openai: "use available browser; label unavailable evidence"
+    claude: "use available browser; label unavailable evidence"
     no_network: "use manually embedded test coordinates and local Leaflet assets if already available; otherwise explain missing assets"
     no_browser: "perform static file and data-shape checks, but mark screenshot evidence as unavailable"
     generic: "neutral-source"

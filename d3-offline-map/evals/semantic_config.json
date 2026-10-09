@@ -1,0 +1,38 @@
+{
+  "fallback_positive_concepts": [
+    "map_artifact"
+  ],
+  "positive_concepts": {
+    "map_artifact": {
+      "weight": 1.0,
+      "phrases": [
+        "省份着色地图",
+        "自绘地图",
+        "offline map D3",
+        "Natural Earth D3",
+        "choropleth",
+        "行政区划 离线绘制"
+      ]
+    }
+  },
+  "negative_concepts": {
+    "outside_scope": {
+      "weight": 1.0,
+      "exclusive": true,
+      "phrases": [
+        "实时导航",
+        "地理编码",
+        "附近餐馆",
+        "POI",
+        "正式公开地图",
+        "地图审核",
+        "skill",
+        "思维导图",
+        "解释",
+        "route map",
+        "在线瓦片",
+        "PostGIS"
+      ]
+    }
+  }
+}

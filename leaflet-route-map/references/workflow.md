@@ -193,31 +193,7 @@ The default OpenStreetMap basemap still requires network.
 
 ## Step 7: Verify in a real browser
 
-Preferred browser checks:
-
-```js
-(() => ({
-  title: document.title,
-  bodyHasDemoText: document.body.innerText.includes('Leaflet 路线地图 Demo'),
-  leafletLoaded: !!window.L,
-  routeCoordCount: window.ROUTE_DATA?.geometry?.coordinates?.length,
-  svgPathCount: document.querySelectorAll('svg path').length,
-  markerCount: document.querySelectorAll('.leaflet-interactive').length,
-  tileImgCount: document.querySelectorAll('.leaflet-tile').length,
-  mapPaneExists: !!document.querySelector('.leaflet-map-pane')
-}))()
-```
-
-Expected shape:
-
-- `leafletLoaded: true`
-- `routeCoordCount > 2`
-- `svgPathCount > 0` or canvas equivalent if renderer differs
-- `markerCount >= 2`
-- `mapPaneExists: true`
-- `tileImgCount > 0` when using online tiles and network is available
-
-Save screenshot as `target/screenshot.png` when browser tooling is available.
+Use stable `.map-route` and `.map-point` classes (the sibling template already provides them). Follow `../../geographic-map-artifact/references/verification-and-boundaries.md`: counts match the input, routes are finite/visible, points align with known positions, online tile images are loaded, errors/network are recorded from before navigation, and a desktop/mobile screenshot is saved. Do not infer marker count from `.leaflet-interactive` or tile success from element presence.
 
 ## Step 8 (Optional): Generate KML for Google My Maps
 
@@ -269,6 +245,8 @@ points = [p for p in places if p.find('kml:Point', ns) is not None]
 print(f'{len(lines)} route(s), {len(points)} marker(s) \u2014 OK')
 ```
 
+Run `python scripts/verify-kml.py data/route.kml --points N` as well. XML well-formedness alone is not schema validation; verify icon nesting, AABBGGRR color and expected endpoint values.
+
 Expected:
 - 1 LineString with all route coordinates
 - N Point placemarks (one per waypoint)
@@ -314,7 +292,7 @@ OSRM/GeoJSON uses `[lon, lat]`; KML also uses `lon,lat`. **No conversion needed*
 
 ### KML file size
 
-20k+ coordinates produce a ~400 KB KML. Google My Maps handles this, but rendering may take a few seconds. Simplify coordinates (sample every Nth point) if loading feels slow.
+20k+ coordinates produce a ~400 KB KML. Google My Maps handles this, but rendering may take a few seconds. If profiling demonstrates a bottleneck, use geometry-aware simplification with an explicit tolerance and preserve endpoints/waypoints; do not sample every Nth point blindly.
 
 ## Current-session evidence
 

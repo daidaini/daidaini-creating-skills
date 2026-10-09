@@ -26,6 +26,8 @@ Create a minimal, complete route-map artifact with Leaflet (HTML) or a KML file 
 
 ## Core workflow
 
+For shared preflight data and a reusable vector/online map template, use the sibling `geographic-map-artifact` workflow. Its Leaflet template uses `L.geoJSON` (native GeoJSON lon/lat handling), explicit layer classes, and no tiles unless requested. Reuse fixed-version assets with its `scripts/vendor-assets.js`.
+
 Follow the detailed process in [Workflow](references/workflow.md):
 
 1. Create a clean target folder.
@@ -39,10 +41,10 @@ Follow the detailed process in [Workflow](references/workflow.md):
 
 - For Leaflet HTML output: `index.html` opens and shows a map.
 - `window.L` and route data are defined.
-- The route has enough coordinates to look like a road path, not only a straight two-point line.
+- The route has two distinct positions at minimum; label illustrative lines. Coordinate count alone cannot prove road-routing accuracy.
 - The map (Leaflet HTML or KML) contains visible route polyline and start/end markers.
-- KML output: valid XML, passes basic schema check (1 LineString + N Point placemarks).
-- Verification checks record route coordinate count, rendered SVG/path/marker evidence, and screenshot path.
+- KML output: XML and structural checks pass via `scripts/verify-kml.py` (not full schema validation); verify lon/lat endpoints and IconStyle/Icon/href.
+- Verification checks record separate route/point layer counts, finite visible geometry, loaded tile images when online, and screenshot path. Do not count `.leaflet-interactive` as markers.
 
 ## Key cautions
 

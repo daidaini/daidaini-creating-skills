@@ -1,0 +1,73 @@
+{
+  "recommended_threshold": 0.5,
+  "should_trigger": [
+    {
+      "text": "绘制路线图，显示起终点",
+      "family": "should_trigger-0"
+    },
+    {
+      "text": "制作省份着色地图，数值在CSV里",
+      "family": "should_trigger-1"
+    },
+    {
+      "text": "离线地图，展示区域和点位",
+      "family": "should_trigger-2"
+    },
+    {
+      "text": "做一张合成地图，区域填色叠加路线",
+      "family": "should_trigger-3"
+    },
+    {
+      "text": "Build a route map with supplied coordinates",
+      "family": "should_trigger-4"
+    },
+    {
+      "text": "Create a choropleth from supplied boundaries",
+      "family": "should_trigger-5"
+    },
+    {
+      "text": "Make an offline geographic map with points",
+      "family": "should_trigger-6"
+    },
+    {
+      "text": "Export this route map to KML only",
+      "family": "should_trigger-7"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "实时导航并根据交通重新规划路线",
+      "family": "should_not_trigger-0"
+    },
+    {
+      "text": "做地理编码，把地址转成经纬度",
+      "family": "should_not_trigger-1"
+    },
+    {
+      "text": "查找附近餐馆和POI",
+      "family": "should_not_trigger-2"
+    },
+    {
+      "text": "发布正式公开地图并办理地图审核",
+      "family": "should_not_trigger-3"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "分析这个地图skill的流程效率",
+      "family": "near_neighbor-0"
+    },
+    {
+      "text": "优化 geographic-map-artifact skill",
+      "family": "near_neighbor-1"
+    },
+    {
+      "text": "解释 Mercator 投影的数学原理",
+      "family": "near_neighbor-2"
+    },
+    {
+      "text": "制作非地理关系的思维导图",
+      "family": "near_neighbor-3"
+    }
+  ]
+}

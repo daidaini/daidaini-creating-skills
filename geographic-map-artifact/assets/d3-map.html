@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>地图</title>
+<style>
+body{margin:0;padding:20px;background:#fafafa;color:#20252b;font-family:system-ui,sans-serif}main{max-width:1000px;margin:auto}h1{font-size:24px}p{color:#58636d;line-height:1.6}svg{display:block;width:100%;height:auto;background:white}.map-region{stroke:#fff;stroke-width:1}.map-route{fill:none;stroke-width:3}.map-point{stroke:#fff;stroke-width:2}text{font-size:13px}#legend{display:flex;flex-wrap:wrap;gap:16px;font-size:14px;margin-top:12px}.swatch{display:inline-block;width:14px;height:14px;margin-right:6px;vertical-align:middle}#error{color:#b91c1c}
+</style>
+</head>
+<body><main><h1 id="title"></h1><p id="source"></p><p id="error" role="alert"></p><svg viewBox="0 0 960 600" aria-label="地理地图"></svg><div id="legend"></div></main>
+<script src="vendor/d3.v5.min.js"></script><script src="data.js"></script>
+<script>
+try {
+  const data = window.MAP_DATA;
+  if (!data || !window.d3) throw new Error('Missing preflight data or local D3');
+  document.querySelector('#title').textContent = data.meta.title || '地图';
+  document.title = data.meta.title || '地图';
+  document.querySelector('#source').textContent = data.meta.source + ' · ' + data.meta.date + (data.meta.synthetic ? ' · 示意数据' : '') + ' · 离线';
+  const features = data.regions.features;
+  const fit = {type:'FeatureCollection',features:[...features,...data.routes.map(r=>({type:'Feature',geometry:r.geometry})),...data.points.map(p=>({type:'Feature',geometry:{type:'Point',coordinates:p.coordinates}}))]};
+  const projection = d3.geoMercator().fitExtent([[28,28],[932,572]],fit);
+  // fitExtent is singular for one isolated point; use a local view instead.
+  if (!Number.isFinite(projection.scale())) projection.scale(1000).center(data.points[0].coordinates).translate([480,300]);
+  const path = d3.geoPath(projection), svg = d3.select('svg');
+  const numeric = Object.values(data.values).filter(Number.isFinite);
+  const domain = numeric.length ? d3.extent(numeric) : [0,1];
+  const color = d3.scaleSequential(d3.interpolateBlues).domain(domain);
+  const value = f => Object.prototype.hasOwnProperty.call(data.values,f.properties[data.valueProperty]) ? data.values[f.properties[data.valueProperty]] : null;
+  svg.append('g').selectAll('path').data(features).enter().append('path').attr('class','map-region').attr('data-key',f=>f.properties[data.valueProperty]).attr('d',path).attr('fill',f=>value(f)==null?'#d1d5db':color(value(f))).append('title').text(f=>f.properties[data.valueProperty]+': '+(value(f)==null?'无数据':value(f)));
+  svg.append('g').selectAll('path').data(data.routes).enter().append('path').attr('class','map-route').attr('d',r=>path(r.geometry)).attr('stroke',r=>r.color||'#e76f51').append('title').text(r=>r.name||r.id||'路线');
+  svg.append('g').selectAll('circle').data(data.points).enter().append('circle').attr('class','map-point').attr('cx',p=>projection(p.coordinates)[0]).attr('cy',p=>projection(p.coordinates)[1]).attr('r',6).attr('fill','#20252b').append('title').text(p=>p.name||p.id||'点位');
+  svg.append('g').selectAll('text').data(data.points).enter().append('text').attr('x',p=>projection(p.coordinates)[0]+9).attr('y',p=>projection(p.coordinates)[1]-9).text(p=>p.name||'');
+  function legend(label,fill){const item=document.createElement('span'),swatch=document.createElement('span');swatch.className='swatch';swatch.style.backgroundColor=fill;item.append(swatch,document.createTextNode(label));document.querySelector('#legend').append(item);}
+  if (features.length) {
+    if (numeric.length) {legend((data.meta.metric||'数值')+': '+domain[0],color(domain[0]));if(domain[1]!==domain[0])legend(String(domain[1]),color(domain[1]));}
+    if(features.some(f=>value(f)==null))legend('无数据','#d1d5db');
+  }
+  data.routes.forEach(r=>legend(r.name||'路线',r.color||'#e76f51'));
+  if(data.points.length)legend('点位','#20252b');
+  window.MAP_RENDER = {projection,path,color,domain};
+} catch(error) {document.querySelector('#error').textContent=error.message;throw error;}
+</script></body></html>

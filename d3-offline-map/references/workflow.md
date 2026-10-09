@@ -66,15 +66,9 @@ Known good values for the China pack:
 - `zh-chn-twn.topo.json` → object `layer1`, 2 geometries; filter Taiwan by `properties.GU_A3 === "TWN"`.
 - `zh-hkg-mac.topo.json` → object `layer1`, 2 geometries; names `properties.NAME` = `"Hong Kong"` / `"Macao"`.
 
-## Projection tuning
+## Projection fitting
 
-China fills nicely with Mercator centered on its centroid:
-
-```js
-d3.geoMercator().center([107, 31]).scale(850).translate([width/2, height/2]);
-```
-
-For other regions, set `center` to the region's `[lon, lat]` centroid and tune `scale` until it fits. A safe first guess: `scale ≈ 200 / (max longitude span in degrees) * width`.
+For a generic dataset, use the sibling geographic-map-artifact preflight and D3 template. Adapt ring direction on a rendering copy before calling `projection.fitExtent`. Include requested overlays in the fitted bounds. Manual center/scale values below are only reference-example settings, not a general fitting method.
 
 ## Tiny-region inset pattern
 
@@ -89,19 +83,7 @@ const path2 = d3.geoPath().projection(proj2);
 
 ## Verification checklist
 
-**Automated (browser-automation MCP such as chrome-devtools / playwright):** navigate to the `file://` URL of `index.html`, `evaluate_script` the snippet below, then `take_screenshot`. **Manual fallback:** ask the user to open the file and run the snippet in the DevTools console.
-
-```js
-JSON.stringify({
-  pathCount: document.querySelectorAll("svg path").length,        // expect region count
-  bboxSpan:  (()=>{const r=document.querySelector("svg g path");return r?r.getBBox():null})(),
-  d3: typeof d3, topojson: typeof topojson,
-  MAPS: window.MAPS ? Object.keys(window.MAPS).join(",") : "undefined",
-  errors: (window.__caught||[]).length
-})
-```
-
-Then screenshot and eyeball: high-value region dark, low-value region light, no console errors.
+Use the sibling `geographic-map-artifact/references/verification-and-boundaries.md`: count `.map-region` only, serialize bbox fields explicitly, compare zero/no-data fills, capture console/page errors before navigation, and observe network from before load through offline reload. Require topojson only if runtime TopoJSON conversion is used. A missing error collector cannot prove zero errors.
 
 ## Compliance reminder
 

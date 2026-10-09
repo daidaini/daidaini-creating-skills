@@ -7,7 +7,7 @@ Usage:
         [--waypoints wp.json] [--route-color AABBGGRR] [--route-width 6]
 
 Input:
-  OSRM route JSON from router.project-osrm.org (geometries=geojson).
+  OSRM route JSON (geometries=geojson), or browser route-data saved as JSON.
   The first route in the response is used.
 
 Output:
@@ -17,7 +17,7 @@ Options:
   --waypoints wp.json   JSON array of waypoint objects:
                           [{"name":"...","desc":"...","lon":...,"lat":...}, ...]
                         If omitted, waypoints are extracted from the OSRM response.
-  --route-color AABBGGRR  KML hex color (AABBGGRR), default ff3b82f6 (blue).
+  --route-color AABBGGRR  KML hex color (AABBGGRR), default fff6823b (blue).
   --route-width N         Line width in pixels, default 6.
 
 Coordinate order:
@@ -41,7 +41,13 @@ def build_kml(coords, dist_km, dur_min, waypoints, route_color, route_width):
     lines.append('<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">')
     lines.append('  <Document>')
     lines.append('    <name>Route Map</name>')
-    lines.append(f'    <description>Total {dist_km:.1f} km · Driving ~{int(dur_min//60)}h{int(dur_min%60)}m</description>')
+    stats = []
+    if dist_km is not None:
+        stats.append(f'{dist_km:.1f} km')
+    if dur_min is not None:
+        stats.append(f'{int(dur_min//60)}h{int(dur_min%60)}m')
+    description = ' · '.join(stats) or 'Distance and duration not supplied'
+    lines.append(f'    <description>{description}</description>')
 
     # ── Route line style ──
     lines.append('    <Style id="routeStyle">')
@@ -54,8 +60,8 @@ def build_kml(coords, dist_km, dur_min, waypoints, route_color, route_width):
 
     # ── Route LineString ──
     lines.append('    <Placemark>')
-    lines.append('      <name>Driving Route</name>')
-    lines.append(f'      <description>{dist_km:.1f} km · {int(dur_min//60)}h{int(dur_min%60)}m</description>')
+    lines.append('      <name>Route</name>')
+    lines.append(f'      <description>{description}</description>')
     lines.append('      <styleUrl>#routeStyle</styleUrl>')
     lines.append('      <LineString>')
     lines.append('        <tessellate>1</tessellate>')
@@ -86,7 +92,7 @@ def build_kml(coords, dist_km, dur_min, waypoints, route_color, route_width):
         lines.append('    <Placemark>')
         lines.append(f'      <name>{name}</name>')
         lines.append(f'      <description>{desc}</description>')
-        lines.append('      <Style><IconStyle><href>' + icon + '</href></IconStyle></Style>')
+        lines.append('      <Style><IconStyle><Icon><href>' + icon + '</href></Icon></IconStyle></Style>')
         lines.append('      <Point>')
         lines.append(f'        <coordinates>{lon:.7f},{lat:.7f}</coordinates>')
         lines.append('      </Point>')
@@ -117,7 +123,7 @@ def main():
 
     # Parse optional flags
     wp_path      = None
-    route_color  = 'ff3b82f6'
+    route_color  = 'fff6823b'
     route_width  = 6
 
     i = 3
@@ -139,10 +145,21 @@ def main():
     with open(input_path, encoding='utf-8') as f:
         data = json.load(f)
 
-    route = data['routes'][0]
+    route = data['routes'][0] if 'routes' in data else data
+    if route['geometry'].get('type') != 'LineString':
+        raise ValueError('KML converter accepts one LineString route')
     coords = route['geometry']['coordinates']
-    dist_km = route['distance'] / 1000
-    dur_min = route['duration'] / 60
+    if len(coords) < 2 or any(len(c) < 2 or any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in c[:2]) or not (-180 <= c[0] <= 180 and -90 <= c[1] <= 90) for c in coords):
+        raise ValueError('Route needs two finite [lon, lat] positions in range')
+    distance = route.get('distance', route.get('distanceMeters'))
+    duration = route.get('duration', route.get('durationSeconds'))
+    for value in (distance, duration):
+        if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0):
+            raise ValueError('Distance/duration must be finite non-negative numbers or absent')
+    dist_km = distance / 1000 if distance is not None else None
+    dur_min = duration / 60 if duration is not None else None
+    if len(route_color) != 8 or any(c not in '0123456789abcdefABCDEF' for c in route_color) or route_width <= 0:
+        raise ValueError('Style requires eight hex AABBGGRR digits and positive width')
 
     # ── Waypoints ──
     if wp_path:
@@ -150,6 +167,9 @@ def main():
             waypoints = json.load(f)
     else:
         waypoints = extract_waypoints_from_osrm(data)
+    for wp in waypoints:
+        if not all(isinstance(wp[k], (int, float)) and not isinstance(wp[k], bool) and math.isfinite(wp[k]) for k in ('lon', 'lat')) or not (-180 <= wp['lon'] <= 180 and -90 <= wp['lat'] <= 90):
+            raise ValueError('Waypoint coordinates must be finite lon/lat in range')
 
     # ── Build KML ──
     kml = build_kml(coords, dist_km, dur_min, waypoints, route_color, route_width)
@@ -162,8 +182,8 @@ def main():
     print(f'KML written: {output_path}')
     print(f'  Coordinates: {len(coords):,}')
     print(f'  Waypoints:   {len(waypoints)}')
-    print(f'  Distance:    {dist_km:.1f} km')
-    print(f'  Duration:    {int(dur_min//60)}h{int(dur_min%60)}m')
+    print(f'  Distance:    {dist_km if dist_km is not None else "not supplied"} km')
+    print(f'  Duration:    {dur_min if dur_min is not None else "not supplied"} min')
     print(f'  Size:        {size_kb:.0f} KB')
 
 

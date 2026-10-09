@@ -1,47 +1,28 @@
 # Boundary and Gates Summary
 
-## Mode
+## Mode and ownership
 
-`Scaffold`
-
-This package is a lightweight routing and composition layer over the existing local `leaflet-route-map` and `d3-offline-map` skills. It adds the missing boundary-plus-route composite mode without duplicating their mature implementation assets.
-
-## Owned job
-
-Choose a map rendering mode, produce a local browser-verifiable artifact, and enforce shared data, offline, and evidence rules.
+Scaffold; no Production/Library/Governed release claim. This package selects layers/renderer, owns shared preflight/templates and verification. Siblings retain specialist boundary/route acquisition and KML conversion. Standalone installation still requires sibling skills for those jobs.
 
 ## Output contract
 
-Every run must produce local HTML, local data payload(s), required local assets, a README, and verification notes. A screenshot is required when browser automation is available. Route runs may additionally produce Google My Maps-compatible KML.
+Default HTML folder: index.html, data.js, vendor assets/manifest, preflight.json, README and verification evidence. Explicit single HTML bundles runtime assets; source/evidence remain separate. KML-only requests receive KML/source/verification notes, not unnecessary HTML. Remote tiles and KML icon URLs remain network-dependent.
 
-## Explicit exclusions
+## Boundaries
 
-- live navigation, traffic, geocoding, or POI search
-- tile hosting and production GIS systems
-- high-precision boundaries without appropriate source data
-- regulated public-map publishing
+Known WGS84 geography, supplied or labeled synthetic data; no live GIS, geocoding/POI, tile hosting, unsupported precision, or regulated publication. Regional ring normalization is not a general topology repair. Antimeridian/polar/hemisphere cases require explicit geospatial preprocessing; preserve source data.
 
-## Resource boundary
+## Resources and gates
 
-- `SKILL.md`: routing table, safe defaults, output contract, hard boundaries.
-- `references/routing-and-data-contract.md`: mode choice and exact payload contract.
-- `references/verification-and-boundaries.md`: browser checks, offline evidence, data/publication limits.
-- Existing sibling skills retain their Leaflet/D3 templates and deterministic scripts to avoid copy divergence.
+- SKILL.md: compact execution skeleton and defaults; agents/interface.yaml: aligned machine contract.
+- references/: shared payload, routing choices, diagnosis and evidence rules.
+- scripts/: deterministic preflight, cached fixed-version vendoring, optional HTML bundling.
+- assets/: small shared D3/Leaflet templates, not copies of the country-specific example.
+- evals/: meaningful geometry/joins/KML/browser fixtures and deterministic trigger proxies.
+- reports/: observed results and limitations; see optimization-report.md.
 
-## Manual gates applied
+Applied: source-preserving preflight regression, real KML CLI/structural checks, trigger positive/negative/neighbor scoring, real Chrome file-URL desktop/mobile/offline tests, template syntax checks, YAML validation, and entry resource-budget check. Counts and evidence kinds are in optimization-report.md. The resource checker defaults to a 1000-token budget without a manifest; that checker label does not promote package maturity.
 
-- Trigger boundary: positive route, choropleth, and composite requests are distinct from excluded live-GIS requests.
-- Data boundary: all persisted geography is `[lon, lat]`; Leaflet conversion is local to rendering.
-- Offline boundary: local libraries alone never justify an offline claim.
-- Verification boundary: every mode has independently testable layer evidence.
+## Deferred evidence
 
-## Deferred
-
-- Trigger-evaluation fixture set
-- A bundled composite D3 template
-- Standalone packaging that vendors sibling scripts/templates
-- Automated browser fixture tests
-
-## Promotion triggers
-
-Promote once composite rendering has been used successfully in multiple projects, or once this package must install independently from its sibling skills. At that point, add a bundled template, deterministic composite-data packer, and routing holdout tests.
+No model-executed activation or end-to-end baseline/token benchmark; no real-data production run, actual My Maps import, online tile availability or global spherical fixture suite. Do not claim these passed. Promote only after repeated real use and measured need; do not add governance artifacts solely to pass a label.

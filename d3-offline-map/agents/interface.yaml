@@ -1,0 +1,31 @@
+interface:
+  display_name: "D3 Offline Map"
+  short_description: "Offline boundary choropleths with data preflight and browser evidence"
+  default_prompt: "Use $d3-offline-map for an offline choropleth; reuse geographic-map-artifact preflight and generic D3 assets. Deliver a folder unless single HTML is explicitly requested."
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets: ["openai", "claude", "generic"]
+  activation:
+    mode: "manual-or-description"
+    paths: ["SKILL.md", "references/workflow.md"]
+  execution:
+    context: "inline"
+    shell: "powershell"
+    browser_verification: "required-for-verified-claim"
+  trust:
+    source_tier: "local"
+    network_policy: "allow-for-requested-boundary-and-fixed-library-acquisition; no runtime network"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "allow-metadata-only"
+  degradation:
+    openai: "use available browser; label unavailable evidence"
+    claude: "use available browser; label unavailable evidence"
+    no_network: "reuse supplied data and cached libraries"
+    no_browser: "static checks only; visual/network evidence unavailable"
+    generic: "neutral-source"
+contract:
+  triggers: ["自绘地图", "省份着色地图", "offline map D3", "choropleth"]
+  inputs: ["suitable WGS84 boundaries", "metric values", "source/date"]
+  outputs: ["offline folder or explicit single HTML", "verification notes"]
+  exclusions: ["route-only maps", "live GIS", "online tiles", "skill audits", "unsupported precision"]
+  mode: "scaffold"

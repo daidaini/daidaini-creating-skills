@@ -1,12 +1,12 @@
 ---
 name: d3-offline-map
-description: Build an offline, zero-dependency, custom-drawn geographic map (choropleth / self-drawn regions) as a single double-clickable HTML using Natural Earth TopoJSON/GeoJSON + D3.js. Use when the user wants to render region boundary data offline without online map APIs, without a server, or wants to color/shade regions by per-region values. Triggers include "自绘地图", "免费地图数据 自绘", "offline map D3", "省份着色地图", "行政区划 离线绘制", "Natural Earth D3", "standalone map without API key". Do NOT use when the user needs online tile basemaps, live POI/geocoding APIs, sub-county/sub-province precision, or a backend GIS/PostGIS pipeline.
+description: Build offline custom-drawn geographic choropleths from GeoJSON/TopoJSON with local D3, as a double-clickable folder or explicitly requested single HTML. Triggers include 自绘地图, 免费地图数据 自绘, offline map D3, 省份着色地图, 行政区划 离线绘制, Natural Earth D3, and standalone map without API key. Do NOT use for route-only maps, live navigation/traffic/geocoding/POI, online tile basemaps, skill audits, precision unsupported by supplied data, or backend GIS/PostGIS.
 license: MIT
 ---
 
 # D3 Offline Map
 
-Render a custom-drawn geographic map as one offline HTML file: no API key, no server, no network. Data comes from preprocessed TopoJSON/GeoJSON (Natural Earth scale); D3.js renders SVG; everything is vendored locally so the result opens by double-clicking.
+Render a custom-drawn geographic map as an offline folder by default: no API key, no server, no runtime network. An explicit single-HTML request uses the sibling `geographic-map-artifact/scripts/bundle-html.js`; verify that output separately.
 
 ## When to use
 
@@ -22,6 +22,8 @@ Render a custom-drawn geographic map as one offline HTML file: no API key, no se
 
 ## Core flow (5 steps)
 
+For generic geography, prefer `../geographic-map-artifact/assets/d3-map.html` and its preflight workflow. The template below remains a China-specific reference example. Reuse cached fixed-version assets with the sibling `scripts/vendor-assets.js`; download only missing dependencies. See the sibling routing/data contract for coordinate-system, ring-direction, join and missing-value checks before rendering.
+
 1. **Get boundary data** → put `*.topo.json` / `*.geo.json` in `./data/`. China province pack (mainland + Taiwan + HK/Macao) is already proven: see [Workflow](references/workflow.md) for sources.
 2. **Vendor the libs** → `curl` D3 v5 + topojson-client into `./vendor/` so no CDN at runtime. Snippet in [Workflow](references/workflow.md).
 3. **Pack data into `data.js`** → from the output directory, run `node <skill-dir>/scripts/build-data.js [file:alias ...] -o data.js` (`<skill-dir>` is the "Base directory for this skill" stated when the skill loads) to emit `window.MAPS = {...}`. The alias form keeps template keys stable: `node <skill-dir>/scripts/build-data.js data/zh-mainland-provinces.topo.json:mainland data/zh-chn-twn.topo.json:chnTwn data/zh-hkg-mac.topo.json:hkMac -o data.js`.
@@ -30,10 +32,10 @@ Render a custom-drawn geographic map as one offline HTML file: no API key, no se
 
 ## Success criteria (must all pass)
 
-- `document.querySelectorAll('svg path').length` === expected region count (e.g. 34 for China).
-- A known high-value region fill ≠ a known low-value region fill (color scale actually bound).
-- Path geometric bbox is map-sized (hundreds of px), not 0×0.
-- `d3`, `topojson`, `window.MAPS` all defined; console 0 errors.
+- `document.querySelectorAll('.map-region').length` === selected input region count; exclude axis/legend paths.
+- Fills match the configured scale; equal/bin-sharing values may have equal fills. Missing values use a neutral color, distinct from numeric zero.
+- Overall geometry is finite and visible; tiny regions need not have map-sized individual bboxes.
+- `d3` and the selected data payload defined; require `topojson` only when runtime conversion is used. Collect console/page errors before navigation.
 - Page renders with no network requests (offline test).
 
 ## Key pitfalls

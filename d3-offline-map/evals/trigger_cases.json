@@ -1,0 +1,57 @@
+{
+  "recommended_threshold": 0.5,
+  "should_trigger": [
+    {
+      "text": "制作省份着色地图，要求离线打开",
+      "family": "should_trigger-0"
+    },
+    {
+      "text": "自绘地图，数据是GeoJSON",
+      "family": "should_trigger-1"
+    },
+    {
+      "text": "offline map D3 using supplied boundaries",
+      "family": "should_trigger-2"
+    },
+    {
+      "text": "Natural Earth D3 country choropleth",
+      "family": "should_trigger-3"
+    },
+    {
+      "text": "行政区划 离线绘制，边界数据已提供",
+      "family": "should_trigger-4"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "Build a route map with start and end markers",
+      "family": "should_not_trigger-0"
+    },
+    {
+      "text": "实时导航并查询交通",
+      "family": "should_not_trigger-1"
+    },
+    {
+      "text": "省份着色地图，需要在线瓦片底图",
+      "family": "should_not_trigger-2"
+    },
+    {
+      "text": "搭建 PostGIS 后端服务",
+      "family": "should_not_trigger-3"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "分析 d3-offline-map skill 的流程",
+      "family": "near_neighbor-0"
+    },
+    {
+      "text": "优化这个地图skill",
+      "family": "near_neighbor-1"
+    },
+    {
+      "text": "解释投影公式，不生成地图",
+      "family": "near_neighbor-2"
+    }
+  ]
+}

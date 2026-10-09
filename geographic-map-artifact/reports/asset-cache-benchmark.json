@@ -1,0 +1,36 @@
+{
+  "kind": "component-cache-timing",
+  "date": "2026-10-09",
+  "node": "v24.15.0",
+  "runs": [
+    {
+      "phase": "cold",
+      "renderer": "d3",
+      "hits": 0,
+      "downloads": 1,
+      "milliseconds": 968
+    },
+    {
+      "phase": "warm",
+      "renderer": "d3",
+      "hits": 1,
+      "downloads": 0,
+      "milliseconds": 60
+    },
+    {
+      "phase": "cold",
+      "renderer": "leaflet",
+      "hits": 0,
+      "downloads": 5,
+      "milliseconds": 1959
+    },
+    {
+      "phase": "warm",
+      "renderer": "leaflet",
+      "hits": 5,
+      "downloads": 0,
+      "milliseconds": 62
+    }
+  ],
+  "limitations": "One cold/warm pair per renderer; download timing depends on network. Not an end-to-end model-task or token-cost comparison."
+}

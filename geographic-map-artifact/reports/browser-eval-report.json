@@ -1,0 +1,255 @@
+{
+  "kind": "real-browser-synthetic-fixtures",
+  "browser": "155.0.8059.39",
+  "cases": [
+    {
+      "name": "route-leaflet",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 0,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\route-leaflet\\index-desktop.png"
+    },
+    {
+      "name": "route-leaflet",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 0,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\route-leaflet\\standalone-desktop.png"
+    },
+    {
+      "name": "choropleth-d3",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 0,
+        "points": 0
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\choropleth-d3\\index-desktop.png"
+    },
+    {
+      "name": "choropleth-d3",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 0,
+        "points": 0
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\choropleth-d3\\standalone-desktop.png"
+    },
+    {
+      "name": "composite-d3",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\composite-d3\\index-desktop.png"
+    },
+    {
+      "name": "composite-d3",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\composite-d3\\standalone-desktop.png"
+    },
+    {
+      "name": "points-with-regions-d3",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 0,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\points-with-regions-d3\\index-desktop.png"
+    },
+    {
+      "name": "points-with-regions-d3",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 0,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\points-with-regions-d3\\standalone-desktop.png"
+    },
+    {
+      "name": "same-values-d3",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\same-values-d3\\index-desktop.png"
+    },
+    {
+      "name": "same-values-d3",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\same-values-d3\\standalone-desktop.png"
+    },
+    {
+      "name": "point-only-d3",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 0,
+        "routes": 0,
+        "points": 1
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\point-only-d3\\index-desktop.png"
+    },
+    {
+      "name": "point-only-d3",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 0,
+        "routes": 0,
+        "points": 1
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\point-only-d3\\standalone-desktop.png"
+    },
+    {
+      "name": "composite-leaflet",
+      "file": "index.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\composite-leaflet\\index-desktop.png"
+    },
+    {
+      "name": "composite-leaflet",
+      "file": "standalone.html",
+      "passed": true,
+      "counts": {
+        "regions": 3,
+        "routes": 1,
+        "points": 2
+      },
+      "consoleErrors": [],
+      "remoteRequests": [],
+      "mobileWidth": 390,
+      "screenshot": "C:\\Users\\admin\\AppData\\Local\\Temp\\map-skill-eval-final-20261009\\composite-leaflet\\standalone-desktop.png"
+    }
+  ],
+  "assetCache": [
+    {
+      "name": "route-leaflet",
+      "renderer": "leaflet",
+      "hits": 5,
+      "downloads": 0,
+      "milliseconds": 54
+    },
+    {
+      "name": "choropleth-d3",
+      "renderer": "d3",
+      "hits": 1,
+      "downloads": 0,
+      "milliseconds": 42
+    },
+    {
+      "name": "composite-d3",
+      "renderer": "d3",
+      "hits": 1,
+      "downloads": 0,
+      "milliseconds": 48
+    },
+    {
+      "name": "points-with-regions-d3",
+      "renderer": "d3",
+      "hits": 1,
+      "downloads": 0,
+      "milliseconds": 53
+    },
+    {
+      "name": "same-values-d3",
+      "renderer": "d3",
+      "hits": 1,
+      "downloads": 0,
+      "milliseconds": 49
+    },
+    {
+      "name": "point-only-d3",
+      "renderer": "d3",
+      "hits": 1,
+      "downloads": 0,
+      "milliseconds": 47
+    },
+    {
+      "name": "composite-leaflet",
+      "renderer": "leaflet",
+      "hits": 5,
+      "downloads": 0,
+      "milliseconds": 48
+    }
+  ],
+  "baseline": "missing evidence: no end-to-end model baseline/token measurements",
+  "passed": true
+}

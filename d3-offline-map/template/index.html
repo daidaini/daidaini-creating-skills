@@ -75,6 +75,9 @@
       .center([107, 36]).scale(800).translate([width / 2, height / 2]);
     var path = d3.geoPath().projection(projection);
 
+    function valueFill(name) {
+      return pop[name] == null ? "#d1d5db" : color(pop[name]);
+    }
     var maxVal = d3.max(d3.values(pop));
     // DATA-SPECIFIC (cosmetic): color scale. Swap interpolateBlues for any d3 palette.
     var color = d3.scaleSequential(d3.interpolateBlues).domain([0, maxVal]);
@@ -86,9 +89,9 @@
     gMain.selectAll("path")
       .data(mainland)
       .enter().append("path")
-        .attr("class", "province")
+        .attr("class", "province map-region")
         .attr("d", path)
-        .attr("fill", function (d) { return color(pop[d.properties.name] || 0); })
+        .attr("fill", function (d) { return valueFill(d.properties.name); })
       .append("title").text(function (d) {
         var v = pop[d.properties.name];
         return d.properties.name + (v == null ? "" : "：" + v + " 万人");
@@ -99,7 +102,7 @@
     var tw = topojson.feature(MAPS.chnTwn, MAPS.chnTwn.objects.layer1).features
       .filter(function (d) { return d.properties.GU_A3 === "TWN"; });
     svg.append("g").selectAll("path").data(tw).enter().append("path")
-        .attr("class", "province")
+        .attr("class", "province map-region")
         .attr("d", path)
         .attr("fill", color(pop["Taiwan"]))
       .append("title").text("Taiwan：" + pop["Taiwan"] + " 万人");
@@ -123,11 +126,11 @@
     // DATA-SPECIFIC: MAPS.hkMac + objects.layer1 + properties.NAME
     var hk = topojson.feature(MAPS.hkMac, MAPS.hkMac.objects.layer1).features;
     gInset.selectAll("path").data(hk).enter().append("path")
-        .attr("class", "province")
+        .attr("class", "province map-region")
         .attr("d", path2)
         .attr("fill", function (d) {
           var n = d.properties.NAME; // "Hong Kong" / "Macao"
-          return color(pop[n] || 0);
+          return valueFill(n);
         })
       .append("title").text(function (d) {
         var v = pop[d.properties.NAME];
@@ -162,6 +165,8 @@
     gLeg.append("g").attr("class", "axis").attr("transform", "translate(" + legendW + ",0)").call(axis);
     gLeg.append("text").attr("class", "legend-caption")
       .attr("x", legendW / 2).attr("y", -10).attr("text-anchor", "middle").text("万人");
+    gLeg.append("rect").attr("y", legendH + 20).attr("width", 12).attr("height", 12).attr("fill", "#d1d5db");
+    gLeg.append("text").attr("x", 18).attr("y", legendH + 30).attr("class", "legend-caption").text("无数据");
   })();
   </script>
 </body>

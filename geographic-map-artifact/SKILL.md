@@ -1,77 +1,35 @@
 ---
 name: geographic-map-artifact
-description: Build a verified local HTML geographic-map artifact. Supports route maps with markers and optional Google My Maps KML export, offline D3 choropleth maps from GeoJSON/TopoJSON, and offline composite maps that overlay routes or points on colored regions. Use when the user asks for a route/travel/logistics map, a region-colored map, an offline self-drawn map, geographic data visualization, or a static map combining boundaries with routes. Do NOT use for live navigation, traffic, geocoding, POI search, tile-service hosting, production GIS systems, sub-county precision without supplied authoritative data, or regulated public map publication.
+description: Build verified local route/point, choropleth, or composite maps as a double-clickable folder or explicit single HTML, with optional KML. Use for 绘制路线图, 路线地图, 省份着色地图, 自绘地图, 离线地图, 合成地图, route map, travel/logistics map, choropleth, offline geographic map, or colored regions with routes/points. Do NOT use for live navigation/traffic/routing, geocoding/POI, production GIS/tile hosting, skill audits, unsupported boundary precision, or regulated public maps.
 license: MIT
 ---
 
 # Geographic Map Artifact
 
-Create a local, browser-verifiable map artifact. Select one mode before building:
+Choose layers/delivery, then renderer.
 
-| Requested visual layer | Mode | Default renderer |
-|---|---|---|
-| Route line, stops, distance/duration, Google My Maps export | `route` | Leaflet |
-| Region boundaries colored by values | `choropleth` | D3 + SVG |
-| Colored regions plus routes and/or point markers | `composite` | D3 + SVG |
+| Need | Default |
+|---|---|
+| Routes/stops with online basemap | Leaflet |
+| Offline choropleth/custom projection | D3/SVG |
+| Regions plus routes/points | D3 offline; Leaflet for map browsing |
 
-Read [routing and data contract](references/routing-and-data-contract.md) before implementation. Read [verification and boundaries](references/verification-and-boundaries.md) before claiming completion.
+Leaflet can work offline without tiles. KML-only needs no HTML. Siblings: `../leaflet-route-map/` for routes/KML; `../d3-offline-map/` for boundaries.
 
-## Default decisions
+## Execute
 
-- Preserve source geographic coordinates as GeoJSON order: `[longitude, latitude]`.
-- Convert to Leaflet `[latitude, longitude]` only at the Leaflet rendering boundary.
-- For `file://` artifacts, load data through a local JavaScript file (`window.MAP_DATA` or `window.MAPS`), never runtime `fetch()`.
-- Treat a map as fully offline only if its libraries, geographic data, and basemap are all local. Vendored Leaflet with OSM tiles is **not** fully offline.
-- Save a `README.md` stating data sources, renderer, files that must remain together, and the actual network requirement.
+1. Resolve folder/single HTML, network, source/date and synthetic status. Ask only for consequential missing inputs.
+2. Read [contract](references/routing-and-data-contract.md); reuse local data/cached libraries.
+3. Convert selected TopoJSON features to GeoJSON, then run `node <skill-dir>/scripts/preflight.js input.json --report preflight.json --out data.js`. Preserve source; resolve errors before rendering.
+4. Copy [D3](assets/d3-map.html) or [Leaflet](assets/leaflet-map.html) template to `index.html`. Run `node <skill-dir>/scripts/vendor-assets.js <output-dir> --renderer d3|leaflet`. Both consume prepared `window.MAP_DATA`.
+5. Follow [verification](references/verification-and-boundaries.md): data/render/browser checks, desktop/mobile, screenshot. Label unavailable evidence.
+6. Deliver README with opening instructions, sources and network classification. For explicit single HTML, run `node <skill-dir>/scripts/bundle-html.js index.html standalone.html`; verify it separately.
 
-## Mode workflows
+## Invariants and output
 
-### `route`
+- Store known WGS84 `[lon,lat]`; Leaflet GeoJSON handles this order. Raw polyline/marker calls need conversion.
+- Use local JS data, not file-URL JSON fetch. Bundling does not make remote tiles offline.
+- Folder: HTML, data, vendor/manifest, preflight, README, browser notes/screenshot. Single HTML embeds runtime dependencies.
+- Label synthetic inputs, omit unknown statistics. Resolve unknown CRS, unsuitable precision and excluded live GIS/publication requirements before proceeding.
 
-Use the local `leaflet-route-map` workflow and assets:
-
-1. Vendor Leaflet locally and create `data/route-data.js`.
-2. Render an online OSM tile layer by default, a polyline, start/end/waypoint markers, and route statistics.
-3. Convert GeoJSON/OSRM `[lon, lat]` coordinate arrays to Leaflet `[lat, lon]` immediately before drawing.
-4. Optionally use `leaflet-route-map/scripts/convert-kml.py` to create a Google My Maps KML export.
-5. Verify Leaflet, route-coordinate count, path, markers, and map pane in a real browser.
-
-### `choropleth`
-
-Use the local `d3-offline-map` workflow and assets:
-
-1. Place GeoJSON/TopoJSON input under `data/`; inspect object and property names.
-2. Vendor D3 and topojson-client; package data into a browser-loadable JS payload with `d3-offline-map/scripts/build-data.js`.
-3. Use an appropriate projection, render SVG region paths, bind values to a color scale, and include a legend.
-4. Verify expected path count, non-zero map-sized geometry, differing high/low fills, no console errors, and no network requests.
-
-### `composite`
-
-Use D3/SVG when a static/offline artifact is required:
-
-1. Build a `window.MAP_DATA` payload containing `regions`, `values`, optional `routes`, and optional `points`; use the contract in the routing reference.
-2. Render regions and fills first. Render route `LineString` paths next, then point markers and labels above them.
-3. Use one D3 geographic projection for every layer, keeping all source coordinates in `[lon, lat]` order.
-4. Include a legend for region values and a compact route/point legend when applicable.
-5. Verify both region and overlay evidence: region path count and color scale, route path count/geometry, marker count, projection bounds, console errors, and a screenshot.
-
-## Output contract
-
-Required for every HTML artifact:
-
-- `index.html`
-- local data payload (`data.js`, `route-data.js`, or equivalent)
-- all required local libraries/assets
-- `README.md`
-- browser verification notes; include `screenshot.png` when browser tooling is available
-
-Additionally for `route` when requested:
-
-- Google My Maps-compatible `route.kml`, with one `LineString` and the requested point placemarks
-
-## Hard boundaries
-
-- Do not claim a Leaflet map with remote tiles is offline.
-- Do not silently invent routes, values, or boundaries; label supplied test/synthetic data.
-- Do not use Natural Earth or other de facto boundary sources as an official public map base in China.
-- Escalate rather than improvising for live routing, navigation, traffic, geocoding, high-precision administrative boundaries, or regulated publication.
+[Regression guide](evals/README.md) · [Boundary and evidence](reports/boundary-and-gates.md)
