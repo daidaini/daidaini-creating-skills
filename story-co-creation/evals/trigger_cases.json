@@ -1,6 +1,7 @@
 {
   "recommended_threshold": 0.48,
   "should_trigger": [
+    {"text": "把这些想法写成儿童文学风格的故事，用孩子听得懂的话，不要高深词句。", "family": "child-literature-style"},
     {"text": "帮我编故事，小龙害怕飞，却想去修月亮。", "family": "child-fragments"},
     {"text": "把孩子的想法写成故事：会吃颜色的云、倒着走的猫，还有一座没有门的城。", "family": "child-fragments"},
     {"text": "想写小说，先和我定框架，别急着写正文。", "family": "framework-first"},

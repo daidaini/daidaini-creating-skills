@@ -7,8 +7,8 @@
   "recall": 1.0,
   "bucket_stats": {
     "should_trigger": {
-      "total": 11,
-      "passed": 11,
+      "total": 12,
+      "passed": 12,
       "pass_rate": 1.0
     },
     "should_not_trigger": {
@@ -23,6 +23,13 @@
     }
   },
   "family_stats": {
+    "child-literature-style": {
+      "total": 1,
+      "passed": 1,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "pass_rate": 1.0
+    },
     "child-fragments": {
       "total": 2,
       "passed": 2,
@@ -181,6 +188,14 @@
   "misfires": [],
   "results": {
     "should_trigger": [
+      {
+        "prompt": "把这些想法写成儿童文学风格的故事，用孩子听得懂的话，不要高深词句。",
+        "family": "child-literature-style",
+        "score": 0.92,
+        "predicted_trigger": true,
+        "expected_trigger": true,
+        "passed": true
+      },
       {
         "prompt": "帮我编故事，小龙害怕飞，却想去修月亮。",
         "family": "child-fragments",

@@ -5,8 +5,8 @@ version: 0.1.0
 
 interface:
   display_name: 故事共创
-  short_description: 将零散想法变成完整故事，先确认框架与篇幅，再按需配图。
-  default_prompt: 使用 story-co-creation，把我的想法整理为故事框架，等我确认框架和预计字数后再写，完成后讨论插画。
+  short_description: 以易懂的儿童文学风格共创故事，确认框架与篇幅后写作，按需配图。
+  default_prompt: 使用 story-co-creation，先确认框架和篇幅，再以儿童文学风格写成故事，完成后讨论插画。
 
 triggers:
   positive:
@@ -51,6 +51,7 @@ outputs:
 
 constraints:
   default_collaboration: 共同创作，核心变化需确认。
+  prose_style: 儿童文学，用常见词和具体画面，不用高深难懂的词句。
   framework_gate: 正文前确认最新框架。
   length_gate: 框架通过后，确认或沿用用户明确指定的预计篇幅，才写正文。
   illustration_gate: 正文完成后确认实际数量、场景和风格，才调用图片生成能力。
