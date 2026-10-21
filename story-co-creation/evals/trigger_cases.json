@@ -1,0 +1,35 @@
+{
+  "recommended_threshold": 0.48,
+  "should_trigger": [
+    {"text": "帮我编故事，小龙害怕飞，却想去修月亮。", "family": "child-fragments"},
+    {"text": "把孩子的想法写成故事：会吃颜色的云、倒着走的猫，还有一座没有门的城。", "family": "child-fragments"},
+    {"text": "想写小说，先和我定框架，别急着写正文。", "family": "framework-first"},
+    {"text": "帮我写一个没有坏人的日常故事。", "family": "slice-of-life"},
+    {"text": "续写故事，沿用下面的人物，先聊下一章怎么走。", "family": "continuation"},
+    {"text": "Co-write a story from my daughter's ideas, with illustrations only if we choose them later.", "family": "english"},
+    {"text": "Help me write fiction about a robot that forgets its own name.", "family": "english"},
+    {"text": "Plan a mystery novel with me before drafting any chapters.", "family": "long-form"},
+    {"text": "上下文：正在故事共创，询问创作方式。用户回复：共同创作。", "family": "contextual-turn"},
+    {"text": "上下文：故事框架已确认，篇幅待定。用户回复：写到两千字吧。", "family": "contextual-turn"},
+    {"text": "上下文：完整故事已完成，正在讨论插画。用户回复：只要两张，用水彩。", "family": "contextual-turn"}
+  ],
+  "should_not_trigger": [
+    {"text": "分析效率工具为什么让人更忙，写一篇思考文。", "family": "analysis"},
+    {"text": "总结这篇小说，保留主要情节，不要创作新内容。", "family": "summary"},
+    {"text": "把这段故事翻译成英文。", "family": "translation"},
+    {"text": "只润色这段故事，不改变情节或扩写。", "family": "polish"},
+    {"text": "点评这篇小说的人物塑造。", "family": "critique"},
+    {"text": "写一首诗。", "family": "poetry"},
+    {"text": "给咖啡品牌写广告文案，包含品牌故事。", "family": "copywriting"},
+    {"text": "帮我写登录功能的用户故事和验收标准。", "family": "software"},
+    {"text": "创建一个写小说的 skill。", "family": "skill-authoring"}
+  ],
+  "near_neighbor": [
+    {"text": "教我如何写小说，给一条学习路线。", "family": "teaching"},
+    {"text": "只画一张故事插画，不需要写文字。", "family": "image-only"},
+    {"text": "列几个故事点子，不用展开框架或写成作品。", "family": "ideas-only"},
+    {"text": "把现成故事排版成单文件 HTML，原文不改。", "family": "formatting"},
+    {"text": "Summarize this novel without adding new events.", "family": "english-summary"},
+    {"text": "Teach me how to write fiction; do not write the story for me.", "family": "english-teaching"}
+  ]
+}

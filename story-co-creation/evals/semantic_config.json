@@ -1,0 +1,20 @@
+{
+  "positive_concepts": {
+    "story_creation": {
+      "weight": 1.0,
+      "phrases": ["故事", "小说", "童话", "story", "fiction", "novel"]
+    }
+  },
+  "negative_concepts": {
+    "existing_text_only": {
+      "weight": 1.0,
+      "exclusive": true,
+      "phrases": ["总结这篇", "翻译成", "只润色", "点评这篇", "summarize", "原文不改"]
+    },
+    "other_work": {
+      "weight": 1.0,
+      "exclusive": true,
+      "phrases": ["广告文案", "用户故事", "创建一个", "教我如何", "teach me", "只画", "列几个故事点子"]
+    }
+  }
+}

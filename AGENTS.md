@@ -4,7 +4,7 @@
 
 ## 仓库是什么
 
-个人 Claude Code / 通用 agent 技能（skills）集合，共 15 个技能。每个技能是一个自包含目录，入口为 `SKILL.md`。
+个人 Claude Code / 通用 agent 技能（skills）集合。每个技能是一个自包含目录，入口为 `SKILL.md`。
 
 在本机（Windows），`C:\Users\admin\.agents\skills\daidaini-skills` 是指向本仓库根目录的符号链接：编辑仓库即生效，无需复制安装。harness 只扫描每个子目录的 `SKILL.md`。
 
@@ -19,6 +19,7 @@
 | leaflet-route-map | Leaflet 路线图 HTML / Google My Maps KML | 仅手动（`disable-model-invocation: true`） |
 | my-summarize | 目录批量中文摘要 → `summarize.md`（可选路由 beautiful-html 出 HTML） | 手动+自动（`user_invocable: true`） |
 | my-writing | 单一核心判断写成 1000–1500 字中文深度文 | 手动+自动 |
+| story-co-creation | 零散想法 → 框架与篇幅确认 → 完整故事／小说 → 可选插画 | 手动+自动 |
 | youtube-audio-downloader | yt-dlp 下载 YouTube 音频 MP3（绕过 403/n-challenge） | 手动+自动 |
 | attends-court | 北宋朝堂式多角色思辨（朝议/廷议） | 仅手动 |
 | beautiful-html | 杂志级可翻阅单文件 HTML 知识手册 | 仅手动 |
@@ -58,6 +59,7 @@
 技能产物默认写入用户当前工作目录：
 
 - attends-court → `./议事-{议题关键词}.md`
+- story-co-creation → `./{story-slug}/`（框架、正文、恢复记录；可选插画方案与图片）
 - my-summarize → `{目录}/summarize.md`（要求 HTML 时再出 `{目录}/summarize.html`，由 beautiful-html 生成）
 - one-page-cheat-sheet → `{topic-slug}_cheat_sheet.md`（明确要 HTML 时再出 `{topic-slug}_cheat_sheet.html`，由 content-to-zen-static-html 生成）
 - product-analysis → `{product_name}_analysis.html`

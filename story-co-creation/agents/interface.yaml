@@ -1,0 +1,84 @@
+schema_version: "1.0"
+name: story-co-creation
+mode: scaffold
+version: 0.1.0
+
+interface:
+  display_name: 故事共创
+  short_description: 将零散想法变成完整故事，先确认框架与篇幅，再按需配图。
+  default_prompt: 使用 story-co-creation，把我的想法整理为故事框架，等我确认框架和预计字数后再写，完成后讨论插画。
+
+triggers:
+  positive:
+    - 编故事
+    - 写小说
+    - 故事共创
+    - 把孩子的想法写成故事
+    - 续写故事
+    - co-write a story
+    - write fiction
+    - novel
+  negative:
+    - 仅总结或翻译已有故事
+    - 仅润色或点评已有文字
+    - 分析文章、诗歌、广告文案
+    - 编程用户故事
+    - 纯写作教学
+    - 仅生成图片
+    - 创建写作 skill
+  continuation: 短回复按当前故事阶段处理，不孤立匹配关键词。
+
+inputs:
+  required:
+    - name: ideas_or_existing_story
+      type: text
+  optional:
+    - audience_and_tone
+    - must_keep_and_avoid
+    - length_and_chapters
+    - existing_plan_and_progress
+    - illustration_preferences
+
+outputs:
+  directory: "{story-slug}/"
+  plan: plan.md
+  prose: story.md
+  recovery: progress.md
+  optional_illustration_plan: illustrations.md
+  optional_images: images/
+  without_files: 聊天正文及恢复摘要
+  without_images: 正文与逐图提示词
+
+constraints:
+  default_collaboration: 共同创作，核心变化需确认。
+  framework_gate: 正文前确认最新框架。
+  length_gate: 框架通过后，确认或沿用用户明确指定的预计篇幅，才写正文。
+  illustration_gate: 正文完成后确认实际数量、场景和风格，才调用图片生成能力。
+  existing_decisions: 沿用明确决定，只重确认受影响部分。
+
+exclusions:
+  - 摘要、翻译、纯润色或点评
+  - 分析文章、诗歌、营销与编程需求
+  - 纯教学、仅绘图、技能创建
+
+resources:
+  evals:
+    - evals/trigger_cases.json
+    - evals/semantic_config.json
+    - evals/behavior_cases.md
+
+compatibility:
+  canonical_format: markdown
+  adapter_targets: [codex, generic-agent]
+  activation:
+    mode: semantic
+  execution:
+    context: inline
+    shell: powershell
+  trust:
+    source_tier: local
+    remote_inline_execution: forbid
+    remote_metadata_policy: 不加载远程代码。
+  degradation:
+    codex: 按实际文件和图片能力降级。
+    generic-agent: 读取 Markdown，无必需 shell、API 或图片工具；缺失能力时交付文本。
