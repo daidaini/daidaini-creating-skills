@@ -1,0 +1,4 @@
+interface:
+  display_name: "小学作业批改"
+  short_description: "识别小学语数英作业照片，逐题批改并输出家长完成情况报告"
+  default_prompt: "Use $primary-homework-review to check these homework photos, identify each question and answer, grade them, and summarize what needs correction."
