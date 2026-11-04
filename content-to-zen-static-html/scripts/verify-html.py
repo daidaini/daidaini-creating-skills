@@ -102,7 +102,7 @@ def main() -> int:
         re.I)
     m = cdn_pat.search(probe)
     if m:
-        results.append((FAIL, f"CDN/external-host reference found: {m.group(1)}",
+        results.append((FAIL, f"CDN/external-host reference found: {m.group(0)}",
                         "system fonts + inline SVG only"))
     else:
         results.append((PASS, "no CDN or stock-image hosts", ""))
