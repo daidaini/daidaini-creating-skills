@@ -1,6 +1,7 @@
 ---
 name: d3-offline-map
 description: Build offline custom-drawn geographic choropleths from GeoJSON/TopoJSON with local D3, as a double-clickable folder or explicitly requested single HTML. Triggers include 自绘地图, 免费地图数据 自绘, offline map D3, 省份着色地图, 行政区划 离线绘制, Natural Earth D3, and standalone map without API key. Do NOT use for route-only maps, live navigation/traffic/geocoding/POI, online tile basemaps, skill audits, precision unsupported by supplied data, or backend GIS/PostGIS.
+disable-model-invocation: true
 license: MIT
 ---
 
