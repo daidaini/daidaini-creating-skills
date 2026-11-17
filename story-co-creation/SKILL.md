@@ -1,6 +1,7 @@
 ---
 name: story-co-creation
 description: 将零散想法共同创作成完整故事、童话或小说，先确认故事框架与预计篇幅，再写正文，完成后按需确认插画。触发：编故事、写小说、故事共创、把孩子的想法写成故事、续写故事、co-write a story、write fiction、novel。排除：文章分析、原文摘要或翻译、仅润色或点评、诗歌、广告文案、编程用户故事、纯写作教学、仅生成图片、创建写作 skill。
+disable-model-invocation: true
 ---
 
 # 故事共创

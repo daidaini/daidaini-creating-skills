@@ -1,7 +1,7 @@
 ---
 name: text-to-infographic
 description: 将非结构化文本（文章、会议纪要、报告、笔记）编译为结构化信息图。先识别核心结论并把内容压缩为 3–7 个信息单元，再依据单元关系选择对比、步骤、层级、漏斗或时间线结构，最后由确定性脚本输出可编辑 SVG 与单文件 HTML 预览壳。当用户要求「把这段文字做成信息图／图解／一图读懂／可视化卡片／图文摘要」，或需要把长文压缩成可传播的单页视觉产出时使用；不适用于纯装饰性海报、照片排版或已有数据表格的直接绘图。
-agent_created: true
+disable-model-invocation: true
 ---
 
 # text-to-infographic

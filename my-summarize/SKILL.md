@@ -1,7 +1,7 @@
 ---
 name: my-summarize
 description: "批量文章摘要：读取指定目录下的所有文章 .md 文件，逐篇生成 5–8 句忠实原文的中文摘要，保留作者，来源超链接到原文链接，汇总输出为该目录下的 summarize.md。当用户输入明确要求 HTML 输出时，生成 summarize.md 后直接路由到 beautiful-html skill 把摘要文档转为设计感单页 HTML。当用户说「摘要」「总结文章」「批量摘要」「生成摘要」「summarize articles」「帮我总结一下这些文章」「把这个目录的文章做成摘要」「做成摘要并输出 HTML」，或指向一个包含多篇 .md 文章的目录并希望汇总内容时，触发本 skill。单篇文章摘要、对话或会议纪要总结、非 .md 内容的总结、观点展开或深读评论写作不触发。"
-user_invocable: true
+disable-model-invocation: false
 version: "1.2.0"
 ---
 
