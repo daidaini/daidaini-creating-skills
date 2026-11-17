@@ -1,6 +1,8 @@
 ---
 name: evidence-led-research
 description: '在下结论或行动前做证据驱动的研究：核对仓库、日志、数据、文档或外部一手资料，检验相互竞争的解释，给出带出处和边界的结论。用于找根因、评估阈值/架构/算法/提示词是否合理、证据冲突或错误代价高的判断，以及「先调查再决定」、investigate, root cause analysis, evaluate options, research before implementation。不用于：低风险的直接问答、仅摘要/翻译、需求明确的直接实现任务；不要把研究当成拖延实现的理由。'
+
+disable-model-invocation: false
 ---
 
 # Evidence-led Research

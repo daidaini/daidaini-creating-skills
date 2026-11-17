@@ -1,6 +1,8 @@
 ---
 name: build-learning-ladder
 description: Builds a progressive learning ladder (学习阶梯) for any topic — from complete beginner to confident practitioner. Each level includes mastery standards, concepts, a hands-on exercise, common mistakes, and a self-check. Output is structured markdown; when HTML is explicitly requested, a single self-contained offline HTML page (日式极简 × 侘寂 style via content-to-zen-static-html by default, magazine flip-through via beautiful-html on request). Use when the user wants to learn something step-by-step, asks "how to learn X", "learning roadmap for X", "帮我拆解学X的路线", "一步步学X", "怎么学X", "从零学X", "学习路线", "学习阶梯", or asks for structured curriculum design, learning stages, difficulty tiers, or a "skill tree".
+
+disable-model-invocation: true
 ---
 
 # Build Learning Ladder

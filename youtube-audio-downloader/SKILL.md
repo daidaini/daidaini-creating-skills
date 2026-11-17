@@ -1,7 +1,7 @@
 ---
 name: youtube-audio-downloader
 description: "Use when downloading audio from YouTube URLs, converting to MP3, or when yt-dlp returns 403 Forbidden, bot detection errors, Sign in to confirm, n-challenge solving failed, or Only images are available for download errors."
-user_invocable: true
+disable-model-invocation: false
 ---
 
 # YouTube Audio Downloader  
