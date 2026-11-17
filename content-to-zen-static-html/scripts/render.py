@@ -15,6 +15,16 @@ import shutil
 import subprocess
 import sys
 
+# verify-html.py emits box-drawing separators and full-width punctuation.
+# Windows consoles default to a legacy code page (cp936/cp1252), where printing
+# that text raises UnicodeEncodeError -- a ValueError subclass that the error
+# handler below would swallow, hiding which checks failed. Pin both streams.
+try:
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+except (AttributeError, ValueError):
+    pass
+
 ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -44,6 +54,17 @@ def markdown(path):
     result = subprocess.run(
         [pandoc, str(path), '-f', 'gfm', '-t', 'html', '--no-highlight', '--wrap=none'],
         capture_output=True, encoding='utf-8', check=True)
+    return result.stdout
+
+
+def markdown_text(text):
+    """Convert an inline markdown string, so short entries need no extra file."""
+    pandoc = shutil.which('pandoc')
+    if not pandoc:
+        raise ValueError('pandoc unavailable: use html/html_file or install pandoc yourself')
+    result = subprocess.run(
+        [pandoc, '-f', 'gfm', '-t', 'html', '--no-highlight', '--wrap=none'],
+        input=text, capture_output=True, encoding='utf-8', check=True)
     return result.stdout
 
 
@@ -78,6 +99,49 @@ def replace_one(source, pattern, replacement):
     return source
 
 
+def wrap_tables(body):
+    """Wrap wide tables so narrow screens scroll instead of crushing cells.
+
+    Pandoc emits bare <table>; the template style for .table-wrap handles the
+    overflow. Idempotent: content already inside a wrapper is masked out before
+    the substitution, because a naive lookbehind cannot see past the newline
+    that the previous pass inserted.
+    """
+    kept = []
+
+    def mask(match):
+        kept.append(match.group(0))
+        return f'\x00{len(kept) - 1}\x00'
+
+    masked = re.sub(r'<div class="table-wrap">.*?</div>', mask, body, flags=re.S)
+    masked = re.sub(
+        r'<table\b.*?</table>',
+        lambda m: f'<div class="table-wrap">\n{m.group(0)}\n</div>',
+        masked, flags=re.S)
+    return re.sub(r'\x00(\d+)\x00', lambda m: kept[int(m.group(1))], masked)
+
+
+def source_prose_chars(model, base):
+    """Character count of the entry bodies, before the template is applied.
+
+    Used as the fidelity baseline. Counting the entries rather than the raw
+    source file keeps the markdown and model paths on the same footing: both
+    end up as HTML bodies here.
+    """
+    total = 0
+    for entry in model['entries']:
+        if 'html' in entry:
+            body = entry['html']
+        elif 'markdown' in entry:
+            body = markdown_text(entry['markdown'])
+        else:
+            path = (base / (entry.get('html_file') or entry.get('markdown_file'))).resolve()
+            body = (markdown(path) if 'markdown_file' in entry
+                    else path.read_text(encoding='utf-8-sig'))
+        total += len(re.sub(r'\s+', '', plain(body)))
+    return total
+
+
 def render(model, base):
     title = model['title']
     entries = model['entries']
@@ -94,17 +158,21 @@ def render(model, base):
         heading = entry['title']
         if not isinstance(heading, str) or not heading.strip():
             raise ValueError(f'entry {i}: title required')
-        keys = [key for key in ('html', 'html_file', 'markdown_file') if key in entry]
+        keys = [key for key in ('markdown', 'markdown_file', 'html', 'html_file') if key in entry]
         if len(keys) != 1:
-            raise ValueError(f'entry {i}: provide exactly one of html/html_file/markdown_file')
+            raise ValueError(
+                f'entry {i}: provide exactly one of markdown/markdown_file/html/html_file')
         key = keys[0]
         if key == 'html':
             body = entry[key]
+        elif key == 'markdown':
+            body = markdown_text(entry[key])
         else:
             path = (base / entry[key]).resolve()
             body = markdown(path) if key == 'markdown_file' else path.read_text(encoding='utf-8-sig')
         if not isinstance(body, str):
             raise ValueError(f'entry {i}: body must be HTML text')
+        body = wrap_tables(body)
         category = entry.get('category', '')
         if category:
             categories.setdefault(category, f'cat-{len(categories) + 1}')
@@ -170,13 +238,15 @@ def main():
         if args.title:
             model['title'] = args.title
         result = render(model, input_path.parent)
+        expected_chars = source_prose_chars(model, input_path.parent)
         # Verify the candidate before replacing a previously delivered output.
         import tempfile
         with tempfile.TemporaryDirectory(prefix='zen-render-') as tmp:
             candidate = Path(tmp) / 'candidate.html'
             candidate.write_text(result, encoding='utf-8')
             check = subprocess.run([sys.executable, str(ROOT / 'scripts/verify-html.py'),
-                                    str(candidate), '--expect-entries', str(len(model['entries']))],
+                                    str(candidate), '--expect-entries', str(len(model['entries'])),
+                                    '--expect-chars', str(expected_chars)],
                                    capture_output=True, encoding='utf-8')
             if check.returncode:
                 print(check.stdout, end='')

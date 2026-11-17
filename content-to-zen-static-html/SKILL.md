@@ -38,18 +38,18 @@ python <skill目录>/scripts/render.py --markdown <源文档.md> -o <输出.html
 python <skill目录>/scripts/render.py --model <内容.json> -o <输出.html>
 ```
 
-每条正文写一次 HTML 片段，或用 `html_file` / `markdown_file` 引用已有片段/Markdown，避免把长文再次抄进 JSON。文件路径相对 JSON 所在目录解析，`markdown_file` 需要本机 pandoc。分类有明确语义时才填写，通常 3～6 个；无法可靠分类就省略。脚本统一生成编号、锚点、目录、分类和计数，并直接复用模板 CSS/JS。中间文件不属于交付物；只交付最终 HTML。
+每条正文写一次 Markdown 或用 `markdown` 内联，必要时才写 HTML 片段。**首选 Markdown**：`markdown` / `markdown_file` 字段由脚本调 pandoc 转换，语义（标题层级、列表、表格、代码转义）由 pandoc 保证；`html` / `html_file` 是逃生口，只在原文本来就是 HTML 或需要精确控制标记时使用。文件路径相对 JSON 所在目录解析，`markdown_file` 需要本机 pandoc。分类有明确语义时才填写，通常 3～6 个；无法可靠分类就省略。脚本统一生成编号、锚点、目录、分类和计数，并直接复用模板 CSS/JS；正文中的 `<table>` 会自动套上横向滚动容器。中间文件不属于交付物；只交付最终 HTML。
 
 **手工方式 A / JSON 运行时方式 B：仅在脚本不适配时使用。** 用户要求特殊视觉、复杂混合内容或超过 50 个高度同构条目且静态 HTML 明显臃肿时，按 [特殊路径](references/advanced-generation.md) 操作。条目多本身不构成切换理由；不要为了速度自写渲染器。
 
 ### 3. 静态检查：成功时不重复运行
 
-`render.py` 在写入最终输出前，已调用 `verify-html.py --expect-entries N`；失败不覆盖已有输出，成功会报告条目数、exit 0 与警告。检查警告、核对源文档各章是否完整，不能用条目数代替内容核对。**脚本成功且未再修改文件时，不重复跑同一检查。**
+`render.py` 在写入最终输出前，已调用 `verify-html.py --expect-entries N --expect-chars M`；失败不覆盖已有输出，成功会报告条目数、exit 0 与警告。`M` 是脚本从条目正文算出的源字数，渲染后正文低于其 90% 即判 FAIL——这是唯一能抓到「条目数齐全但正文被删节」的检查，不要绕过它。仍应核对源文档各章是否完整，机器只能守住字数下限，守不住语义。**脚本成功且未再修改文件时，不重复跑同一检查。**
 
 手工路径或生成后改了 HTML，才执行：
 
 ```bash
-python <skill目录>/scripts/verify-html.py <输出.html> --expect-entries <源条目数>
+python <skill目录>/scripts/verify-html.py <输出.html> --expect-entries <源条目数> --expect-chars <源正文非空白字数>
 ```
 
 修复全部 FAIL；线性手工长文可省略条目参数。仅修复失败位置，不重写全文。
@@ -60,8 +60,9 @@ python <skill目录>/scripts/verify-html.py <输出.html> --expect-entries <源�
 
 - 检查标题、正文首尾、源条目数；搜索一个真实标题词和正文词，验证无结果与清除；有分类时验证与搜索组合。
 - 点击目录，确认锚点跳转与滚动高亮；切换明暗主题。
-- 切到移动端宽度，开关抽屉，检查正文无横向溢出；截图确认布局与可读性。
+- 切到移动端宽度，开关抽屉，检查正文无横向溢出（宽表格应在容器内横滚）；截图确认布局与可读性。
 - 检查控制台无报错；断网刷新后正文与交互仍可用。
+- 需要纸质或 PDF 时用浏览器打印预览：应去掉顶栏/侧栏/进度条，正文为黑白、链接附 URL，且不出现被筛选隐藏的条目缺失。
 
 若环境无法启动浏览器，应明确说明缺少验证，不能声称已通过。验证通过后不做无依据的反复调色或全页重写。交付时给出文件路径与必要的验证说明即可。
 

@@ -10,6 +10,7 @@ browser pass: open the file, click search/theme/drawer, watch the console.
 """
 
 import argparse
+import html
 import json
 import re
 import sys
@@ -20,6 +21,36 @@ except Exception:
     pass
 
 PASS, FAIL, WARN = "PASS", "FAIL", "WARN"
+
+# Rendered prose below this share of the source character count is treated as
+# truncation. Markup-to-text conversion loses whitespace and list markers, so
+# the bar is a ratio rather than equality; it cannot be 1.0.
+FIDELITY_RATIO = 0.9
+
+
+def entry_content_text(src):
+    """Prose inside .entry-content blocks only, for a like-for-like comparison.
+
+    Titles, entry numbers and tags are template furniture; counting them on the
+    rendered side would let a truncated body hide behind them.
+    """
+    parts = []
+    for chunk in src.split('<div class="entry-content">')[1:]:
+        end = chunk.find("</article>")
+        part = chunk[:end] if end != -1 else chunk
+        cut = part.find('<div class="entry-tags">')
+        if cut != -1:
+            part = part[:cut]
+        parts.append(part)
+    return "".join(parts)
+
+
+def prose_text(src):
+    """Strip markup and whitespace so both sides count the same way."""
+    text = re.sub(r"<(style|script)\b.*?</\1>", " ", src, flags=re.S | re.I)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
+    return re.sub(r"\s+", "", text)
 
 
 def island_entry_count(islands):
@@ -53,6 +84,8 @@ def main() -> int:
     ap.add_argument("--strict", action="store_true", help="treat WARN as failure")
     ap.add_argument("--expect-entries", type=int, default=None,
                     help="expected number of .entry articles (source item count)")
+    ap.add_argument("--expect-chars", type=int, default=None,
+                    help="source content character count; rendered prose below 90%% is FAIL")
     args = ap.parse_args()
 
     try:
@@ -162,6 +195,18 @@ def main() -> int:
                             "short docs may use plain sections; verify intentionally"))
     else:
         results.append((PASS, f"{n_entries} entry articles", ""))
+
+    # --- 2b. Content fidelity: entry count alone cannot catch a dropped section ---
+    if args.expect_chars is not None:
+        rendered = len(prose_text(entry_content_text(body)))
+        minimum = int(args.expect_chars * FIDELITY_RATIO)
+        if rendered >= minimum:
+            results.append((PASS, f"prose volume {rendered} chars >= {minimum} "
+                                  f"({FIDELITY_RATIO:.0%} of source)", ""))
+        else:
+            results.append((FAIL, f"prose volume {rendered} chars < {minimum} "
+                                   f"({FIDELITY_RATIO:.0%} of source {args.expect_chars})",
+                            "body text was dropped or summarized; the entry count can still match"))
 
     # --- 3. Interaction hooks (search / filter / toc / theme) ---
     for needle, label in [

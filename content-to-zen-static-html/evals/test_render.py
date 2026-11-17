@@ -2,6 +2,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -63,9 +64,14 @@ class RenderTests(unittest.TestCase):
             self.assertEqual(len(model['entries']), 3)
             result = renderer.render(model, path.parent)
             for marker in ['<strong>强调</strong>', '<blockquote>', '<ul>', '<table>',
-                           '&lt;h2&gt;不是章节&lt;/h2&gt;', '&lt;/script&gt;', '末尾全文。',
+                           '<div class="table-wrap">', '&lt;h2&gt;不是章节&lt;/h2&gt;',
+                           '&lt;/script&gt;', '末尾全文。',
                            'href="#第一章"', '<h3 id="子标题">']:
                 self.assertIn(marker, result)
+            # Wrapping must not nest on a second pass.
+            self.assertEqual(result.count('<div class="table-wrap">'), 1)
+            self.assertEqual(renderer.wrap_tables(renderer.wrap_tables('<table></table>'))
+                             .count('table-wrap'), 1)
 
     def test_failed_verification_preserves_existing_output(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -81,6 +87,65 @@ class RenderTests(unittest.TestCase):
             self.assertIn('FAIL', result.stdout)
             self.assertNotIn('Traceback', result.stderr)
             self.assertEqual(output.read_text(encoding='utf-8'), 'previous deliverable')
+
+    def test_inline_markdown_entry_is_converted(self):
+        """Markdown is the preferred body field; it must go through pandoc."""
+        if not shutil.which('pandoc'):
+            self.skipTest('pandoc not installed')
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            model = base / 'm.json'
+            model.write_text(json.dumps({'title': '标题', 'entries': [
+                {'title': '第一章', 'markdown': '正文 **强调**。\n\n- 甲\n- 乙'}]},
+                ensure_ascii=False), encoding='utf-8')
+            out = base / 'o.html'
+            run = subprocess.run([sys.executable, str(ROOT / 'scripts/render.py'),
+                                  '--model', str(model), '-o', str(out)],
+                                 capture_output=True, encoding='utf-8')
+            self.assertEqual(run.returncode, 0, run.stdout)
+            html = out.read_text(encoding='utf-8')
+            self.assertIn('<strong>强调</strong>', html)
+            self.assertIn('<ul>', html)
+            # Raw markdown must not leak into the page.
+            self.assertNotIn('**强调**', html)
+
+            # Two body fields at once is a user error, not a silent pick.
+            model.write_text(json.dumps({'title': 'T', 'entries': [
+                {'title': 'x', 'markdown': 'a', 'html': '<p>b</p>'}]}), encoding='utf-8')
+            bad = subprocess.run([sys.executable, str(ROOT / 'scripts/render.py'),
+                                  '--model', str(model), '-o', str(out)],
+                                 capture_output=True, encoding='utf-8')
+            self.assertEqual(bad.returncode, 1)
+            self.assertIn('exactly one', bad.stderr)
+
+    def test_truncated_body_fails_fidelity_check(self):
+        """Entry count alone cannot catch a dropped section; prose volume must."""
+        long_body = '<p>' + ('保留全文。' * 60) + '</p>'
+        with tempfile.TemporaryDirectory() as tmp:
+            base = Path(tmp)
+            good = base / 'good.json'
+            good.write_text(json.dumps({'title': '标题', 'entries': [
+                {'title': '第一章', 'html': long_body},
+                {'title': '第二章', 'html': long_body}]}), encoding='utf-8')
+            out = base / 'out.html'
+            ok = subprocess.run([sys.executable, str(ROOT / 'scripts/render.py'),
+                                 '--model', str(good), '-o', str(out)],
+                                capture_output=True, encoding='utf-8')
+            self.assertEqual(ok.returncode, 0, ok.stdout)
+
+            expected = renderer.source_prose_chars(json.loads(good.read_text(encoding='utf-8')), base)
+            # Same entry count, but most of one body removed.
+            truncated = base / 'trunc.html'
+            html = out.read_text(encoding='utf-8')
+            cut = long_body[:30] + '</p>'
+            truncated.write_text(html.replace(long_body, cut, 1), encoding='utf-8')
+            check = subprocess.run([sys.executable, str(ROOT / 'scripts/verify-html.py'),
+                                    str(truncated), '--expect-entries', '2',
+                                    '--expect-chars', str(expected)],
+                                   capture_output=True, encoding='utf-8')
+            self.assertEqual(check.returncode, 1)
+            self.assertIn('prose volume', check.stdout)
+            self.assertIn('entry count matches source (2)', check.stdout)
 
 
 if __name__ == '__main__':

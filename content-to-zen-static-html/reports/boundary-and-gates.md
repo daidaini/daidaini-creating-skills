@@ -32,12 +32,14 @@
 
 ## 检查记录
 
-`python content-to-zen-static-html/evals/test_render.py -v`：4 项通过。
+`python content-to-zen-static-html/evals/test_render.py -v`：6 项通过。
 
 - 保留正文、代码转义、标题转义；自动生成目录/分类/计数；CSS/JS 与模板逐字一致。
-- 文件引用相对模型目录；拒绝重复、非法和模板保留 id。
-- Markdown 强调、外链、引用、列表、表格、代码、下级标题和章节锚点保留；代码中的 h2 不会切章。
+- 文件引用相对模型目录；拒绝重复、非法和模板保留 id；拒绝同时给多个正文字段。
+- Markdown 强调、外链、引用、列表、表格、代码、下级标题和章节锚点保留；代码中的 h2 不会切章；内联 markdown 走 pandoc 且不漏原始标记。
 - 静态验证失败时保留已有输出；命中 CDN 报 FAIL 而非检查脚本异常。
+- 正文被删节但条目数不变时，`--expect-chars` 判 FAIL；旧检查（仅 `--expect-entries`）会放过。
+- 表格包装幂等，重复调用不会嵌套。
 
 真实 Chrome 打开 file 协议生成样例：正文关键词搜索 8 条，叠加分类后 4 条，无结果时 0 条并显示清除按钮；清除后恢复 8 条。目录跳到 entry-08 且高亮对应章节；主题切换成功；390×844 下抽屉开关正常，document.scrollWidth 为 390。断网刷新后 8 条正文与初始化仍正常；页面 errors 与 console 均为空。已保存并查看移动端截图，文字和控件可读。
 
@@ -48,5 +50,19 @@
 - pandoc 是可选的本机预处理工具，未安装时立即退回内容模型的 HTML 片段路径；不自动安装。
 - 原始 HTML 嵌套结构、资源内嵌、特殊一级标题锚点与重新分章使用内容模型或手工路径，不能静默丢内容。
 - HTML 片段应来自可信任务输入并经过检查；组装器不承担不可信 HTML 净化。现有静态检查为启发式，不能替代内容核对和真实浏览器验证。
-- 输出计数不证明全文完整。入口继续要求源文档逐章核对。
+- 输出计数不证明全文完整；`--expect-chars` 守住正文不低于源字数 90%，但守不住语义与顺序，因此入口仍要求逐章核对。
 - 回退仅需使用保留的手工方式 A 与原模板；无需迁移用户文件，输出始终是独立 HTML。
+
+## 2026-11 修订（P0/P1）
+
+**P0：Windows 下校验输出丢失。** `render.py` 把 `verify-html.py` 的 UTF-8 输出用系统代码页（cp936/cp1252）`print`，抛 `UnicodeEncodeError`——它是 `ValueError` 子类，被末尾 `except (OSError, ValueError, ...)` 静默吞掉，stdout 变 `None`。后果是验证失败时只看到空的 `ERROR:`，看不出哪几条 FAIL，恰好破坏了「失败不覆盖旧产物」这个最需要它的保护。修法：照 `verify-html.py` 的做法，在 `render.py` 顶部 `sys.stdout/stderr.reconfigure(encoding='utf-8', errors='replace')`；测试从报 `TypeError: argument of type 'NoneType'` 恢复到 6 项全过。
+
+**P1：保真守卫、Markdown 优先、打印、表格与对比度。**
+
+| 项 | 改动 | 理由 |
+|---|---|---|
+| 全文保真 | 新增 `--expect-chars`，渲染后正文低于源字数 90% 判 FAIL | `--expect-entries` 只数条目，删掉整段正文仍 exit 0；这是本技能核心承诺却无守卫 |
+| 正文格式 | 内容模型新增 `markdown` / `markdown_file` 为首选，`html` 降为逃生口 | 模型手写 `<p>` 输出量翻倍且转义易错，与入口「减少模型输出」自相矛盾 |
+| 打印 | 新增 `@media print` | 长文最自然的第二用途是打印/PDF，原模板一条没有 |
+| 宽表 | 正文 `<table>` 自动套 `.table-wrap` + `overflow-x:auto` | 仅 `width:100%` 会在窄屏压碎中文单元格，而不是横滚 |
+| 对比度 | 浅色 `--accent` `#3d9d99`(2.84:1) → `#2b746f`(4.81:1)；`--muted` → `#676d68`(4.65:1) | 强调色用作链接文字色，未达 AA 4.5:1；原文档只写「截图确认对比度」，肉眼看不出这种差距 |
