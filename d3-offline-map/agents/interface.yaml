@@ -1,13 +1,13 @@
 interface:
   display_name: "D3 Offline Map"
   short_description: "Offline boundary choropleths with data preflight and browser evidence"
-  default_prompt: "Use $d3-offline-map for an offline choropleth; reuse geographic-map-artifact preflight and generic D3 assets. Deliver a folder unless single HTML is explicitly requested."
+  default_prompt: "Use $d3-offline-map for an offline choropleth. Deliver a folder unless single HTML is explicitly requested."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets: ["openai", "claude", "generic"]
   activation:
     mode: "manual-or-description"
-    paths: ["SKILL.md", "references/workflow.md"]
+    paths: ["SKILL.md", "references/data-sources.md"]
   execution:
     context: "inline"
     shell: "powershell"

@@ -18,7 +18,7 @@
  *
  * Each packed value is the parsed JSON as-is. For TopoJSON the template will call
  * topojson.feature(topo, topo.objects.<OBJECT_NAME>); figure out <OBJECT_NAME>
- * by inspecting the file (see references/workflow.md "Inspecting data").
+ * by inspecting the file (see references/data-sources.md for known China-pack values).
  */
 "use strict";
 const fs = require("fs");
