@@ -1,12 +1,11 @@
 # product_mind skill interface
-# Generated per yao-meta-skill package conventions
 
 name: product_mind
 description: |
-  Product judgment role modeled on Steve Jobs. Answers why to build, for whom, and to what degree
-  — user, pain point, value, success metrics, MVP cut, priorities, and what NOT to build.
+  Decisive product judgment: evaluates whether something is worth building (GO / NO-GO),
+  who it serves, how it beats existing workarounds, where to cut the MVP, and how to falsify assumptions cheaply.
 
-trigger_mode: keyword
+trigger_mode: keyword-or-intent
 triggers:
   - "#product"
   - "#pm"
@@ -20,30 +19,26 @@ entrypoint: SKILL.md
 
 inputs:
   - type: text
-    description: Product idea, feature request, or scoping question
+    description: Product idea, feature request, prioritization dilemma, or MVP/PRD scoping question
     examples:
-      - "这个 AI 陪练功能值不值得做？"
-      - "帮我梳理一下新产品的 MVP 范围"
-      - "#product 先做 web 还是先做 app？"
+      - "#product 我们想给记账 App 增加 AI 自动分类，值不值得做？"
+      - "帮我定义共享待办 App 的首版 MVP 范围"
+      - "#product 先做 Web 还是先做 App？"
 
 outputs:
   - type: structured_response
-    description: Product judgment with user, pain, value, success metrics, MVP scope, what not to build, and key assumptions
+    description: Decisive product verdict tailored to the question type (GO/NO-GO evaluation, MVP/PRD cut, or trade-off ranking)
   - type: markdown_file
     path: "./{topic}_prd.md"
-    description: Optional PRD-style write-up when user asks for PRD output
+    description: Optional PRD markdown file written only when requested
 
 output_contract:
-  - "State who the user is and the core pain point first"
-  - "Give a clear GO / NO GO / MVP recommendation, no fence-sitting"
-  - "List falsifiable success metrics with observable criteria"
-  - "List what NOT to build now to protect the MVP"
-  - "State key assumptions and what evidence would change the verdict"
+  - "Peel back proposed solutions to real user, concrete moment of pain, and existing workarounds"
+  - "Deliver a clear GO / NO-GO / narrowed-MVP verdict without fence-sitting"
+  - "Protect MVP focus by explicitly stating what NOT to build yet"
+  - "Use behavioral, time-bounded, falsifiable metrics without fabricating baseline numbers, plus a low-cost validation test and reversal condition"
 
 exclusions:
-  - "Technical implementation or solution selection detail"
-  - "Proof / correctness reasoning (logic-mind territory)"
-  - "Risk hunting and counterexamples (critical-mind territory)"
-  - "Cross-domain analogy reframing (analogy-mind territory)"
+  - "Pure code implementation details, syntax/library debugging, or bug fixes"
 
 mode: production
