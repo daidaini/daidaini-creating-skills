@@ -1,66 +1,32 @@
 ---
 name: build-learning-ladder
-description: Builds a progressive learning ladder (学习阶梯) for any topic — from complete beginner to confident practitioner. Each level includes mastery standards, concepts, a hands-on exercise, common mistakes, and a self-check. Output is structured markdown; when HTML is explicitly requested, a single self-contained offline HTML page (日式极简 × 侘寂 style via content-to-zen-static-html by default, magazine flip-through via beautiful-html on request). Use when the user wants to learn something step-by-step, asks "how to learn X", "learning roadmap for X", "帮我拆解学X的路线", "一步步学X", "怎么学X", "从零学X", "学习路线", "学习阶梯", or asks for structured curriculum design, learning stages, difficulty tiers, or a "skill tree".
-
+description: Build a step-by-step learning ladder (学习阶梯) for any topic, from beginner to confident practitioner, with optional HTML export.
 disable-model-invocation: true
 ---
 
 # Build Learning Ladder
 
-Transform any learning topic into a **progressive ladder** — from zero to confident practitioner. Output is exercise-driven and focused on real progress, not theory overload.
+Turn a topic into a ladder of levels the learner climbs by doing. Write in the user's language, in the voice of a coach.
 
-## When to Use
+## Steps
 
-- User wants to learn something step-by-step
-- "how should I learn X?" / "learning roadmap for X" / "从零学X"
-- User asks for difficulty tiers, learning stages, or curriculum design
-- "一步步学X" / "学习路线" / "学习阶梯" / "skill tree"
+1. **Scope.** Use whatever background, goal, and weekly time the user gave. Fill gaps with a reasonable assumption stated in one line at the top. Ask only when the topic is too broad to choose a path (e.g. "math").
+2. **Write the ladder.** Open with an overview table: level, name, what the learner can do after it. Then write the levels, usually 5; use more or fewer when the topic calls for it. Name levels to fit the topic. Close with a short note on what lies beyond the top level.
+3. **Save** to `{topic-slug}_learning_ladder.md` in the working directory. Give the user the path and mention that an HTML version is available on request.
 
-**Do NOT use for:** Quick fact checks, single-session tutorials, formal academic course design.
+## Each level
 
-## Workflow
+- **Goal**: what the learner can do at the end, as observable "you can..." statements.
+- **Core concepts**: the 3-5 things that matter at this level, one line each.
+- **Exercise**: a concrete task with a time estimate and a picture of the finished result. It doubles as the milestone that proves the level is done.
+- **Common mistakes**: the specific traps real learners of this topic hit, why they hit them, and the fix.
+- **Self-check**: one plain question. A learner who cannot answer it confidently stays on this level.
 
-1. **Clarify topic.** If too broad (e.g. "math", "programming"), ask to narrow. If user insists, build around the most practical sub-path and note the scope assumption.
-2. **Detect domain.** Determine which domain the topic belongs to — this shapes level naming, exercise style, and mistake patterns. See [Domain Patterns](references/domain-patterns.md).
-3. **Build the ladder.** Generate the 5-level structure with all 8 sections per level. See [Level Structure](references/level-structure.md).
-4. **Quality check.** Verify against the quality checklist before delivering. See [Quality Checklist](references/quality-checklist.md).
-5. **Save output.** Write to `{topic-slug}_learning_ladder.md` in the working directory. Tell the user the file path.
-6. **Optional: Export HTML (only when explicitly requested).** When the user clearly asks for HTML output, generate a single self-contained HTML file. Default route: follow the `content-to-zen-static-html` skill's generation method and 「日式极简 × 侘寂 × 未来科技」 style; use `beautiful-html` only when the user asks for a magazine flip-through design. See [HTML Output Guide](references/html-output-guide.md).
+A good ladder is concrete ("write 10 SQL queries that join 3+ tables", not "understand joins"), each level builds on the one before, each level fits roughly 1-4 weeks of the user's available time, and jargon is defined where it first appears.
 
-## The 5-Level Structure (Summary)
+## Optional: HTML export
 
-| Level | Default Name | Intent |
-|-------|-------------|--------|
-| 1 | Complete Beginner | First exposure, zero prior knowledge |
-| 2 | Basic Understanding | Grasp core concepts, can follow along |
-| 3 | Practical User | Can produce real output independently |
-| 4 | Problem Solver | Can debug, adapt, handle non-trivial tasks |
-| 5 | Confident Practitioner | Can self-direct, teach others, handle ambiguity |
+Only when the user asks for HTML. Turn the finished markdown into one self-contained offline file, `{topic-slug}_learning_ladder.html`, keeping all content:
 
-Level names adapt by domain. See [Domain Patterns](references/domain-patterns.md) for naming tables.
-
-## Output Format (Summary)
-
-Each level has **exactly 8 sections** in order:
-
-1. What This Level Is About
-2. Mastery Standard
-3. Core Concepts & Skills
-4. Milestone: Prove You're Ready
-5. Hands-On Exercise / Mini Project
-6. Most Common Mistakes at This Level
-7. Self-Check Question Before Moving On
-8. What's Next
-
-See [Level Structure](references/level-structure.md) for the full template with section-level detail.
-
-## Output Language
-
-Match the user's language. Warm, coach-like tone — you're a guide, not a lecturer.
-
-## Bundled References
-
-- [Domain Patterns](references/domain-patterns.md) — domain detection and level naming tables
-- [Level Structure](references/level-structure.md) — the full 8-section template
-- [Quality Checklist](references/quality-checklist.md) — must-do / must-not-do rules
-- [HTML Output Guide](references/html-output-guide.md) — HTML export routes: `content-to-zen-static-html` (default) and `beautiful-html` (magazine style)
+- Default: follow the `content-to-zen-static-html` skill (日式极简 × 侘寂 style), including its verification.
+- Magazine or flip-through style (杂志风): follow the `beautiful-html` skill.
