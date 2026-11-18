@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""beautiful-html static checklist runner.
+"""Static checklist runner for beautiful-html outputs.
 
 Usage:
-    python scripts/verify-html.py <path-to.html> [--strict]
+    python3 scripts/verify-html.py <path-to.html> [--strict]
 
-Checks the generated HTML against the design-system quick checklist.
-Static heuristics only: visual quality still needs a real-browser pass
-(open the file, check anchor jumps, mobile collapse, console errors,
-and take a screenshot).
+Enforces hard technical/content-cleanliness invariants as FAIL (single-file,
+no leftover REPLACE placeholders, no generator branding, raw Markdown fence
+leakage, responsive + print rules) and reports style-agnostic editorial craft
+signals as PASS/WARN without forcing one preset's decorative motifs onto all
+aesthetics.
 
-Exit code 0 when no FAIL, 1 when any FAIL.
+Exit code 0 when no FAIL (and no WARN under --strict), 1 otherwise.
 """
 
 import argparse
 import re
 import sys
 
-# Windows consoles may default to GBK; force UTF-8-safe output.
 try:
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
@@ -25,15 +25,27 @@ except Exception:
 PASS, FAIL, WARN = "PASS", "FAIL", "WARN"
 
 
-def has(haystack: str, needle: str) -> bool:
-    return needle in haystack
+def _strip_code_and_styles(html: str) -> str:
+    s = re.sub(r"<!--[\s\S]*?-->", "", html)
+    for tag in ("script", "style", "pre", "code", "textarea", "svg"):
+        s = re.sub(rf"<{tag}\b[^>]*>[\s\S]*?</{tag}>", "", s, flags=re.I)
+    return s
+
+
+def _looks_blue_purple(hexc: str) -> bool:
+    h = hexc.lstrip("#")
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
+    if len(h) != 6:
+        return False
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return b > 120 and b >= r and b > g
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("html", help="path to the generated HTML file")
-    ap.add_argument("--strict", action="store_true",
-                    help="treat WARN results as failures")
+    ap.add_argument("--strict", action="store_true", help="treat WARN results as failures")
     args = ap.parse_args()
 
     try:
@@ -45,112 +57,127 @@ def main() -> int:
 
     results: list[tuple[str, str, str]] = []
 
-    # --- 1. Google Fonts, not system fonts only ---
-    if has(src, "fonts.googleapis.com") and has(src, "<link"):
-        results.append((PASS, "Google Fonts <link> present", ""))
+    # --- 1. Single-file invariant (no external JS; no external CSS except Google Fonts) ---
+    external_scripts = re.findall(r"<script[^>]*\bsrc\s*=", src, re.I)
+    external_css = re.findall(
+        r'<link[^>]*rel=["\']stylesheet["\'][^>]*href=["\'](?!https://fonts\.googleapis)',
+        src,
+        re.I,
+    )
+    if not external_scripts and not external_css:
+        results.append((PASS, "single file: inline styles/scripts only (Google Fonts allowed)", ""))
     else:
-        results.append((FAIL, "Google Fonts <link> missing", "add fonts.googleapis.com <link>" ))
+        results.append(
+            (
+                FAIL,
+                f"external resources found (js={len(external_scripts)}, css={len(external_css)})",
+                "inline <style>/<script> only; Google Fonts <link> is the only allowed external stylesheet",
+            )
+        )
 
-    # --- 2. No default blue/purple gradient as main identity ---
-    gradients = re.findall(r"linear-gradient\s*\([^)]*\)", src)
+    # --- 2. Typography setup ---
+    has_gfonts = "fonts.googleapis.com" in src and "<link" in src
+    has_fontface = "@font-face" in src
+    has_font_tokens = bool(re.search(r"--[a-z-]*(?:display|body|serif|sans|mono|font)[a-z-]*\s*:", src, re.I))
+    if has_gfonts or has_fontface:
+        results.append((PASS, "web/embedded typography present", ""))
+    elif has_font_tokens:
+        results.append((PASS, "explicit CSS font-role tokens present (offline/system stack)", ""))
+    else:
+        results.append((WARN, "no Google Fonts, @font-face, or font-role CSS variables detected", "define distinct display/body font stacks"))
+
+    # --- 3. Color & editorial craft signals (style-agnostic) ---
+    gradients = re.findall(r"linear-gradient\s*\([^)]*\)", src, re.I)
     suspicious = []
     for g in gradients:
-        if re.search(r"#(?:[0-9a-fA-F]{3,8})", g):
-            hexes = re.findall(r"#([0-9a-fA-F]{3,8})", g)
-            if any(_looks_blue_purple(h) for h in hexes):
-                suspicious.append(g)
+        hexes = re.findall(r"#([0-9a-fA-F]{3,6})\b", g)
+        if any(_looks_blue_purple(h) for h in hexes):
+            suspicious.append(g)
     if suspicious:
-        results.append((WARN, "possible blue/purple gradient present",
-                        " ".join(suspicious[:2])))
-    elif gradients:
-        results.append((PASS, "gradients present but none flagged blue/purple", ""))
+        results.append((WARN, "possible generic blue/purple linear-gradient detected", " ".join(suspicious[:2])))
     else:
-        results.append((PASS, "no linear-gradient (solid color identity OK)", ""))
+        results.append((PASS, "palette avoids generic blue/purple gradient", ""))
 
-    # --- 3. Offset solid shadows, not blur-only ---
-    offset = re.findall(r"box-shadow\s*:\s*([^;}]+)", src)
-    has_offset = any(re.search(r"^\s*[\-0-9]+px\s+[\-0-9]+px\s+0(?:\s|;|})", s) for s in offset)
-    has_blur_only = any(re.search(r"^\s*0\s+0\s+[\-0-9]+px", s) for s in offset)
-    if has_offset:
-        results.append((PASS, "offset solid shadows found (e.g. 6px 6px 0)", ""))
+    craft_cues = [
+        name
+        for name, ok in [
+            ("css-tokens", ":root" in src and "--" in src),
+            ("offset-shadow", bool(re.search(r"box-shadow\s*:\s*[\-0-9]+px\s+[\-0-9]+px\s+0\b", src))),
+            ("editorial-rules", bool(re.search(r"border(?:-(?:top|bottom|left|right))?\s*:[^;]*(?:double|[2-9]px\s+solid)", src))),
+            ("rotated-motif", "rotate(" in src or "data-rot" in src),
+            ("hollow-or-oversized-num", "-webkit-text-stroke" in src or "clamp(" in src),
+            ("vertical-type", "vertical-rl" in src),
+            ("inline-svg", "<svg" in src.lower()),
+            ("grid-layout", bool(re.search(r"display\s*:\s*grid", src))),
+        ]
+        if ok
+    ]
+    if len(craft_cues) >= 3:
+        results.append((PASS, f"editorial craft signals present ({', '.join(craft_cues[:5])})", ""))
     else:
-        results.append((FAIL, "no offset solid box-shadow found",
-                        "use e.g. box-shadow: 6px 6px 0 var(--line), not blur shadows"))
-    if has_blur_only:
-        results.append((WARN, "blur-style box-shadow detected", "prefer offset solid shadows"))
+        results.append((WARN, f"few editorial craft signals detected ({', '.join(craft_cues) or 'none'})", "add deliberate typographic scale, rules, tokens, or layout contrast"))
 
-    # --- 4. At least one rotated element ---
-    if has(src, "rotate(") or re.search(r"data-rot", src):
-        results.append((PASS, "rotated element(s) found", ""))
+    # --- 4. Semantic landmarks ---
+    landmarks = [t for t in ("<main", "<section", "<nav") if t in src.lower()]
+    if len(landmarks) >= 2:
+        results.append((PASS, f"semantic landmarks present ({', '.join(landmarks)})", ""))
     else:
-        results.append((FAIL, "no rotated element found", "add transform: rotate(-3deg) sticker/label"))
+        results.append((WARN, "sparse semantic landmarks", "use <main>, <nav>, <section>/<article>"))
 
-    # --- 5. Hollow/outlined chapter numbers ---
-    if has(src, "-webkit-text-stroke") and has(src, "color: transparent"):
-        results.append((PASS, "hollow outlined text present (chapter numbers)", ""))
+    # --- 5. Responsive viewport + media query + wide-table overflow ---
+    has_viewport = bool(re.search(r'<meta[^>]*name=["\']viewport["\']', src, re.I))
+    has_media = bool(re.search(r"@media[^{]*(?:max-width|min-width)", src, re.I))
+    if has_viewport and has_media:
+        results.append((PASS, "viewport meta and responsive @media query present", ""))
     else:
-        results.append((WARN, "hollow stroke numbers not detected",
-                        "use color:transparent + -webkit-text-stroke for chapter numbers"))
+        results.append((FAIL, "missing viewport meta or responsive @media query", "add <meta name='viewport'> and mobile @media breakpoint"))
 
-    # --- 6. Semantic HTML tags ---
-    missing = [t for t in ("<aside", "<nav", "<section", "<table") if t not in src]
-    if not missing:
-        results.append((PASS, "semantic tags present (aside/nav/section/table)", ""))
-    else:
-        results.append((WARN, "missing semantic tags", ", ".join(missing)))
+    if "<table" in src.lower():
+        if "table-scroll" in src or re.search(r"overflow-x\s*:\s*auto", src, re.I):
+            results.append((PASS, "table horizontal overflow handled", ""))
+        else:
+            results.append((WARN, "<table> present without overflow-x: auto wrapper", "wrap wide tables in an overflow-x: auto container"))
 
-    # --- 7. Responsive + table scroll ---
-    if re.search(r"@media[^{]*max-width", src):
-        results.append((PASS, "responsive media query present", ""))
+    # --- 6. Print stylesheet ---
+    print_blocks = re.findall(r"@media\s+print\s*\{([\s\S]*?\})\s*\}", src, re.I)
+    if "@media print" in src.lower():
+        has_nav_aside = "<aside" in src.lower() or 'class="sidebar"' in src
+        if not has_nav_aside or re.search(r"@media\s+print[\s\S]*?display\s*:\s*none", src, re.I):
+            results.append((PASS, "@media print rules present", ""))
+        else:
+            results.append((WARN, "@media print present but no display:none rule found for navigation chrome", "hide fixed sidebar/nav in @media print"))
     else:
-        results.append((FAIL, "no responsive @media query", "add @media (max-width: 900px)"))
-    if has(src, "table-scroll") or has(src, "overflow-x: auto"):
-        results.append((PASS, "table horizontal scroll handled", ""))
-    else:
-        results.append((WARN, "wide-table scroll wrapper not detected", "wrap tables in .table-scroll"))
+        results.append((FAIL, "missing @media print rules", "add @media print to hide navigation chrome and clean backgrounds"))
 
-    # --- 8. Print style hides sidebar ---
-    if re.search(r"@media\s+print", src) and re.search(r"@media\s+print[\s\S]*?\.sidebar\s*\{[^}]*display:\s*none", src):
-        results.append((PASS, "@media print hides sidebar", ""))
-    else:
-        results.append((FAIL, "@media print does not hide sidebar", "add @media print { .sidebar { display:none } }"))
-
-    # --- 9. Single file, no external JS framework / css ---
-    external_scripts = re.findall(r"<script[^>]*\bsrc\s*=", src)
-    external_css = re.findall(r'<link[^>]*rel="stylesheet"[^>]*href="(?!https://fonts\.googleapis)', src)
-    if not external_scripts and not external_css:
-        results.append((PASS, "single file: no external script/css (fonts link allowed)", ""))
-    else:
-        results.append((FAIL, f"external resources found (js={len(external_scripts)}, css={len(external_css)})",
-                        "inline <style> only; Google Fonts <link> is the only allowed external"))
-    if re.search(r"<script", src):
-        results.append((PASS, "inline <script> OK (no framework)", ""))
-
-    # --- 10. No leftover placeholders ---
+    # --- 7. No unfilled REPLACE placeholders ---
     leftover = len(re.findall(r"REPLACE", src))
     if leftover == 0:
         results.append((PASS, "no unfilled REPLACE placeholders", ""))
     else:
-        results.append((FAIL, f"{leftover} unfilled REPLACE placeholder(s) remain",
-                        "fill or remove all REPLACE comments"))
+        results.append((FAIL, f"{leftover} unfilled REPLACE placeholder(s) remain", "fill or remove all REPLACE markers"))
 
-    # --- 11. No generator/skill branding in output ---
+    # --- 8. No raw Markdown fence leakage in prose ---
+    prose = _strip_code_and_styles(src)
+    if "```" in prose:
+        results.append((FAIL, "raw Markdown code fence (```) leaked into rendered HTML", "convert fenced blocks to <pre><code>"))
+    else:
+        results.append((PASS, "no raw Markdown fences in prose", ""))
+
+    # --- 9. No generator/skill branding ---
     skill_hits = re.findall(r"beautiful[\s-]*html", src, re.I)
     if skill_hits:
-        results.append((FAIL, f"generator/skill branding present ({len(skill_hits)}x)",
-                        "remove skill names from title, sidebar and footer; the page must carry no 'Beautiful HTML' text"))
+        results.append((FAIL, f"generator/skill branding present ({len(skill_hits)}x)", "remove 'beautiful-html' / 'Beautiful HTML' from all HTML and comments"))
     else:
         results.append((PASS, "no generator/skill branding", ""))
+
     chrome = " ".join(re.findall(r"<(?:footer|aside)[\s\S]*?</(?:footer|aside)>", src, re.I))
     chrome_slogans = re.findall(r"设计感知识手册|TEMPLATE READY|CYBERPUNK PRESET", chrome, re.I)
     if chrome_slogans:
-        results.append((FAIL, f"template slogan in sidebar/footer ({len(chrome_slogans)}x)",
-                        "sidebar/footer sign-off must be document info only (author / date / source)"))
+        results.append((FAIL, f"template slogan in sidebar/footer ({len(chrome_slogans)}x)", "keep colophon/sidebar to real document metadata only"))
     else:
         results.append((PASS, "sidebar/footer free of template slogans", ""))
 
-    # --- Report ---
-    statuses = {"PASS": 0, "WARN": 0, "FAIL": 0}
+    statuses = {PASS: 0, WARN: 0, FAIL: 0}
     print(f"verify: {args.html}")
     print("-" * 70)
     for status, msg, hint in results:
@@ -160,24 +187,11 @@ def main() -> int:
             line += f"\n          -> {hint}"
         print(line)
     print("-" * 70)
-    print(f"summary: {statuses['PASS']} pass, {statuses['WARN']} warn, {statuses['FAIL']} fail")
+    print(f"summary: {statuses[PASS]} pass, {statuses[WARN]} warn, {statuses[FAIL]} fail")
 
-    failed = statuses["FAIL"] > 0
-    if args.strict:
-        failed = failed or statuses["WARN"] > 0
-    print("result: " + ("FAIL (fix before delivery)" if failed else "OK (visual check still required)"))
+    failed = statuses[FAIL] > 0 or (args.strict and statuses[WARN] > 0)
+    print("result: " + ("FAIL (fix before delivery)" if failed else "OK (visual browser check still required)"))
     return 1 if failed else 0
-
-
-def _looks_blue_purple(hexc: str) -> bool:
-    """Heuristic: does a #rrggbb (or 3-digit) hex look blue/purple-dominant?"""
-    h = hexc.lstrip("#")
-    if len(h) == 3:
-        h = "".join(c * 2 for c in h)
-    if len(h) != 6:
-        return False
-    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
-    return b > 120 and b >= r and b > g
 
 
 if __name__ == "__main__":

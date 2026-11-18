@@ -1,97 +1,38 @@
 ---
 name: beautiful-html
-description: "Create a design-conscious, flip-through-able static HTML knowledge manual from long text (summaries, notes, methodology): one self-contained .html file that opens by double-clicking, skinnable via an optional style parameter, avoiding the generic AI-template look. Trigger on: 有设计感的 HTML 知识手册, 杂志感排版 HTML 页面, 风格化的 HTML 静态页面, 知识手册生成器, 优雅复古/复古印刷风页面, 水墨/宣纸/朱砂/宋体/古风单页手册, vintage/old-print style HTML, ink-wash / xuan-paper style HTML, designed static HTML manual/page, 把长笔记/总结/方法论做成精美单页 HTML 手册. Use the `style` parameter to select a preset (e.g. style=zen, style=cyberpunk, style=vintage, style=inkwash). NOT for: interactive web apps, JS-framework SPAs (React/Vue), live data dashboards, multi-page websites, email HTML, or anything requiring a build server/runtime."
+description: Turn notes, summaries, or long-form text into a single self-contained, publication-grade static HTML manual with preset or bespoke editorial styling.
 license: MIT
 disable-model-invocation: true
 ---
 
 # Beautiful HTML
 
-Turn arbitrary long text (technical summaries, knowledge points, methodology) into one visually distinctive, paged-style static HTML manual that opens by double-clicking. The goal is "designed by a human" — magazine/design-studio quality, never generic AI template styling.
+Turn source text into one self-contained `.html` file that opens over `file://` and reads like an art-directed publication, not a generic SaaS template.
 
-## When to use
+## Style & Routing
 
-- User wants a designed, 设计感 static HTML page or manual from text content.
-- Content is a long summary / notes / methodology that benefits from a flip-through handbook layout (sidebar TOC + hero + numbered chapters + mixed components).
-- A single self-contained `.html` file is acceptable (inline styles, Google Fonts via `<link>`).
-- The user wants a specific visual identity (style keyword + color keyword), or wants to re-skin the same structure with a different preset.
+Choose a visual direction from the optional `style` parameter, the user's aesthetic cues, or the nature of the subject matter:
 
-## When NOT to use
+- **`style=zen` (or wabi-sabi / 日式极简 / 侘寂)**: Stop here and follow [`content-to-zen-static-html`](../content-to-zen-static-html/SKILL.md) instead; its own workflow and verification govern the output.
+- **Bundled presets** — read the matching skeleton in `template/` as a starting foundation, then adapt its tokens, rhythm, and components (or add custom components) to fit the material rather than mechanically filling slots:
+  - `vintage` / `elegant` *(default when no style is specified)*: [`template/skeleton-vintage.html`](template/skeleton-vintage.html) — early-20th-century print, aged paper, double-rule frame, roman numerals, wax/rubber seals.
+  - `inkwash` / `shuimo` (水墨 / 宣纸 / 古风): [`template/skeleton-inkwash.html`](template/skeleton-inkwash.html) — xuan paper, vertical-rl title slip, vermilion seal, Chinese numerals, ink-wash SVG motifs.
+  - `cyberpunk`: [`template/skeleton-cyberpunk.html`](template/skeleton-cyberpunk.html) — dark engineering grid, neon signal accents, display + mono + CJK sans type.
+  - `pop` / `scandi`: [`template/skeleton.html`](template/skeleton.html) — warm oatmeal ground, bold pop accents, offset solid shadows, rotated stickers, organic blobs.
+- **Any other direction** (`style=swiss`, Bauhaus, financial broadsheet, botanical field guide, color/mood keywords, or a custom aesthetic suited to the topic): either re-skin the closest skeleton or write bespoke HTML/CSS from scratch faithful to that tradition's real grid, rules, and typography. Never force pop-art stickers or outline numbers onto an aesthetic where they do not belong.
 
-- Interactive web app, React/Vue SPA, or anything needing a runtime framework → out of scope.
-- Live data dashboard / dynamic data binding → out of scope.
-- Multi-page site or CMS template → out of scope.
-- Email HTML (no inline CSS constraints here, but also no need for this design system).
-- The user just wants a quick plain Markdown-to-HTML dump without design intent.
+## Craft & Content Rules
 
-## Style parameter（风格参数）
+1. **Preserve 100% of substantive content.** Keep every fact, argument, category, code snippet, and table row from the source. Organize into well-paced chapters with navigable TOC links, and vary layout rhythm across sections (prose, cards, comparison tables, numbered steps, pull-quotes, callouts, code/formula blocks) instead of repeating one component down the whole page.
+2. **Parse Markdown and diagrams cleanly.** Convert all Markdown syntax into semantic HTML (`aside`, `nav`, `main`, `section`, `article`, `table`, etc.) with code properly escaped; for large or deeply nested Markdown, `pandoc input.md -f gfm -t html --no-highlight` may be used at build time. When flows, architectures, or multi-branch logic read better visually (or appear as Mermaid/ASCII diagrams, unless the source is teaching diagram syntax), render them as responsive inline `<svg viewBox="...">` with `<title>`/`<desc>` styled in the page's palette.
+3. **Commit to deliberate typography and color.** Pair distinct display, emphasis, and body typefaces (via Google Fonts `<link>` with sensible CJK fallbacks, or local/system stacks when fully offline output is requested). Define palette tokens in `:root`: restrained ground, crisp ink, and decisive accents—avoiding default blue-purple gradients and uniform blur-shadow card grids.
+4. **Single-file, responsive, print-clean, unbranded.** Inline all CSS (and any minimal vanilla JS if needed); use no external JS/CSS frameworks. Collapse navigation cleanly on mobile, wrap wide tables and preformatted blocks in horizontal scroll (`overflow-x: auto`), and strip navigation chrome and heavy background textures in `@media print`. Include zero generator branding (`beautiful-html` / `Beautiful HTML` or template slogans) anywhere in markup, comments, title, sidebar, or footer; colophon holds real document metadata only or is omitted.
 
-One optional `style` parameter may be passed to select a preset; otherwise default to the Elegant Vintage / 复古印刷 preset.
+## Workflow
 
-| Parameter value | Preset |
-|---|---|
-| `zen` | Delegates to `content-to-zen-static-html` skill (Japanese Minimalism × Wabi-Sabi × Futuristic Tech). See [Zen routing](#zen-routing). |
-| `cyberpunk` | Dark neon Cyberpunk preset |
-| `swiss` | Swiss preset |
-| `vintage` / `elegant` | Elegant Vintage variant; also the default when `style` is omitted |
-| `inkwash` / `shuimo` | 水墨宣纸 / Vermilion-seal / 竖排题签 / Song-serif variant; uses dedicated skeleton `template/skeleton-inkwash.html` |
-| `pop` / `scandi` | Scandinavian + pop-art variant; explicit selection only |
-| A color keyword (e.g. `style=莫兰迪绿`) | Re-skin the default Elegant Vintage palette with that color direction |
-
-### Zen routing
-
-When `style=zen` is passed, the beautiful-html skill does **not** generate the page itself. Instead, it delegates to the `content-to-zen-static-html` skill, which produces a single-file static HTML with a Japanese Minimalism × Wabi-Sabi × Futuristic Tech visual language and zero external dependencies. The beautiful-html design rules (offset shadows, rotated stickers, hollow chapter numbers, Google Fonts) do not apply in this case; the zen skill's own rules govern the output.
-
-### Manual trigger only
-
-This skill is **user-manual-trigger only**. It must not be invoked automatically by an agent. The user must explicitly request it (e.g., "帮我生成一个设计感的 HTML 手册" or "用 beautiful-html 生成一个知识手册").
-
-## Core flow (6 steps)
-
-1. **Confirm target + design variables.** Target file/folder, style parameter (see [Style Presets](references/style-presets.md)) or custom style keywords, color keywords, and whether Google Fonts over the network is acceptable. If the user only says "有设计感" without details, default to the Elegant Vintage / 复古印刷 preset and [template/skeleton-vintage.html](template/skeleton-vintage.html). If the user passes `style=pop` / `style=scandi`, explicitly select the Scandinavian + pop-art [template/skeleton.html](template/skeleton.html). If the user passes `style=cyberpunk`, use the dark neon cyberpunk structural variant: start from [template/skeleton-cyberpunk.html](template/skeleton-cyberpunk.html) and follow [Style Presets → 赛博朋克](references/style-presets.md#赛博朋克-presetcyberpunk专属骨架). If the user passes `style=inkwash` / `style=shuimo` (水墨 / 宣纸 / 朱砂 / 宋体 / ink-wash), use the ink-wash xuan-paper structural variant: start from [template/skeleton-inkwash.html](template/skeleton-inkwash.html) and follow [Style Presets → 水墨宣纸](references/style-presets.md#水墨宣纸-presetink-wash-xuan-paper专属骨架). If the user passes `style=zen`, delegate to the `content-to-zen-static-html` skill instead — do not use the beautiful-html skeleton or presets.
-2. **Plan content structure.** Read the source content. Preserve ALL key information, tables, categories, and logic. Split/merge into chapters of "one screen to one-and-a-half screens" each. Decide which components each section needs (avoid repeating one component for the whole page — see [Component Library](references/component-library.md)).
-   If the source is Markdown, parse structural syntax (headings, emphasis, lists, quotes, tables, fenced code blocks) into the corresponding HTML elements and components — never render raw markers (heading hashes, `*`/`_`, fence backticks) as body text; markers inside code blocks are content and get escaped. For dense tables or deep nesting, optionally pre-convert with `pandoc input.md -f gfm -t html --no-highlight` and map the fragment into components; pandoc is a build-time tool only, its output must be fully inlined, and the page must not depend on it. Skip this for simple documents.
-3. **Optimize process-heavy content.** If the source contains Mermaid diagrams, ASCII process diagrams, or relationships that are clearer as a diagram than as prose, consider converting that part to an inline SVG. This is optional, not a reason to turn every list into a diagram. Preserve the original steps, direction, branch conditions, labels and meaning; do not invent missing transitions. Keep a short textual explanation or equivalent accessible description. When the source is teaching Mermaid/ASCII syntax itself, retain the escaped source code rather than replacing it. Follow [Component Library → Inline SVG diagrams](references/component-library.md#11-内联-svg-流程图) for rendering and accessibility.
-4. **Generate the page.** Start from the skeleton matching the chosen preset — [template/skeleton-vintage.html](template/skeleton-vintage.html) for the default Elegant Vintage look, [template/skeleton.html](template/skeleton.html) only for explicit `style=pop` / `style=scandi`, [template/skeleton-cyberpunk.html](template/skeleton-cyberpunk.html) for dark neon cyberpunk: copy it, replace the design-token variables (fonts, colors, decorative shapes) and fill each chapter with the planned content using the component classes. Keep class names stable and legible so colors/content stay easy to modify.
-5. **Verify against the checklist.** Run `python scripts/verify-html.py <file>` for the static checklist (fonts, no default gradient, offset shadows, rotated elements, hollow numbers, responsive, print, semantics, single-file). Then open in a real browser: check sidebar anchor jumps, mobile collapse, horizontal table scroll, any SVG diagram's labels/arrows on mobile and in print, console has 0 errors, take a screenshot. See [Design System → Quick Checklist](references/design-system.md#快速检查清单).
-6. **Deliver.** Report the output file path, the visual identity used, and any content-structure decisions made (chapters merged/split, diagrams converted) so nothing was silently dropped.
-
-## Success criteria (must all pass)
-
-- Single `.html` file; inline `<style>`; no external JS framework.
-- Google Fonts `<link>` present and actually used for headings/emphasis/body (not system-font defaults).
-- Color identity avoids the default blue/purple gradient; base color restrained, accent colors loud and contrasting.
-- Cards use offset solid shadows (e.g. `box-shadow: 6px 6px 0 #...`), not blur shadows; hover shifts the card slightly.
-- At least one rotated element (sticker badge / label, e.g. `transform: rotate(-3deg)`).
-- Chapter numbers are poster-like hollow/outlined large figures (stroke, not fill).
-- Every chapter uses ≥2 different component types; the page mixes cards, tables, process steps, formula boxes, callouts, quotes, badges.
-- Responsive: sidebar becomes top bar on mobile; wide tables scroll horizontally. Print: `@media print` hides the sidebar.
-- Semantic tags: `aside`, `nav`, `section`, `article`, `table`, etc.
-- All source content preserved — no omissions for the sake of styling; diagram conversions retain steps, branches and labels, with an accessible textual explanation; ends with a one-line summary + styled sign-off.
-- **No generator branding:** the output must not name the skill anywhere (title, sidebar, footer, comments — no "Beautiful HTML"/"beautiful-html") and must not carry template slogans. The colophon sign-off holds document info only (author / date / source) or is omitted. `verify-html.py` fails the build on leftovers.
-- Markdown input fully parsed into elements/components; no raw Markdown markers in rendered prose (markers inside escaped code blocks are fine).
-- Browser check: 0 console errors, anchor nav works, no overflow that clips content.
-
-## Key pitfalls
-
-- **Zen delegation:** if `style=zen` is passed, the beautiful-html skill must not be used. The `content-to-zen-static-html` skill owns the visual rules for those styles. Attempting to apply beautiful-html presets (offset shadows, Google Fonts, sticker badges) to a zen request produces a mismatched result.
-- **Template feel:** the moment you use a centered big-title hero + uniform rounded shadow cards + blue-purple gradient, you've failed the core requirement. Refer to [Design System](references/design-system.md) for the "human-made" cues list.
-- **System fonts only:** must include Google Fonts `<link>`; the three roles (display serif / heavy sans emphasis / humanist sans body) must be distinct.
-- **Blur shadows:** `box-shadow: 0 4px 12px rgba(...)` is the generic look. Use offset solid shadows (`box-shadow: 6px 6px 0 rgba(0,0,0,0.9)` or a solid color) for the hand-crafted sticker feel.
-- **Monotone pages:** one component type across the whole page reads as a template. Rotate between cards / tables / process strips / formula boxes / callouts / quotes per section.
-- **Losing content:** readability is a goal, but never cut facts, tables, or categories. Re-flow into sections, don't delete.
-- **Raw Markdown leakage:** dumping unparsed Markdown (heading hashes, asterisks, code fences) into the page reads as machine output. Parse structure into components first; for dense tables or deep nesting, pre-convert with pandoc (`pandoc input.md -f gfm -t html --no-highlight`, build-time only, fully inlined). Mermaid/ASCII diagrams used as content may become inline SVG, but syntax examples remain escaped code.
-- **Layout overflow:** long tables need a `.table-scroll` wrapper (mobile horizontal scroll); code/formula boxes need `overflow-x: auto`.
-- **Fonts are network-dependent:** the page is otherwise offline-capable, but Google Fonts requires network to render the intended type. State this clearly if the user needs fully offline output (then swap in local `@font-face` files).
-
-## References
-
-- [Design System](references/design-system.md) — full visual rules: style cues, color system, font system, structure, technical + content requirements, and the quick checklist.
-- [Style Presets](references/style-presets.md) — the 换装 reference table (Scandinavian pop, Wabi-sabi, Cyberpunk, Swiss, Elegant Vintage) and how to swap style/color/font variables. Cyberpunk and Elegant Vintage each have a structural skeleton and dedicated section.
-- [Component Library](references/component-library.md) — the parts inventory with concrete HTML/CSS recipes for each component, inline SVG diagram guidance, plus the vintage-variant component substitution table.
-- [Pop Skeleton](template/skeleton.html) — verified single-file Scandinavian + pop-art variant, selected only with `style=pop` / `style=scandi`.
-- [Cyberpunk Skeleton](template/skeleton-cyberpunk.html) — dark neon structural variant: deep-black grid base, cyan/magenta/acid signal colors, technical typography, solid offset shadows, and print-safe fallbacks.
-- [Vintage Skeleton](template/skeleton-vintage.html) — Elegant Vintage structural variant: aged-paper texture layers, double-rule frame with corner ornaments, wax seal, rubber-stamp badges, hollow roman-numeral chapters, drop caps, sepia photos.
-- [Ink-wash Skeleton](template/skeleton-inkwash.html) — 水墨宣纸 structural variant: rice-paper base, vertical-rl title aside, vermilion seal, inline SVG bamboo & flying geese decoration, hollow Chinese-numeral chapters (壹/贰/叁/肆), Ma-Shan-Zheng display font, Song-serif body.
-- [Verification Script](scripts/verify-html.py) — static checklist runner.
-- [content-to-zen-static-html](../../content-to-zen-static-html/SKILL.md) — delegated skill for `style=zen` requests.
+1. **Read & art-direct.** Read the source, pick the preset skeleton or bespoke aesthetic direction (handing off `style=zen`), and plan chapter divisions and component variety around the content's natural structure.
+2. **Generate the `.html`.** Write the complete single-file HTML with all source content intact and no `REPLACE` placeholders left behind.
+3. **Verify before delivery.**
+   - Run `python3 <skill-dir>/scripts/verify-html.py <output.html>` and fix any `FAIL`.
+   - Open `file://<abs-path>` in a real browser: verify desktop and mobile widths (TOC anchor navigation, no clipped overflow, legible SVG diagrams, 0 console errors) and check a screenshot. If no browser tool is available, state that visual verification was not run.
+   - Report the output path, visual direction, and any structural reorganizations made.
